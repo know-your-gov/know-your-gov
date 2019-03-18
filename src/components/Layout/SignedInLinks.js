@@ -1,33 +1,49 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
 
 const SignedInLinks = () => {
   let userId = 1;
+  var style = {
+    float: "left",
+    fontSize: 25,
+    marginLeft: "5vw",
+
+   color: "black"
+  };
+
   return (
     <div>
-      <h5>SignedInLinks</h5>
+      {/* <AppBar> */}
+      <Typography style={style} variant="display2" gutterBottom>
+        KnowYourGov.com
+      </Typography>
+      <div style={{display: 'flex', justifyContent:'space-evenly',}}>
       <Link to="/dashboard">
-        <button>Dashboard</button>
+        <Button color="primary">Dashboard</Button>
       </Link>
       <Link to={`/account/${userId}`}>
-        <button> Account </button>
+        <Button color="primary"> Account </Button>
       </Link>
       <Link to="/bills">
-        <button> Bills </button>
+        <Button color="primary"> Bills </Button>
       </Link>
       <Link to="/politicians">
-        <button> Politicians</button>
+        <Button color="primary"> Politicians</Button>
       </Link>
       <Link to="/">
-        <button>Logout </button>
+        <Button color="primary">Logout </Button>
       </Link>
+      </div>
+      {/* </AppBar> */}
     </div>
   );
 };
 
 export default SignedInLinks;
-
-/*
-
-<button> </button>
-*/

@@ -14,13 +14,13 @@ export default class Chart extends Component {
       axios.get(`request here`)
         .then(res => {
           const graph = res.data;
-    //    create variables that equal arrays here
-    // let arr1 = []
-    // let arr2= []
+    //    create variables that equal arrays here that have values drilled through props for reusability
+    // let arr1 = [this.props]
+    // let arr2= [this.props]
     //       graph.forEach loop here 
     this.setState({
       Data: {
-        labels: "arr",
+        labels: "array from  variables here",
         datasets: [
           {
             label: "ease my suffering",
