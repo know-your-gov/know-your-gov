@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+
 const LandingPage = () => {
   return (
     <div>
       Landing Page
       <Link to="/login">
-        <button>Login/SignUp</button>
+        <Button color="primary">Login/SignUp</Button>
       </Link>
     </div>
   );

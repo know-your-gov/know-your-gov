@@ -5,5 +5,4 @@ export class Search extends Component {
     return <div>Search</div>;
   }
 }
-
 export default Search;
