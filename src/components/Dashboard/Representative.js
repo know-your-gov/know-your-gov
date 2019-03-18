@@ -11,10 +11,10 @@ import Typography from '@material-ui/core/Typography'
 
 const styles = {
   media:{
-    width: "25vw"
+    width: "100%",
   },
   root: {
-    width: "30vw"
+    width: "20vw"
   }
 }
 
@@ -32,7 +32,7 @@ const Representative =(props)=>{
 
         {/* representative contact details */}
         <CardContent>
-          <Typography variant = "h4">{dets.title} {dets.name}</Typography>
+          <Typography variant = "h5">{dets.title} {dets.name}</Typography>
           <p>Contact Details: {dets.contact}</p> 
         </CardContent>
 
