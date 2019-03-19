@@ -4,7 +4,7 @@ import SignedOutLinks from "./SignedOutLinks";
 
 const Navbar = () => {
     return (
-      <div style={{ padding: 10, backgroundColor:"lightgray" }}>
+      <div style={{ padding: 10, backgroundColor:"lightgray",}}>
         <SignedInLinks/>
       </div>
     );

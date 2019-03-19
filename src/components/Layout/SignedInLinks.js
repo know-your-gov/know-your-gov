@@ -14,7 +14,6 @@ const SignedInLinks = () => {
     float: "left",
     fontSize: 25,
     marginLeft: "5vw",
-
    color: "black"
   };
 

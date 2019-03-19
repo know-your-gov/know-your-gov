@@ -1,0 +1,14 @@
+.landingPage
+{background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url("http://bossierpress.com/wp-content/uploads/2014/02/United_States_Capitol_west_front_edit2.jpg");
+  background-size: 200vh, 100vw;
+  height: 100vh;
+  width:100%;
+  background-position: center top;
+  text-align: center;
+  background-repeat: no-repeat
+}
+
+.title{   
+background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+}
