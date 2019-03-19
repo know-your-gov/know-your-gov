@@ -27,7 +27,6 @@ class BillDetails extends Component {
       headers: {'X-API-Key':process.env.REACT_APP_PRO_PUBLICA}  
     }).then((res)=>{
       this.setState({billDetails: res.data.results[0]})
-      console.log(this.state.billDetails)
     })
   }
   render() {
