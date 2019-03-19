@@ -45,7 +45,7 @@ const Representative =(props)=>{
   )
 }
 
-Card.propTypes = {
+Representative.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
