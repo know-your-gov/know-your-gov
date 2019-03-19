@@ -12,8 +12,9 @@ export class PoliticianDetails extends Component {
     super();
     this.state = {
       politician: [
+      ],
 
-      ]
+      committees: {}
     };
   }
 
@@ -36,8 +37,17 @@ export class PoliticianDetails extends Component {
         const url = repInfo.url
         const id = repInfo.memeber_id
         const party = repInfo.current_party
-        const politician = [name, birthDate, gender, url, id, party]
-        this.setState({ politician: politician});
+        const office = repInfo.roles[0].office
+        const phone = repInfo.roles[0].phone
+        const chamber = repInfo.roles[0].chamber
+        const title = repInfo.roles[0].title
+
+        const politician = [name, birthDate, gender, url, id, party, office, phone, chamber, title]
+        const committees = repInfo.roles[0].committees[0]
+
+        for(var comTitle in committees)
+
+        this.setState({ politician: politician, committees: committees });
       });
   }
 
@@ -50,8 +60,9 @@ export class PoliticianDetails extends Component {
           justifyContent: "space-around"
         }}
       >
-        <div>{this.state.politician[0]} </div>
+        <div>{this.state.politician} </div>
         <div />
+        {this.state.committees.name}
       </div>
     );
   }
