@@ -24,7 +24,7 @@ class BillDetails extends Component {
     const congress = congSenId.exec(billId)[0]
     const billSlug = billId.split(congSenId)[0].split("-")[0]
     axios.get(`https://api.propublica.org/congress/v1/${congress}/bills/${billSlug}.json`,{
-      headers: {'X-API-Key':"6mvDJez0i0forqt6pqCgyV1QFLPMbHCx4JbsSJq4"}  
+      headers: {'X-API-Key':process.env.REACT_APP_PRO_PUBLICA}  
     }).then((res)=>{
       this.setState({billDetails: res.data.results[0]})
       console.log(this.state.billDetails)
@@ -37,9 +37,9 @@ class BillDetails extends Component {
         <Card>
           <CardContent>
             <Typography variant = "h6">{billDetails.short_title}</Typography>
-            <Typography variant = "p">{billDetails.committees}</Typography>
-            <Typography variant = "p">Sponsored by: {billDetails.sponsor_title} {billDetails.sponsor} ({billDetails.sponsor_party}, {billDetails.sponsor_state})</Typography>
-            <Typography variant = "p">Introduced(yyyy/mm/dd): {billDetails.introduced_date}</Typography>
+            <p>{billDetails.committees}</p>
+            <p>Sponsored by: {billDetails.sponsor_title} {billDetails.sponsor} ({billDetails.sponsor_party}, {billDetails.sponsor_state})</p>
+            <p>Introduced(yyyy/mm/dd): {billDetails.introduced_date}</p>
           </CardContent>
         </Card>
       </div>

@@ -41,7 +41,7 @@ class Dashboard extends Component {
 
   componentDidMount(){
     axios.get("https://api.propublica.org/congress/v1/115/both/bills/introduced.json",{
-      headers: {'X-API-Key':"6mvDJez0i0forqt6pqCgyV1QFLPMbHCx4JbsSJq4"}
+      headers: {'X-API-Key': process.env.REACT_APP_PRO_PUBLICA}
     }).then((res)=>{
       const bills = res.data.results[0].bills
       const recents = bills.slice(0,6)
