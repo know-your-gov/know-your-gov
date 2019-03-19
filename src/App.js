@@ -9,7 +9,7 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          {/* <Navbar /> */}
+          <Navbar />
           {routes}
         </div>
       </Router>
