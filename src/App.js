@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import "./App.css";
 import Navbar from "./components/Layout/Navbar";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import routes from "./components/routes";
 
 class App extends Component {
   render() {
+    console.log(window);
     return (
       <Router>
         <div className="App">
-          <Navbar />
+          {window.location.hash === "#/" ? null : <Navbar />}
           {routes}
         </div>
       </Router>

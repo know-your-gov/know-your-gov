@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { signUp } from "../../ducks/authReducer";
+import { compose } from "redux";
 import PropTypes from "prop-types";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -16,6 +19,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import grey from "@material-ui/core/colors/grey";
+
 import "./Auth.css";
 
 const primary = grey[900];
@@ -65,6 +69,10 @@ const styles = theme => ({
     [theme.breakpoints.down(400 + theme.spacing.unit * 3 * 2)]: {
       marginLeft: theme.spacing.unit * 22
     }
+  },
+  zipInput: {
+    marginRight: theme.spacing.unit * 20,
+    width: "50%"
   }
 });
 
@@ -76,6 +84,7 @@ export class SignUp extends Component {
       password: "",
       address: "",
       city: "",
+      state: "",
       zip: ""
     };
   }
@@ -83,13 +92,13 @@ export class SignUp extends Component {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-  handleLogin = e => {
+  handleSubmit = e => {
     e.preventDefault();
-    // this.props.
+    this.props.signUp(this.state);
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, authError } = this.props;
     console.log(this.state);
     console.log(styles);
 
@@ -113,7 +122,7 @@ export class SignUp extends Component {
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
-          <form className={classes.form}>
+          <form className={classes.form} onSubmit={this.handleSubmit}>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="email">Email Address</InputLabel>
               <Input
@@ -134,42 +143,66 @@ export class SignUp extends Component {
                 onChange={this.handleChange}
               />
             </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="address">Address Line 1</InputLabel>
-              <Input
-                type="address"
-                id="address"
-                placeholder="Address line 1"
-                onChange={this.handleChange}
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="city">City</InputLabel>
-              <Input
-                type="city"
-                id="city"
-                placeholder="City"
-                onChange={this.handleChange}
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="zip">Zip Code</InputLabel>
-              <Input
-                type="number"
-                id="zip"
-                placeholder="Zip Code"
-                onChange={this.handleChange}
-              />
-            </FormControl>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign Up
-            </Button>
+            <div className="address-div">
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="address">Address Line 1</InputLabel>
+                <Input
+                  disableUnderline="true"
+                  type="address"
+                  id="address"
+                  placeholder="Address line 1"
+                  onChange={this.handleChange}
+                />
+              </FormControl>
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="city">City</InputLabel>
+                <Input
+                  disableUnderline="true"
+                  type="city"
+                  id="city"
+                  placeholder="City"
+                  onChange={this.handleChange}
+                />
+              </FormControl>
+              <FormControl margin="normal">
+                <InputLabel htmlFor="zip">State</InputLabel>
+                <Input
+                  // disableUnderline="true"
+                  className={classes.zipInput}
+                  type="state"
+                  id="state"
+                  placeholder="State"
+                  onChange={this.handleChange}
+                />
+              </FormControl>
+            </div>
+            <div className="submit-div">
+              <FormControl margin="normal">
+                <InputLabel htmlFor="zip">Zip Code</InputLabel>
+                <Input
+                  // disableUnderline="true"
+                  className={classes.zipInput}
+                  type="number"
+                  id="zip"
+                  placeholder="Zip Code"
+                  onChange={this.handleChange}
+                />
+              </FormControl>
+              <Button
+                disableUnderline="true"
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                // classes={
+
+                // }
+                className={classes.submit}
+              >
+                Sign Up
+              </Button>
+            </div>
+            <div className="error">{authError ? <p>{authError}</p> : null}</div>
           </form>
         </Paper>
       </div>
@@ -181,4 +214,23 @@ SignUp.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(SignUp);
+const mapStateToProps = state => {
+  return {
+    auth: state.firebase.auth,
+    authError: state.auth.authError
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    signUp: newUser => dispatch(signUp(newUser))
+  };
+};
+
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  withStyles(styles)
+)(SignUp);
