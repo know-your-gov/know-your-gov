@@ -14,3 +14,12 @@
 .button {
   text-decoration: none;
 }
+
+.address-div,
+.submit-div {
+  display: flex;
+}
+
+.error {
+  color: red;
+}

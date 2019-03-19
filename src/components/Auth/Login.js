@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { compose } from "redux";
+import { connect } from "react-redux";
+import { signIn } from "../../ducks/authReducer";
+import { Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -78,15 +82,17 @@ export class Login extends Component {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-  handleLogin = e => {
+  handleSubmit = e => {
     e.preventDefault();
-    // this.props.
+    this.props.signIn(this.state);
   };
 
   render() {
-    const { classes } = this.props;
-    console.log(this.state);
-
+    const { classes, auth, authError } = this.props;
+    // console.log(this.state);
+    console.log(auth);
+    console.log(authError);
+    if (auth.uid) return <Redirect to="/dashboard" />;
     return (
       <div className={classes.main}>
         <CssBaseline />
@@ -105,9 +111,9 @@ export class Login extends Component {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign Up
+            Sign In
           </Typography>
-          <form className={classes.form}>
+          <form className={classes.form} onSubmit={this.handleSubmit}>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="email">Email Address</InputLabel>
               <Input
@@ -142,6 +148,7 @@ export class Login extends Component {
               Login
             </Button>
           </form>
+          <div className="error">{authError ? <p>{authError}</p> : null}</div>
         </Paper>
       </div>
     );
@@ -152,4 +159,23 @@ Login.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Login);
+const mapStateToProps = state => {
+  return {
+    authError: state.auth.authError,
+    auth: state.firebase.auth
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    signIn: credentials => dispatch(signIn(credentials))
+  };
+};
+
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  withStyles(styles)
+)(Login);

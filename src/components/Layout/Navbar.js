@@ -1,13 +1,21 @@
 import React from "react";
 import SignedInLinks from "./SignedInLinks";
 import SignedOutLinks from "./SignedOutLinks";
+import { connect } from "react-redux";
 
-const Navbar = () => {
-    return (
-      <div style={{ padding: 10, backgroundColor:"lightgray",}}>
-        <SignedInLinks/>
-      </div>
-    );
+const Navbar = props => {
+  const { auth } = props;
+  return (
+    <div style={{ padding: 10, backgroundColor: "lightgray" }}>
+      {auth.uid ? <SignedInLinks /> : <SignedOutLinks />}
+    </div>
+  );
 };
 
-export default Navbar;
+const mapStateToPtops = state => {
+  return {
+    auth: state.firebase.auth
+  };
+};
+
+export default connect(mapStateToPtops)(Navbar);
