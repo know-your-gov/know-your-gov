@@ -4,8 +4,11 @@ import axios from 'axios'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
-// import CardActions from '@material-ui/core/CardActions'
-// import CardActionArea from '@material-ui/core/CardActionArea'
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
+import Clear from '@material-ui/icons/Clear'
+import CardActions from '@material-ui/core/CardActions'
+import CardActionArea from '@material-ui/core/CardActionArea'
+import {Link} from 'react-router-dom'
 
 
 class BillDetails extends Component {
@@ -27,6 +30,7 @@ class BillDetails extends Component {
       headers: {'X-API-Key':process.env.REACT_APP_PRO_PUBLICA}  
     }).then((res)=>{
       this.setState({billDetails: res.data.results[0]})
+      console.log(this.state.billDetails)
     })
   }
   render() {
@@ -35,10 +39,19 @@ class BillDetails extends Component {
       <div style = {{width: "65%", margin: "0 auto", marginTop:"5vh"}}>
         <Card>
           <CardContent>
-            <Typography variant = "h6">{billDetails.short_title}</Typography>
+            <Typography variant = "h6">{billDetails.title}</Typography>
             <p>{billDetails.committees}</p>
-            <p>Sponsored by: {billDetails.sponsor_title} {billDetails.sponsor} ({billDetails.sponsor_party}, {billDetails.sponsor_state})</p>
+            <p>Sponsored by: <Link to = {`/politicians/${billDetails.sponsor_id}`}>{billDetails.sponsor_title} {billDetails.sponsor} ({billDetails.sponsor_party}, {billDetails.sponsor_state})</Link></p>
             <p>Introduced(yyyy/mm/dd): {billDetails.introduced_date}</p>
+            <p> <a href ={billDetails.gpo_pdf_uri} >See more information here</a></p>
+            <div>
+              <CardActionArea>
+                <CardActions>
+                  <FavoriteBorder/>
+                  <Clear/>
+                </CardActions>
+              </CardActionArea>
+            </div>
           </CardContent>
         </Card>
       </div>
