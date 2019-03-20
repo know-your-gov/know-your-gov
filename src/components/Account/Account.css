@@ -1,9 +1,22 @@
-.accountCard {
-    margin-left: 5vw;
+.accountPage {
+  width: 100%;
+  /* height: 100vh; */
+}
 
+.accountCard {
+  width: 50%;
+  /* height: 100vh; */
+  margin: 0 auto;
+  margin-top: 10vh;
 }
 
 .MuiTypography-colorTextSecondary-34 {
-    color: rgba(0, 0, 0, 0.54);
-    text-align: left;
+  color: rgba(0, 0, 0, 0.54);
+  text-align: left;
+}
+
+.title {
+  font-size: 1.5rem;
+  padding-bottom: 1.5rem;
+  text-decoration: underline;
 }

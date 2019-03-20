@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "./reset.css";
 import "./App.css";
 import Navbar from "./components/Layout/Navbar";
 import { HashRouter as Router } from "react-router-dom";
