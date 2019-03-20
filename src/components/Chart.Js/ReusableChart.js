@@ -58,7 +58,7 @@ export default class Chart extends Component {
     return (
       <div>
         <Pie data={this.state.Data} options={{ maintainAspectRatio: false }}
-        height={180}
+        height={140}
         />
       </div>
     );
