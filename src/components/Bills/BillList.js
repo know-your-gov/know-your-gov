@@ -109,13 +109,12 @@ class BillList extends Component {
 
               <TableFooter>
                 <TableRow>
-                  <TableCell></TableCell>
                   <TableCell>
                     <ArrowBackIos onClick = {()=>this.pageChange("back")}/>
                     <ArrowForwardIos onClick = {()=>this.pageChange("next")}/> 
+                    
                   </TableCell>
-                  <TableCell>Page {this.state.page+1}</TableCell>
-                   
+                  {/* <TableCell>Page {this.state.page+1}</TableCell> */}
                 </TableRow>
               </TableFooter>
 

@@ -49,7 +49,7 @@ class Dashboard extends Component {
     })
   }
 
-  panelShow = ()=>{
+  billPanelShow = ()=>{
     const {classes} = this.props
     const bills = this.state.bills
     console.log(bills)
@@ -95,7 +95,7 @@ class Dashboard extends Component {
 
             <div style = {{width: "20vw", marginTop: "5vh"}}>
               <Typography variant = "h5">Recent Bills</Typography> 
-              {this.panelShow()}
+              {this.billPanelShow()}
              </div>
 
           </div>
