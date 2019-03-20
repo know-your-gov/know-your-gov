@@ -1,4 +1,9 @@
 import React, { Component } from "react";
+import {connect} from 'react-redux'
+import {compose} from 'redux'
+import { firestoreConnect } from "react-redux-firebase";
+// import firebase from "../../config/fbConfig";
+import "firebase/auth";
 import Card from '@material-ui/core/Card'
 import {Link} from 'react-router-dom'
 import Button from '@material-ui/core/Button'
@@ -20,8 +25,8 @@ const styles = {
   }
 }
 class Dashboard extends Component {
-  constructor(){
-    super()
+  constructor(props){
+    super(props)
     this.state = {
       senateRep: {
         title: "Senator",
@@ -35,11 +40,24 @@ class Dashboard extends Component {
         name: "Sheila Jackson Lee",
         contact: "some stuff"
       },
+      officials: [],
       bills: []
     }
   }
 
   componentDidMount(){
+    this.getRecentBills()
+    this.state.user && this.getRepresentatives()
+   
+  }
+
+  componentDidUpdate(prevProps){
+    if(this.props !== prevProps){
+      this.getRepresentatives()
+    }
+  }
+
+  getRecentBills = ()=>{
     axios.get("https://api.propublica.org/congress/v1/115/both/bills/introduced.json",{
       headers: {'X-API-Key': process.env.REACT_APP_PRO_PUBLICA}
     }).then((res)=>{
@@ -49,10 +67,19 @@ class Dashboard extends Component {
     })
   }
 
+  getRepresentatives = ()=>{
+    const {user} = this.props
+    axios.get(`https://www.googleapis.com/civicinfo/v2/representatives?address=${user && user[0].address}&levels=country&roles=legislatorLowerBody&roles=legislatorUpperBody&key=${process.env.REACT_APP_GOOGLE_CIVIC}`,{
+      header:{
+        Accept: "application/json"
+      }
+    }).then((res)=>{
+      this.setState({officials: res.data.officials},()=>console.log(this.state.officials))
+  })}
+
   billPanelShow = ()=>{
     const {classes} = this.props
     const bills = this.state.bills
-    console.log(bills)
     if(bills.length>0){
       return(
        <div style = {{width: "20vw"}}>
@@ -81,6 +108,19 @@ class Dashboard extends Component {
     }
   }
 
+  showReps = ()=>{
+    const {officials} = this.state
+    if(officials.length>0){
+      return(
+        officials.map((official,i)=>{
+          return(
+            <Representative repDets = {official} key = {i}/>
+          )
+        })
+      )
+    }
+  }
+
   render() {
     return (
         <div style = {{height: "100vh", marginTop: "5vh"}}>
@@ -101,8 +141,9 @@ class Dashboard extends Component {
           </div>
 
           {/* card showing senate representatitve */}
-          <Representative repDets = {this.state.senateRep}/>
-          <Representative repDets = {this.state.congressRep}/>
+          {/* <Representative repDets = {this.state.senateRep}/>
+          <Representative repDets = {this.state.congressRep}/> */}
+          {this.showReps()}
         
 
         </div>
@@ -121,10 +162,28 @@ Dashboard.propTypes ={
   classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(Dashboard);
+function mapStateToProps(state){
+  return {
+    user: state.firestore.ordered.users,
+    auth: state.firebase.auth
+  };
+}
+
+
+export default compose(connect(mapStateToProps),firestoreConnect(state => {
+  return [{ collection: "users", doc: state.auth.uid }];
+}),withStyles(styles))(Dashboard)
 
 
 /*
+
+export default compose(connect(mapStateToProps),firestoreConnect(state => {
+  console.log(state);
+  return [{ collection: "users", doc: state.auth.uid }];
+}),withStyles(styles))(Dashboard)
+
+
+
  bills.map((bill)=>{
           console.log(bill.bill_id)
           return(
@@ -145,5 +204,10 @@ export default withStyles(styles)(Dashboard);
           <Typography variant = "h5">Recent Bills</Typography> 
           {this.panelShow()}
         </div>
+
+https://www.googleapis.com/civicinfo/v2/representatives?address=500%20South%20Ervay%20Street&levels=country&roles=legislatorLowerBody&key=AIzaSyBzASxcvpzZFl5h2EnuAguqgnHCQajGEPM
+
+
+https://www.googleapis.com/civicinfo/v2?address=500%South%Ervay%Street%&levels=country&roles=legislatorLowerBody&key=AIzaSyBzASxcvpzZFl5h2EnuAguqgnHCQajGEPM
 
 */

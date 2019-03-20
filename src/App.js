@@ -7,7 +7,6 @@ import routes from "./components/routes";
 
 class App extends Component {
   render() {
-    console.log(window);
     return (
       <Router>
         <div className="App">
