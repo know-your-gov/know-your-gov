@@ -7,8 +7,29 @@ import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Chart from "../Chart.Js/ReusableChart";
-
 import axios from "axios";
+
+const styles = {
+  card: {
+    minWidth: 240,
+    maxWidth: 700,
+    marginRight: "5%",
+    marginTop: "5%",
+    textAlign: "left",
+    display: "flex"
+  },
+  bullet: {
+    display: "inline-block",
+    margin: "0 2px",
+    transform: "scale(0.8)"
+  },
+  title: {
+    fontSize: 14
+  },
+  pos: {
+    marginBottom: 12
+  }
+};
 
 export class PoliticianDetails extends Component {
   constructor() {
@@ -20,13 +41,13 @@ export class PoliticianDetails extends Component {
   }
 
   componentDidMount() {
-    const memberId = this.props.memberId;
+    const {id} = this.props.match.params
     //pass the memberId down from the politician card for axios, or maybe later through search?
     axios
       // .get(`https://api.propublica.org/congress/v1/members/${memberId}.json`, {
       //   headers: { "X-API-Key": "6mvDJez0i0forqt6pqCgyV1QFLPMbHCx4JbsSJq4" }
       // })
-      .get(`https://api.propublica.org/congress/v1/members/K000388.json`, {
+      .get(`https://api.propublica.org/congress/v1/members/${id}.json`, {
         headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
       })
       .then(res => {
@@ -35,7 +56,7 @@ export class PoliticianDetails extends Component {
 
         const name = repInfo.first_name + " " + repInfo.last_name;
         const birthDate = repInfo.date_of_birth;
-
+        const state = repInfo.roles[0].state
         const url = repInfo.url;
         const id = repInfo.member_id;
 
@@ -59,14 +80,23 @@ export class PoliticianDetails extends Component {
             return "Other";
           }
         }
+
+        function writeChamber(param) {
+          if (param === "House") {
+            return "House of Representatives";
+          }
+          return param;
+        }
+
         const gender = writeGender(repInfo.gender);
         const party = writeParty(repInfo.current_party);
+        const chamber = writeChamber(committeeInfo.chamber);
         const office = committeeInfo.office;
         const phone = committeeInfo.phone;
-        const chamber = committeeInfo.chamber;
         const title = committeeInfo.title;
         const district = committeeInfo.district;
         const billsSponsored = committeeInfo.bills_sponsored;
+        
 
         const politician = {
           name,
@@ -80,7 +110,8 @@ export class PoliticianDetails extends Component {
           chamber,
           title,
           billsSponsored,
-          district
+          district,
+          state
         };
 
         const committees = committeeInfo.committees;
@@ -93,62 +124,83 @@ export class PoliticianDetails extends Component {
   render() {
     const committeeDisplay = this.state.committees.map((e, i) => {
       return (
-        <Card>
-          <div key={i}>
-            <div>{e.name}</div>
-            <div>{e.title}</div>
-            Rank {e.rank_in_party}
-            <hr />
-          </div>
-        </Card>
+        <div>
+          <Card>
+            <div key={i}>
+              <Typography variant="h5">{e.name}</Typography>
+              <Typography variant="h6">{e.title}</Typography>
+             <Typography variant="h6">Rank {e.rank_in_party}</Typography> 
+            </div>
+          </Card>{" "}
+          <br />
+        </div>
       );
     });
     return (
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-around"
-        }}
-      >
-        <div>
-          <Card>
-            <Typography>{this.state.politician.id} </Typography>
-            <Typography>{this.state.politician.name} </Typography>
-            <Typography>{this.state.politician.gender} </Typography>
-            <Typography>{this.state.politician.chamber} </Typography>
-            <Typography>{this.state.politician.party} </Typography>
-          </Card>
-        </div>
-        <Chart />
-        <div>
-          <Card>
-            <Typography>District: {this.state.politician.district} </Typography>
-            <Typography>
-              Bills Sponsored: {this.state.politician.billsSponsored}{" "}
-            </Typography>
-          </Card>
-        </div>
-        <div>
-          <Card>
-            <Typography>
-              Office Address: {this.state.politician.office}{" "}
-            </Typography>
+      <div style={{}}><Typography variant="h5">
+                  District: {this.state.politician.district}
+                </Typography>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-around"
+          }}
+        >
+          <div className="mainInfo" style={styles.card}>
+            <Card>
+              <div>
+                <Typography variant="caption">
+                  {" "}
+                  Member ID: {this.state.politician.id}{" "}
+                </Typography>
 
+                <Typography variant="h4">
+                  {this.state.politician.name}
+                </Typography>
+                <Typography>{this.state.politician.gender} </Typography>
+
+                <Typography variant="caption">Chamber:</Typography>
+                {this.state.politician.chamber}
+                <Typography variant="caption">Party:</Typography>
+                {this.state.politician.party}
+                <Typography variant="caption">State:</Typography>
+                {this.state.politician.state}
+              </div>
+            </Card>
+          </div>
+          <Chart />
+
+          <div className="committeeInfo">
+            <br />
+            <Typography variant="h5">{committeeDisplay}</Typography>
+          </div>
+        </div>
+        <div className="subInfo" style={styles.card}>
+          <div className="mainInfo" style={styles.card}>
+            
+              <div style={{ marginRight: "5%" }}>
+                
+                {/* <Typography variant="caption">Bills Sponsored:</Typography>
+                {this.state.politician.billsSponsored} */}
+              </div>
+            
+          </div>
+        </div>
+        <div className="contactInfo">
+          <Card>
+            <Typography variant="caption">Office:</Typography>
+            <Typography variant="headline">
+              {this.state.politician.office}{" "}
+            </Typography>
             <Typography>
-              {" "}
               Contact number: {this.state.politician.phone}
             </Typography>
             <Typography>
-              {" "}
-              <Button> {this.state.politician.url}</Button>
+              <Button size="large"> {this.state.politician.url}</Button>
             </Typography>
           </Card>
         </div>
-        <Typography>
-          Committees:
-          {committeeDisplay}
-        </Typography>
       </div>
     );
   }
