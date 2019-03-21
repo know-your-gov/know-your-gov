@@ -7,38 +7,33 @@ import Typography from "@material-ui/core/Typography";
 // import Toolbar from "@material-ui/core/Toolbar";
 // import IconButton from "@material-ui/core/IconButton";
 // import MenuIcon from "@material-ui/icons/Menu";
+import "./NavBarStyling.css"
 
 const SignedOutLinks = () => {
-  var style = {
-    float: "left",
-    fontSize: 25,
-    marginLeft: "5vw"
-  };
+  
 
   return (
     <div>
-      {/* <AppBar> */}
-      <Typography style={style} variant="display2" gutterBottom>
+    <div className="navTitle">
+      
         KnowYourGov.com
-      </Typography>
-      <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+</div>
+<div className="navLinks">
         <Link to="/dashboard">
-          <Button>Dashboard</Button>
+          <Button color="primary">Dashboard</Button>
         </Link>
-        {/* <Link to={`/account/${userId}`}>
-        <Button> Account </Button>
-      </Link> */}
         <Link to="/bills">
-          <Button> Bills </Button>
+          <Button color="primary"> Bills </Button>
         </Link>
         <Link to="/politicians">
-          <Button>Politicians</Button>
+          <Button color="primary"> Politicians</Button>
         </Link>
         <Link to="/login">
-          <Button>Login </Button>
+          <Button color="primary">
+            Login
+          </Button>
         </Link>
-      </div>
-      {/* </AppBar> */}
+        </div>
     </div>
   );
 };

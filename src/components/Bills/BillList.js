@@ -102,7 +102,7 @@ class BillList extends Component {
   render() {
     console.log(this.props);
     return (
-      <div style={{ width: "80vw", margin: "0 auto", marginTop: "5vh" }}>
+      <div style={{ width: "80vw", marginLeft: "5vw", marginTop: "5vh", overflow:"scroll"}}>
         <Button onClick={() => this.getRecentBills()}>See Recent</Button>
         <Button onClick={() => this.getUpcomingBills()}>See Upcoming</Button>
         <Button>See Favored Bills </Button>
@@ -117,7 +117,7 @@ class BillList extends Component {
                 </TableRow>
               </TableHead>
               <TableBody>{this.listBills()}</TableBody>
-
+              
               <TableFooter>
                 <TableRow>
                   <TableCell>

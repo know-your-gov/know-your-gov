@@ -10,15 +10,22 @@ export class PoliticianList extends Component {
   constructor() {
     super();
     this.state = {
-      selectedState: "AL",
-      politicianList: []
+      selectedSenateState: "AL",
+      selectedHouseState: "AL",
+      senateList: [],
+      houseRepList: []
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.handleSenateChange = this.handleSenateChange.bind(this);
+    this.handleHouseChange = this.handleHouseChange.bind(this);
     this.handleSenateSubmit = this.handleSenateSubmit.bind(this);
+    this.handleHouseSubmit = this.handleHouseSubmit.bind(this);
   }
 
-  handleChange(e) {
-    this.setState({ selectedState: e.target.value });
+  handleSenateChange(e) {
+    this.setState({ selectedSenateState: e.target.value });
+  }
+  handleHouseChange(e) {
+    this.setState({ selectedHouseState: e.target.value });
   }
 
   handleSenateSubmit(e) {
@@ -26,41 +33,44 @@ export class PoliticianList extends Component {
     axios
       .get(
         `https://api.propublica.org/congress/v1/members/senate/${
-          this.state.selectedState
+          this.state.selectedSenateState
         }/current.json`,
         {
           headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
         }
       )
       .then(res => {
-        const politicianList = res.data.results;
+        const senateList = res.data.results;
 
-        this.setState({ politicianList: politicianList }, () =>
-          console.log(politicianList)
+        this.setState({ senateList: senateList }, () =>
+          console.log(senateList)
         );
       });
   }
   handleHouseSubmit(e) {
+    e.preventDefault();
+    axios
+      .get(
+        `https://api.propublica.org/congress/v1/members/house/${
+          this.state.selectedHouseState
+        }/current.json
+    `,
+        {
+          headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
+        }
+      )
+      .then(res => {
+        const houseRepList = res.data.results;
 
-
-    // e.preventDefault();
-    // axios.get(`https://api.propublica.org/congress/v1/members/house/${this.state.selectedState}/${district}/current.json`, {
-    //     headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
-    //   })
-    //   .then(res => {
-
-    //     const politicianList = res.data.results;
-
-    //     this.setState({politicianList: politicianList})
-    //     console.log(politicianList)
-    //   }
-    //   )
-    }
+        this.setState({ houseRepList: houseRepList });
+        console.log(houseRepList);
+      });
+  }
 
   render() {
-    const politicianListDisplay =
-      this.state.politicianList &&
-      this.state.politicianList.map((g, k) => {
+    const senateListDisplay =
+      this.state.senateList &&
+      this.state.senateList.map((g, k) => {
         const id = g.id;
         return (
           <div key={k}>
@@ -92,13 +102,52 @@ export class PoliticianList extends Component {
           </div>
         );
       });
+    const houseRepListDisplay =
+      this.state.houseRepList &&
+      this.state.houseRepList.map((h, l) => {
+        const id = h.id;
+        return (
+          <div key={l}>
+            <Card>
+              <div>
+                <Typography>
+                  {" "}
+                  <Button size="large">
+                    <Link
+                      style={{
+                        textDecoration: "none",
+                        color: "black",
+                        fontSize: "200"
+                      }}
+                      to={`/politicians/${id}`}
+                    >
+                      {h.name}
+                    </Link>
+                  </Button>
+                </Typography>
+                {/* <Typography variant="caption">Party:</Typography> */}
+                {/* <Typography variant="h6">{h.party}</Typography>
+                <Typography variant="caption">Next Election:</Typography>
+                <Typography variant="h6">{h.next_election}</Typography> */}
+              </div>
+            </Card>{" "}
+            <br />
+          </div>
+        );
+      });
+
     return (
       <div>
         <div>
           <form onSubmit={this.handleSenateSubmit}>
             <label>
-              <Typography>Find Senate members by State</Typography>
-              <select value={this.state.value} onChange={this.handleChange}>
+              <Typography variant="title">
+                Find Senate members by State
+              </Typography>
+              <select
+                value={this.state.value}
+                onChange={this.handleSenateChange}
+              >
                 <option value="AL">Alabama</option>
                 <option value="AK">Alaska</option>
                 <option value="AZ">Arizona</option>
@@ -155,12 +204,15 @@ export class PoliticianList extends Component {
             <input type="submit" value="Submit" />
           </form>
         </div>
-        <div>{politicianListDisplay} </div>
+
         <div>
           <form onSubmit={this.handleHouseSubmit}>
             <label>
               <Typography>Find House Representatives by State</Typography>
-              <select value={this.state.value} onChange={this.handleChange}>
+              <select
+                value={this.state.value}
+                onChange={this.handleHouseChange}
+              >
                 <option value="AL">Alabama</option>
                 <option value="AK">Alaska</option>
                 <option value="AZ">Arizona</option>
@@ -217,6 +269,8 @@ export class PoliticianList extends Component {
             <input type="submit" value="Submit" />
           </form>
         </div>
+        <div>{senateListDisplay} </div>
+        <div>{houseRepListDisplay}</div>
       </div>
     );
   }

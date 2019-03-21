@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 const Navbar = props => {
   const { auth } = props;
   return (
-    <div style={{ padding: 10, backgroundColor: "lightgray" }}>
+    <div style={{ backgroundColor: "lightgray", width:"100vw"}}>
       {auth.uid ? <SignedInLinks /> : <SignedOutLinks />}
     </div>
   );
