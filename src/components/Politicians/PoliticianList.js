@@ -40,54 +40,58 @@ export class PoliticianList extends Component {
         );
       });
   }
-  // handleHouseSubmit(e) {
-  //   e.preventDefault();
-  //   axios.get(`https://api.propublica.org/congress/v1/members/senate/${this.state.selectedState}/current.json`, {
-  //       headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
-  //     })
-  //     .then(res => {
+  handleHouseSubmit(e) {
 
-  //       const politicianList = res.data.results;
 
-  //       this.setState({politicianList: politicianList})
-  //       console.log(politicianList)
-  //     }
-  //     )
-  //   }
+    // e.preventDefault();
+    // axios.get(`https://api.propublica.org/congress/v1/members/house/${this.state.selectedState}/${district}/current.json`, {
+    //     headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
+    //   })
+    //   .then(res => {
+
+    //     const politicianList = res.data.results;
+
+    //     this.setState({politicianList: politicianList})
+    //     console.log(politicianList)
+    //   }
+    //   )
+    }
 
   render() {
-    const politicianListDisplay = this.state.politicianList && this.state.politicianList.map((g, k) => {
-      const id = g.id
-      return (
-        <div key={k}>
-          <Card>
-            <div>
-              <Typography>
-                {" "}
-                <Button size="large">
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                      color: "black",
-                      fontSize: "200"
-                    }}
-                    to={`/politicians/${id}`}
-                  >
-                    {g.name}
-                  </Link>
-                </Button>
-              </Typography>
-              <Typography variant="caption">Party:</Typography>
-              <Typography variant="h6">{g.party}</Typography>
-              <Typography variant="h6">{g.role}</Typography>
-              <Typography variant="caption">Next Election:</Typography>
-              <Typography variant="h6">{g.next_election}</Typography>
-            </div>
-          </Card>{" "}
-          <br />
-        </div>
-      );
-    });
+    const politicianListDisplay =
+      this.state.politicianList &&
+      this.state.politicianList.map((g, k) => {
+        const id = g.id;
+        return (
+          <div key={k}>
+            <Card>
+              <div>
+                <Typography>
+                  {" "}
+                  <Button size="large">
+                    <Link
+                      style={{
+                        textDecoration: "none",
+                        color: "black",
+                        fontSize: "200"
+                      }}
+                      to={`/politicians/${id}`}
+                    >
+                      {g.name}
+                    </Link>
+                  </Button>
+                </Typography>
+                <Typography variant="caption">Party:</Typography>
+                <Typography variant="h6">{g.party}</Typography>
+                <Typography variant="h6">{g.role}</Typography>
+                <Typography variant="caption">Next Election:</Typography>
+                <Typography variant="h6">{g.next_election}</Typography>
+              </div>
+            </Card>{" "}
+            <br />
+          </div>
+        );
+      });
     return (
       <div>
         <div>
