@@ -42,19 +42,18 @@ export class PoliticianList extends Component {
   }
   handleHouseSubmit(e) {
 
+    e.preventDefault();
+    axios.get(`https://api.propublica.org/congress/v1/{congress}/house/members.json`, {
+        headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
+      })
+      .then(res => {
 
-    // e.preventDefault();
-    // axios.get(`https://api.propublica.org/congress/v1/members/house/${this.state.selectedState}/${district}/current.json`, {
-    //     headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
-    //   })
-    //   .then(res => {
+        const politicianList = res.data.results;
 
-    //     const politicianList = res.data.results;
-
-    //     this.setState({politicianList: politicianList})
-    //     console.log(politicianList)
-    //   }
-    //   )
+        this.setState({politicianList: politicianList})
+        console.log(politicianList)
+      }
+      )
     }
 
   render() {
