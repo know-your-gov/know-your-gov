@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
+// import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+// import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+// import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+// import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Chart from "../Chart.Js/ReusableChart";
 import axios from "axios";
 
@@ -124,9 +124,9 @@ export class PoliticianDetails extends Component {
   render() {
     const committeeDisplay = this.state.committees.map((e, i) => {
       return (
-        <div>
+        <div key={e.code}>
           <Card>
-            <div key={i}>
+            <div >
               <Typography variant="h5">{e.name}</Typography>
               <Typography variant="h6">{e.title}</Typography>
              <Typography variant="h6">Rank {e.rank_in_party}</Typography> 

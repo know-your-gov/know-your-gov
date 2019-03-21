@@ -23,14 +23,14 @@ class BillDetails extends Component {
   }
   getBillDetails = ()=>{
     const {billId} = this.props.match.params
-    const congSenId = /(?<=-)\d{1,6}/
-    const congress = congSenId.exec(billId)[0]
-    const billSlug = billId.split(congSenId)[0].split("-")[0]
+    const split = billId.split("-")
+    const congress = split[1]
+    const billSlug = split[0]
+  
     axios.get(`https://api.propublica.org/congress/v1/${congress}/bills/${billSlug}.json`,{
       headers: {'X-API-Key':process.env.REACT_APP_PRO_PUBLICA}  
     }).then((res)=>{
       this.setState({billDetails: res.data.results[0]})
-      console.log(this.state.billDetails)
     })
   }
   render() {
@@ -43,7 +43,7 @@ class BillDetails extends Component {
             <p>{billDetails.committees}</p>
             <p>Sponsored by: <Link to = {`/politicians/${billDetails.sponsor_id}`}>{billDetails.sponsor_title} {billDetails.sponsor} ({billDetails.sponsor_party}, {billDetails.sponsor_state})</Link></p>
             <p>Introduced(yyyy/mm/dd): {billDetails.introduced_date}</p>
-            <p> <a href ={billDetails.gpo_pdf_uri} >See more information here</a></p>
+            <p> <a href ={billDetails.gpo_pdf_uri} target = "_blank" rel = "noopener noreferrer">See more information here</a></p>
             <div>
               <CardActionArea>
                 <CardActions>
@@ -60,3 +60,10 @@ class BillDetails extends Component {
 }
 
 export default BillDetails;
+
+/*
+  // const congSenId = /(?<=-)\d{1,6}/
+    // const congress = congSenId.exec(billId)[0]
+    // const billSlug = billId.split(congSenId)[0].split("-")[0]
+
+*/

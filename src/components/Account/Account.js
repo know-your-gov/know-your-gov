@@ -15,13 +15,13 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+// import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControl from "@material-ui/core/FormControl";
-import Avatar from "@material-ui/core/Avatar";
-import grey from "@material-ui/core/colors/grey";
+// import Avatar from "@material-ui/core/Avatar";
+// import grey from "@material-ui/core/colors/grey";
 import "./Account.css";
-import axios from "axios";
+// import axios from "axios";
 
 const styles = {
   card: {
@@ -42,64 +42,9 @@ const styles = {
   }
 };
 
-const primary = grey[900];
-const secondary = grey[800];
+// const primary = grey[900];
+// const secondary = grey[800];
 
-const editStyles = theme => ({
-  main: {
-    width: "auto",
-    height: "100vh",
-    display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-      width: 400,
-      marginLeft: "auto",
-      marginRight: "auto"
-    }
-  },
-  paper: {
-    marginTop: theme.spacing.unit * 8,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`
-  },
-  avatar: {
-    margin: theme.spacing.unit,
-    backgroundColor: secondary
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing.unit
-  },
-  submit: {
-    marginTop: theme.spacing.unit * 3,
-    backgroundColor: primary,
-    color: "#fff"
-  },
-  login: {
-    width: "30%",
-    marginBottom: theme.spacing.unit,
-    marginLeft: theme.spacing.unit * 30,
-    backgroundColor: primary,
-    color: "#fff",
-    textDecoration: "none",
-    [theme.breakpoints.down(400 + theme.spacing.unit * 3 * 2)]: {
-      marginLeft: theme.spacing.unit * 22
-    }
-  },
-  zipInput: {
-    marginRight: theme.spacing.unit * 20,
-    width: "50%"
-  }
-});
-
-function editHandler() {
-  //firebase stuff here?!
-  // axios.put()
-}
 
 class Account extends Component {
   constructor(props) {
@@ -214,7 +159,7 @@ class Account extends Component {
               </div>
               <Button
                 variant="contained"
-                color={primary}
+                color="primary"
                 className={classes.login}
                 onClick={this.toggleEdit}
               >
@@ -262,10 +207,10 @@ class Account extends Component {
                   />
                 </FormControl>
                 <Button
-                  disableUnderline="true"
+                 
                   type="submit"
                   variant="contained"
-                  color={primary}
+                  color="primary"
                   // classes={
 
                   // }
@@ -311,3 +256,59 @@ export default compose(
   }),
   withStyles(styles)
 )(Account);
+
+
+/*
+const editStyles = theme => ({
+  main: {
+    width: "auto",
+    height: "100vh",
+    display: "block", // Fix IE 11 issue.
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+      width: 400,
+      marginLeft: "auto",
+      marginRight: "auto"
+    }
+  },
+  paper: {
+    marginTop: theme.spacing.unit * 8,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
+      .spacing.unit * 3}px`
+  },
+  avatar: {
+    margin: theme.spacing.unit,
+    backgroundColor: secondary
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing.unit
+  },
+  submit: {
+    marginTop: theme.spacing.unit * 3,
+    backgroundColor: primary,
+    color: "#fff"
+  },
+  login: {
+    width: "30%",
+    marginBottom: theme.spacing.unit,
+    marginLeft: theme.spacing.unit * 30,
+    backgroundColor: primary,
+    color: "#fff",
+    textDecoration: "none",
+    [theme.breakpoints.down(400 + theme.spacing.unit * 3 * 2)]: {
+      marginLeft: theme.spacing.unit * 22
+    }
+  },
+  zipInput: {
+    marginRight: theme.spacing.unit * 20,
+    width: "50%"
+  }
+});
+
+
+*/

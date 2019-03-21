@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PoliticianCard from "./PoliticianCard";
+// import PoliticianCard from "./PoliticianCard";
 import { Typography } from "@material-ui/core";
 import axios from "axios";
 import Card from "@material-ui/core/Card";
@@ -10,7 +10,7 @@ export class PoliticianList extends Component {
   constructor() {
     super();
     this.state = {
-      selectedState: "",
+      selectedState: "AL",
       politicianList: []
     };
     this.handleChange = this.handleChange.bind(this);
@@ -56,8 +56,8 @@ export class PoliticianList extends Component {
   //   }
 
   render() {
-    const politicianListDisplay = this.state.politicianList.map((g, k) => {
-      const id = g.id;
+    const politicianListDisplay = this.state.politicianList && this.state.politicianList.map((g, k) => {
+      const id = g.id
       return (
         <div key={k}>
           <Card>
