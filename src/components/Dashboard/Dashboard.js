@@ -17,6 +17,7 @@ import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import Clear from "@material-ui/icons/Clear";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
+import ElectionList from './ElectionList'
 import axios from "axios";
 
 const styles = {
@@ -163,6 +164,7 @@ class Dashboard extends Component {
           {/* <Representative repDets = {this.state.senateRep}/>
           <Representative repDets = {this.state.congressRep}/> */}
           {this.showReps()}
+          <ElectionList/>
         </div>
       </div>
     );
