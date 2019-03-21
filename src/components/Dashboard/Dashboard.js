@@ -36,14 +36,18 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.getRecentBills();
-    this.state.user && this.getRepresentatives();
+    this.props.user && this.getRepresentatives();
+    console.log(this.props);
   }
 
-  componentDidUpdate(prevProps) {
-    // if (this.props !== prevProps) {
-      this.getRepresentatives();
-    
-  }
+  // componentDidUpdate(prevProps) {
+  //   // if (this.props === prevProps) {
+  //   console.log(prevProps);
+  //   console.log(this.props);
+
+  //   this.getRepresentatives();
+  //   // }
+  // }
 
   getRecentBills = () => {
     axios
@@ -81,9 +85,6 @@ class Dashboard extends Component {
         );
       });
   };
-
-
-  
 
   billPanelShow = () => {
     const { classes } = this.props;
@@ -127,7 +128,10 @@ class Dashboard extends Component {
     }
   };
 
+  handleBillFavor = () => {};
+
   render() {
+    console.log(this.props);
     return (
       <div style={{ height: "100vh", marginTop: "5vh" }}>
         <div
@@ -143,7 +147,9 @@ class Dashboard extends Component {
           <div style={{ width: "30vw" }}>
             <Card>
               <CardContent>
-                <Typography variant="h6">Welcome userName</Typography>
+                <Typography variant="h6">
+                  Welcome {this.props.user && this.props.user[0].username}
+                </Typography>
               </CardContent>
             </Card>
 
