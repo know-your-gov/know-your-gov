@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { firestoreConnect } from "react-redux-firebase";
+import { getFirestore } from "redux-firestore";
+import { firestoreConnect, getFirebase } from "react-redux-firebase";
+// import firebase from "../../config/fbConfig";
+// import "firebase/auth";
 // import BillCard from "./BillCard";
 import { billFavor } from "../../ducks/authReducer";
 import Button from "@material-ui/core/Button";
@@ -55,8 +58,8 @@ class BillList extends Component {
       });
   };
 
-  getLikedBills = () => {
-    this.setState({ bills: this.props.bill });
+  LikedBillsList = () => {
+    this.setState({ bills: this.props.bills && this.props.bills });
   };
 
   getDislikedBills = () => {};
@@ -100,12 +103,12 @@ class BillList extends Component {
   };
 
   render() {
-    console.log(this.props);
+    console.log(this.props.bills);
     return (
       <div style={{ width: "80vw", margin: "0 auto", marginTop: "5vh" }}>
         <Button onClick={() => this.getRecentBills()}>See Recent</Button>
         <Button onClick={() => this.getUpcomingBills()}>See Upcoming</Button>
-        <Button>See Favored Bills </Button>
+        <Button onClick={this.LikedBillsList}>See Favored Bills </Button>
         <Paper>
           <div>
             <Table>
@@ -138,7 +141,9 @@ class BillList extends Component {
 const mapStateToProps = state => {
   return {
     auth: state.firebase.auth,
-    bills: state.firestore
+    bills:
+      state.firestore.ordered.users &&
+      state.firestore.ordered.users[0]["bills-favored"]
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -154,7 +159,11 @@ export default compose(
   firestoreConnect(state => {
     console.log(state.firestore);
     return [
-      { collection: "users", doc: state.auth.uid, collection: "bills-favored" }
+      {
+        collection: "users",
+        doc: state.auth.uid,
+        subcollections: [{ collection: "bills-favored" }]
+      }
     ];
   })
 )(BillList);
