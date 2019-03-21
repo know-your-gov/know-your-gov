@@ -34,8 +34,8 @@ const Representative = props => {
           <CardMedia
             className={classes.media}
             component="img"
-            src={dets.photoUrl}
-            title="beto"
+            src={dets.photoUrl ? dets.photoUrl : "blankuser.png"}
+            title={dets.name}
           />
         </CardActionArea>
 

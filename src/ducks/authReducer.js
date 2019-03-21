@@ -6,6 +6,7 @@ const SIGNIN = "SIGNIN";
 const SIGNOUT = "SIGNOUT";
 const SIGNUP = "SIGNUP";
 const UPDATE = "UPDATE";
+const BILLFAVOR = "BILLFAVOR";
 
 export const signIn = credentials => {
   return (dispatch, getState, { getFirebase }) => {
@@ -87,6 +88,33 @@ export const updateAccount = newInfo => {
   };
 };
 
+export const billFavor = billId => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+
+    const split = billId.split("-");
+    const congress = split[1];
+    const billSlug = split[0];
+
+    firestore
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("bills-favored")
+      .doc(billId)
+      .set({
+        congress,
+        billSlug
+      })
+      .then(() => {
+        dispatch({ type: `${BILLFAVOR}_SUCCESS` });
+      })
+      .catch(err => {
+        dispatch({ type: `${BILLFAVOR}_ERROR`, err });
+      });
+  };
+};
+
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case `${SIGNIN}_ERROR`:
@@ -99,12 +127,16 @@ const authReducer = (state = initialState, action) => {
       return state;
     case `${SIGNUP}_ERROR`:
       return { ...state, authError: action.err.message };
-    case `${SIGNUP}_SUCCES`:
+    case `${SIGNUP}_SUCCESS`:
       return { ...state, authError: null };
     case `${UPDATE}_SUCCESS`:
       return { ...state, authError: null };
     case `${UPDATE}_ERROR`:
       return { ...state, authError: action.err.message };
+    case `${BILLFAVOR}_SUCCESS`:
+      return { ...state };
+    case `${BILLFAVOR}_ERROR`:
+      return { ...state };
     default:
       return state;
   }

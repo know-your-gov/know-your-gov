@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signUp } from "../../ducks/authReducer";
 import { compose } from "redux";
+import { Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -98,10 +99,10 @@ export class SignUp extends Component {
   };
 
   render() {
-    const { classes, authError } = this.props;
+    const { classes, authError, auth } = this.props;
     console.log(this.state);
     console.log(styles);
-
+    if (auth.uid) return <Redirect to="/dashboard" />;
     return (
       <div className={classes.main}>
         <CssBaseline />
