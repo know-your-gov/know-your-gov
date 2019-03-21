@@ -1,0 +1,20 @@
+.navTitle {
+    float:left;
+    font-size: 1.5em;
+    padding: 5px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+
+.navLinks{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap
+}
+
+
+
+@media (max-width: 660px) {
+   .navTitle{ 
+       float: none;
+padding: none;
+   }}

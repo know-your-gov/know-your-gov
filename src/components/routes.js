@@ -17,7 +17,7 @@ export default (
     <Route path="/login" component={Login} />
     <Route path="/signup" component={SignUp} />
     <Route path="/dashboard" component={Dashboard} />
-    <Route path="/account/:uid" component={Account} />
+    <Route path="/account/" component={Account} />
     <Route path="/bills/:billId" component={BillDetails} />
     <Route exact path="/bills" component={BillList} />
     <Route exact path="/politicians" component={PoliticianList} />
