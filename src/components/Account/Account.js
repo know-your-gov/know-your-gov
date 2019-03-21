@@ -45,7 +45,6 @@ const styles = {
 // const primary = grey[900];
 // const secondary = grey[800];
 
-
 class Account extends Component {
   constructor(props) {
     super(props);
@@ -207,7 +206,6 @@ class Account extends Component {
                   />
                 </FormControl>
                 <Button
-                 
                   type="submit"
                   variant="contained"
                   color="primary"
@@ -256,7 +254,6 @@ export default compose(
   }),
   withStyles(styles)
 )(Account);
-
 
 /*
 const editStyles = theme => ({
