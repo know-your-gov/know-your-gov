@@ -38,7 +38,7 @@ class Dashboard extends Component {
   componentDidMount() {
     this.getRecentBills();
     this.props.user && this.getRepresentatives();
-    console.log(this.props);
+    // console.log(this.props);
   }
 
   // componentDidUpdate(prevProps) {
@@ -132,7 +132,7 @@ class Dashboard extends Component {
   handleBillFavor = () => {};
 
   render() {
-    console.log(this.props);
+    // console.log(this.props);
     return (
       <div style={{ height: "100vh", marginTop: "5vh" }}>
         <div
@@ -165,6 +165,7 @@ class Dashboard extends Component {
           <Representative repDets = {this.state.congressRep}/> */}
           {this.showReps()}
           <ElectionList/>
+          
         </div>
       </div>
     );
