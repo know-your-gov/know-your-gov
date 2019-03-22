@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 // import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Chart from "../Chart.Js/ReusableChart";
 import axios from "axios";
+import {Link} from "react-router-dom"
 
 const styles = {
   card: {
@@ -17,17 +18,6 @@ const styles = {
     marginTop: "5%",
     textAlign: "left",
     display: "flex"
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
-  },
-  title: {
-    fontSize: 14
-  },
-  pos: {
-    marginBottom: 12
   }
 };
 
@@ -169,7 +159,8 @@ export class PoliticianDetails extends Component {
               </div>
             </Card>
           </div>
-          <Chart />
+
+          <Chart/>
 
           <div className="committeeInfo">
             <br />
@@ -190,14 +181,17 @@ export class PoliticianDetails extends Component {
         <div className="contactInfo">
           <Card>
             <Typography variant="caption">Office:</Typography>
-            <Typography variant="headline">
+            <Typography variant="h5">
               {this.state.politician.office}{" "}
             </Typography>
             <Typography>
-              Contact number: {this.state.politician.phone}
+             <Typography variant="caption">Contact number:</Typography> 
+             <Typography variant="h5">{this.state.politician.phone}</Typography> 
             </Typography>
             <Typography>
-              <Button size="large"> {this.state.politician.url}</Button>
+              <Button style={{fontSize:"130%"}}>
+            <a href={`${this.state.politician.url}`} target="_blank" rel="noopener noreferrer">{this.state.politician.url}</a>
+            </Button>
             </Typography>
           </Card>
         </div>

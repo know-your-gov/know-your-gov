@@ -5,6 +5,13 @@ import axios from "axios";
 import Card from "@material-ui/core/Card";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableHead from "@material-ui/core/TableHead";
+import TableCell from "@material-ui/core/TableCell";
+import TableFooter from "@material-ui/core/TableFooter";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
 
 export class PoliticianList extends Component {
   constructor() {
@@ -73,17 +80,16 @@ export class PoliticianList extends Component {
       this.state.senateList.map((g, k) => {
         const id = g.id;
         return (
-          <div key={k}>
-            <Card>
+          <div key={k} style={{ padding: "10px" }}>
+            <Card style={{ width: "30vw", height: "30vh" }}>
               <div>
                 <Typography>
                   {" "}
-                  <Button size="large">
+                  <Button size="large" style={{ fontSize: "1.5em" }}>
                     <Link
                       style={{
                         textDecoration: "none",
-                        color: "black",
-                        fontSize: "200"
+                        color: "darkblue"
                       }}
                       to={`/politicians/${id}`}
                     >
@@ -91,10 +97,14 @@ export class PoliticianList extends Component {
                     </Link>
                   </Button>
                 </Typography>
-                <Typography variant="caption">Party:</Typography>
+                <Typography variant="caption" style={{ fontSize: "105%" }}>
+                  Party:
+                </Typography>
                 <Typography variant="h6">{g.party}</Typography>
                 <Typography variant="h6">{g.role}</Typography>
-                <Typography variant="caption">Next Election:</Typography>
+                <Typography variant="caption" style={{ fontSize: "105%" }}>
+                  Next Election:
+                </Typography>
                 <Typography variant="h6">{g.next_election}</Typography>
               </div>
             </Card>{" "}
@@ -102,43 +112,71 @@ export class PoliticianList extends Component {
           </div>
         );
       });
+
     const houseRepListDisplay =
-      this.state.houseRepList &&
-      this.state.houseRepList.map((h, l) => {
-        const id = h.id;
-        return (
-          <div key={l}>
-            <Card>
-              <div>
-                <Typography>
-                  {" "}
-                  <Button size="large">
-                    <Link
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
-                        fontSize: "200"
-                      }}
-                      to={`/politicians/${id}`}
-                    >
-                      {h.name}
-                    </Link>
-                  </Button>
-                </Typography>
-                {/* <Typography variant="caption">Party:</Typography> */}
-                {/* <Typography variant="h6">{h.party}</Typography>
-                <Typography variant="caption">Next Election:</Typography>
-                <Typography variant="h6">{h.next_election}</Typography> */}
-              </div>
-            </Card>{" "}
-            <br />
-          </div>
-        );
-      });
+      // this.state.houseRepList &&
+      this.state.houseRepList
+        .sort((a, b) => {
+          return a.district - b.district;
+        })
+        .map((h, l) => {
+          const id = h.id;
+          return (
+            <TableRow key={l}>
+              <TableCell>
+                <Button size="small" style={{height:"5vh"}}>
+                  <Link
+                    to={`/politicians/${id}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "darkblue",
+                      fontSize: "100%"
+                    }}
+                  >
+                    {h.name}
+                  </Link>
+                </Button>
+              </TableCell> 
+              
+              <TableCell>{h.id}</TableCell>
+              <TableCell>{h.district}</TableCell>
+              <TableCell>{h.party}</TableCell>
+            </TableRow>
+          );
+        });
+    // <div key={l}>
+    /* <Card>
+                <div>
+                  <Typography>
+                    {" "}
+                    <Button size="large">
+                      <Link
+                        style={{
+                          textDecoration: "none",
+                          color: "black",
+                          fontSize: "200"
+                        }}
+                        to={`/politicians/${id}`}
+                      >
+                        {h.name}
+                      </Link>
+                    </Button>
+                    <Typography variant="h6"> ID: {h.id}</Typography>
+                    <Typography variant="h6"> District {h.district}</Typography>
+                    <Typography variant="h6"> Next Election: {h.next_election}</Typography>
+                  </Typography> */
+
+    /* </div>
+              </Card>{" "}
+              <br /> */
+    /* </div> */
+    //   );
+    // });
 
     return (
       <div>
         <div>
+         
           <form onSubmit={this.handleSenateSubmit}>
             <label>
               <Typography variant="title">
@@ -204,11 +242,11 @@ export class PoliticianList extends Component {
             <input type="submit" value="Submit" />
           </form>
         </div>
-
+        <br/>
         <div>
           <form onSubmit={this.handleHouseSubmit}>
             <label>
-              <Typography>Find House Representatives by State</Typography>
+              <Typography variant="title">Find House Representatives by State</Typography>
               <select
                 value={this.state.value}
                 onChange={this.handleHouseChange}
@@ -269,8 +307,27 @@ export class PoliticianList extends Component {
             <input type="submit" value="Submit" />
           </form>
         </div>
-        <div>{senateListDisplay} </div>
-        <div>{houseRepListDisplay}</div>
+        
+        <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+          {senateListDisplay}
+        </div>
+        <Paper style={{ width: "70vw", margin: "auto" }}>
+          <div>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Id</TableCell>
+                  <TableCell>District</TableCell>
+                  <TableCell>Party</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{houseRepListDisplay}</TableBody>
+
+              <TableFooter />
+            </Table>
+          </div>
+        </Paper>
       </div>
     );
   }
