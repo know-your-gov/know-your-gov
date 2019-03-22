@@ -17,7 +17,7 @@ import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import Clear from "@material-ui/icons/Clear";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
-import ElectionList from './ElectionList'
+import ElectionList from "./ElectionList";
 import axios from "axios";
 
 const styles = {
