@@ -24,7 +24,7 @@ class ElectionList extends React.Component{
     axios.get(`https://www.googleapis.com/civicinfo/v2/elections`,{
       params:{key: process.env.REACT_APP_GOOGLE_CIVIC}
     }).then((res)=>{
-      this.setState({elections: res.data.elections},()=> console.log(this.state.elections))
+      this.setState({elections: res.data.elections})
      })
   }
 
