@@ -3,7 +3,7 @@ import axios from "axios";
 // import Button from '@material-ui/core/Button'
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { firestoreConnect } from "react-redux-firebase";
+
 import { billFavor } from "../../ducks/authReducer";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -72,7 +72,7 @@ class BillDetails extends Component {
               <CardActionArea>
                 <CardActions>
                   <FavoriteBorder
-                    onClick={() => this.props.billFavor(billDetails.bill_id)}
+                    onClick={() => this.props.billFavor(billDetails)}
                   />
                   <Clear />
                 </CardActions>
@@ -92,19 +92,14 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    billFavor: billId => dispatch(billFavor(billId))
+    billFavor: billDetails => dispatch(billFavor(billDetails))
   }; /////////////////////
 };
 export default compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  firestoreConnect(state => {
-    return [
-      { collection: "users", doc: state.auth.uid, collection: "bills-liked" }
-    ];
-  })
+  )
 )(BillDetails);
 
 /*

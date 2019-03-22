@@ -1,5 +1,8 @@
+import BillDetails from "../components/Bills/BillDetails";
+
 const initialState = {
-  authError: null
+  authError: null,
+  billsFavored: []
 };
 
 const SIGNIN = "SIGNIN";
@@ -7,6 +10,7 @@ const SIGNOUT = "SIGNOUT";
 const SIGNUP = "SIGNUP";
 const UPDATE = "UPDATE";
 const BILLFAVOR = "BILLFAVOR";
+const GETBILLSFAVORED = "GETBILLSFAVORED";
 
 export const signIn = credentials => {
   return (dispatch, getState, { getFirebase }) => {
@@ -88,29 +92,57 @@ export const updateAccount = newInfo => {
   };
 };
 
-export const billFavor = billId => {
+export const billFavor = billDetails => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
     const firestore = getFirestore();
 
-    const split = billId.split("-");
+    const split = billDetails["bill_id"].split("-");
     const congress = split[1];
     const billSlug = split[0];
+    const title = billDetails.title;
+    const committee = billDetails.committees;
 
     firestore
       .collection("users")
       .doc(firebase.auth().currentUser.uid)
       .collection("bills-favored")
-      .doc(billId)
+      .doc(billDetails["bill_id"])
       .set({
         congress,
-        billSlug
+        billSlug,
+        title,
+        committee
       })
       .then(() => {
         dispatch({ type: `${BILLFAVOR}_SUCCESS` });
       })
       .catch(err => {
         dispatch({ type: `${BILLFAVOR}_ERROR`, err });
+      });
+  };
+};
+
+export const getBillsFavored = () => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+
+    firestore
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("bills-favored")
+      .get()
+      .then(querySnapshot => {
+        const dataArray = [];
+        querySnapshot.forEach(function(doc) {
+          dataArray.push(doc.data());
+        });
+        return dataArray;
+      })
+      .then(response => {
+        console.log(response);
+        dispatch({ type: `${GETBILLSFAVORED}_SUCCESS`, payload: response });
       });
   };
 };
@@ -137,6 +169,8 @@ const authReducer = (state = initialState, action) => {
       return { ...state };
     case `${BILLFAVOR}_ERROR`:
       return { ...state };
+    case `${GETBILLSFAVORED}_SUCCESS`:
+      return { ...state, billsFavored: action.payload };
     default:
       return state;
   }

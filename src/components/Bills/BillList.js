@@ -6,7 +6,7 @@ import { firestoreConnect, getFirebase } from "react-redux-firebase";
 // import firebase from "../../config/fbConfig";
 // import "firebase/auth";
 // import BillCard from "./BillCard";
-import { billFavor } from "../../ducks/authReducer";
+import { billFavor, getBillsFavored } from "../../ducks/authReducer";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -26,12 +26,22 @@ class BillList extends Component {
     this.state = {
       bills: [],
       page: 0,
-      rowsPerPage: 5
+      rowsPerPage: 5,
+      tracked: false
     };
   }
   componentDidMount() {
     this.getRecentBills();
+    this.props.getBillsFavored();
   }
+
+  // componentDidUpdate(prevProps) {
+  //   console.log(prevProps.bills);
+  //   console.log(this.props.bills);
+  //   if (this.props.bills !== prevProps.bills) {
+  //     this.props.getBillsFavored();
+  //   }
+  // }
 
   getRecentBills = () => {
     axios
@@ -43,7 +53,7 @@ class BillList extends Component {
       )
       .then(res => {
         const bills = res.data.results[0].bills;
-        this.setState({ bills });
+        this.setState({ bills, tracked: false });
       });
   };
 
@@ -55,11 +65,13 @@ class BillList extends Component {
       .then(res => {
         const bills = res.data.results[0].bills;
         this.setState({ bills });
+        this.setState({ tracked: false });
       });
   };
 
   LikedBillsList = () => {
-    this.setState({ bills: this.props.bills && this.props.bills });
+    // this.setState({ bills: this.props.bills && this.props.bills });
+    this.setState({ tracked: true });
   };
 
   getDislikedBills = () => {};
@@ -102,10 +114,53 @@ class BillList extends Component {
     }
   };
 
+  listBillsTracked = () => {
+    const { page, rowsPerPage } = this.state;
+    const { bills } = this.props;
+    const startRow = page * rowsPerPage;
+    const endRow = startRow + rowsPerPage;
+    if (bills && bills.length > 0) {
+      return bills.slice(startRow, endRow).map(bill => {
+        let title = bill.title ? bill.title : bill.description;
+        const id = `${bill.billSlug}-${bill.congress}`;
+        return (
+          <TableRow key={id}>
+            <TableCell>
+              <Link
+                to={`/bills/${id}`}
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                {id}
+              </Link>
+            </TableCell>
+            <TableCell>
+              {title
+                ? title
+                : "Excepteur mollit commodo ipsum esse qui elit labore do do ex tempor aliqua."}
+            </TableCell>
+            <TableCell>
+              {bill.committee
+                ? bill.committee
+                : "Aute occaecat consectetur labore esse."}{" "}
+            </TableCell>
+          </TableRow>
+        );
+      });
+    }
+  };
+
   render() {
-    console.log(this.props.bills);
+    console.log(this.props);
+    console.log(this.state);
     return (
-      <div style={{ width: "80vw", marginLeft: "5vw", marginTop: "5vh", overflow:"scroll"}}>
+      <div
+        style={{
+          width: "80vw",
+          marginLeft: "5vw",
+          marginTop: "5vh",
+          overflow: "scroll"
+        }}
+      >
         <Button onClick={() => this.getRecentBills()}>See Recent</Button>
         <Button onClick={() => this.getUpcomingBills()}>See Upcoming</Button>
         <Button onClick={this.LikedBillsList}>See Favored Bills </Button>
@@ -119,8 +174,12 @@ class BillList extends Component {
                   <TableCell>Committee</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>{this.listBills()}</TableBody>
-              
+              <TableBody>
+                {!this.state.tracked
+                  ? this.listBills()
+                  : this.listBillsTracked()}
+              </TableBody>
+
               <TableFooter>
                 <TableRow>
                   <TableCell>
@@ -141,14 +200,16 @@ class BillList extends Component {
 const mapStateToProps = state => {
   return {
     auth: state.firebase.auth,
-    bills:
-      state.firestore.ordered.users &&
-      state.firestore.ordered.users[0]["bills-favored"]
+    bills: state.auth.billsFavored
+    // bills:
+    //   state.firestore.ordered.users &&
+    //   state.firestore.ordered.users[0]["bills-favored"]
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    billFavor: billId => dispatch(billFavor(billId))
+    billFavor: billId => dispatch(billFavor(billId)),
+    getBillsFavored: () => dispatch(getBillsFavored())
   }; /////////////////////
 };
 export default compose(
