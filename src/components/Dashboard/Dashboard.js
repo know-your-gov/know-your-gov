@@ -164,7 +164,7 @@ class Dashboard extends Component {
           {/* <Representative repDets = {this.state.senateRep}/>
           <Representative repDets = {this.state.congressRep}/> */}
           {this.showReps()}
-          <ElectionList />
+          <ElectionList/>
         </div>
       </div>
     );
