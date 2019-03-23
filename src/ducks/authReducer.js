@@ -2,6 +2,7 @@ import BillDetails from "../components/Bills/BillDetails";
 
 const initialState = {
   authError: null,
+  user: [],
   billsFavored: []
 };
 
@@ -11,6 +12,7 @@ const SIGNUP = "SIGNUP";
 const UPDATE = "UPDATE";
 const BILLFAVOR = "BILLFAVOR";
 const GETBILLSFAVORED = "GETBILLSFAVORED";
+const GETUSER = "GETUSER";
 
 export const signIn = credentials => {
   return (dispatch, getState, { getFirebase }) => {
@@ -92,6 +94,32 @@ export const updateAccount = newInfo => {
   };
 };
 
+export const getUser = () => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+
+    const userData = [];
+    const docRef = firestore
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+
+    docRef
+      .get()
+      .then(doc => {
+        userData.push(doc.data());
+        return userData;
+      })
+      .then(response => {
+        console.log(response);
+        dispatch({ type: `${GETUSER}_SUCCESS`, payload: response });
+      })
+      .catch(err => {
+        dispatch({ type: `${GETUSER}_ERROR`, err });
+      });
+  };
+};
+
 export const billFavor = billDetails => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
@@ -164,6 +192,11 @@ const authReducer = (state = initialState, action) => {
     case `${UPDATE}_SUCCESS`:
       return { ...state, authError: null };
     case `${UPDATE}_ERROR`:
+      return { ...state, authError: action.err.message };
+    case `${GETUSER}_SUCCESS`:
+      console.log(action);
+      return { ...state, user: action.payload[0] };
+    case `${GETUSER}_ERROR`:
       return { ...state, authError: action.err.message };
     case `${BILLFAVOR}_SUCCESS`:
       return { ...state };
