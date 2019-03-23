@@ -164,6 +164,7 @@ class BillList extends Component {
         <Button onClick={() => this.getRecentBills()}>See Recent</Button>
         <Button onClick={() => this.getUpcomingBills()}>See Upcoming</Button>
         <Button onClick={this.LikedBillsList}>See Favored Bills </Button>
+        <Button>See Bills You're Against</Button>
         <Paper>
           <div>
             <Table>
@@ -201,14 +202,10 @@ const mapStateToProps = state => {
   return {
     auth: state.firebase.auth,
     bills: state.auth.billsFavored
-    // bills:
-    //   state.firestore.ordered.users &&
-    //   state.firestore.ordered.users[0]["bills-favored"]
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    billFavor: billId => dispatch(billFavor(billId)),
     getBillsFavored: () => dispatch(getBillsFavored())
   }; /////////////////////
 };
@@ -216,15 +213,5 @@ export default compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  firestoreConnect(state => {
-    console.log(state.firestore);
-    return [
-      {
-        collection: "users",
-        doc: state.auth.uid,
-        subcollections: [{ collection: "bills-favored" }]
-      }
-    ];
-  })
+  )
 )(BillList);

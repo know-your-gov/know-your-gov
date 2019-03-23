@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
+import { getUser } from "../../ducks/authReducer";
 // import firebase from "../../config/fbConfig";
 import "firebase/auth";
 import Card from "@material-ui/core/Card";
@@ -36,19 +37,21 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
+    this.props.getUser();
     this.getRecentBills();
-    this.props.user && this.getRepresentatives();
+    console.log(this.props.user);
+    // this.props.user && this.getRepresentatives();
     // console.log(this.props);
   }
 
-  // componentDidUpdate(prevProps) {
-  //   // if (this.props === prevProps) {
-  //   console.log(prevProps);
-  //   console.log(this.props);
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps) {
+      // console.log(prevProps);
+      // console.log(this.props);
 
-  //   this.getRepresentatives();
-  //   // }
-  // }
+      this.props.user && this.getRepresentatives();
+    }
+  }
 
   getRecentBills = () => {
     axios
@@ -70,8 +73,7 @@ class Dashboard extends Component {
     axios
       .get(
         `https://www.googleapis.com/civicinfo/v2/representatives?address=${user &&
-          user[0]
-            .address}&levels=country&roles=legislatorLowerBody&roles=legislatorUpperBody&key=${
+          user.address}&levels=country&roles=legislatorLowerBody&roles=legislatorUpperBody&key=${
           process.env.REACT_APP_GOOGLE_CIVIC
         }`,
         {
@@ -132,7 +134,7 @@ class Dashboard extends Component {
   handleBillFavor = () => {};
 
   render() {
-    // console.log(this.props);
+    console.log(this.props);
     return (
       <div style={{ height: "100vh", marginTop: "5vh" }}>
         <div
@@ -149,7 +151,7 @@ class Dashboard extends Component {
             <Card>
               <CardContent>
                 <Typography variant="h6">
-                  Welcome {this.props.user && this.props.user[0].username}
+                  Welcome {this.props.user && this.props.user.username}
                 </Typography>
               </CardContent>
             </Card>
@@ -164,8 +166,7 @@ class Dashboard extends Component {
           {/* <Representative repDets = {this.state.senateRep}/>
           <Representative repDets = {this.state.congressRep}/> */}
           {this.showReps()}
-          <ElectionList/>
-          
+          <ElectionList />
         </div>
       </div>
     );
@@ -178,15 +179,21 @@ Dashboard.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    user: state.firestore.ordered.users,
+    user: state.auth.user,
     auth: state.firebase.auth
   };
 }
 
+const mapDispatchToProps = dispatch => {
+  return {
+    getUser: () => dispatch(getUser())
+  };
+};
+
 export default compose(
-  connect(mapStateToProps),
-  firestoreConnect(state => {
-    return [{ collection: "users", doc: state.auth.uid }];
-  }),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   withStyles(styles)
 )(Dashboard);
