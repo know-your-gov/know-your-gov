@@ -8,7 +8,10 @@ import Typography from "@material-ui/core/Typography";
 // import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Chart from "../Chart.Js/ReusableChart";
 import axios from "axios";
-import {Link} from "react-router-dom"
+
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { politicianFavor } from "../../ducks/authReducer";
 
 const styles = {
   card: {
@@ -112,7 +115,9 @@ export class PoliticianDetails extends Component {
   }
 
   render() {
-    const committeeDisplay = this.state.committees.map((e, i) => {
+const {politician} = this.state
+
+    const committeeDisplay = this.state.committees.map((e) => {
       return (
         <div key={e.code}>
           <Card>
@@ -157,6 +162,8 @@ export class PoliticianDetails extends Component {
                 <Typography variant="caption">State:</Typography>
                 {this.state.politician.state}
               </div>
+              <hr/>
+              <img className="favor" src="greenupvote.ico" alt="favor" width="30vw" height ="25vh" onClick ={() => this.props.politicianFavor(politician)}></img>
             </Card>
           </div>
 
@@ -174,6 +181,7 @@ export class PoliticianDetails extends Component {
                 
                 {/* <Typography variant="caption">Bills Sponsored:</Typography>
                 {this.state.politician.billsSponsored} */}
+
               </div>
             
           </div>
@@ -199,5 +207,20 @@ export class PoliticianDetails extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    auth: state.firebase.auth
+  };
+};
 
-export default PoliticianDetails;
+const mapDispatchToProps = dispatch => {
+  return {
+    politicianFavor: politician => dispatch(politicianFavor(politician))
+  };
+};
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(PoliticianDetails);
