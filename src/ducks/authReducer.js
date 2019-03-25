@@ -1,7 +1,3 @@
-import PoliticianDetails from "../components/Politicians/PoliticianDetails";
-
-// import BillDetails from "../components/Bills/BillDetails";
-
 const initialState = {
   authError: null,
   user: [],
