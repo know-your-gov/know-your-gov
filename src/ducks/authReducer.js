@@ -1,5 +1,3 @@
-// import BillDetails from "../components/Bills/BillDetails";
-
 const initialState = {
   authError: null,
   user: [],
