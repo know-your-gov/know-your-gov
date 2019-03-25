@@ -13,13 +13,32 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import "./Representative.css";
 
 const styles = {
   media: {
     width: "100%"
   },
   root: {
-    width: "20vw"
+    width: "280px",
+    height: "500px",
+    margin: "0.5rem"
+  },
+  content: {
+    fontSize: "1rem"
+  },
+  h5: {
+    fontSize: "1rem"
+  },
+  repInfo: {
+    height: "100%",
+    fontSize: "0.9rem",
+    paddingTop: ".5rem",
+    textAlign: "left",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "space-between",
+    padding: "0"
   }
 };
 
@@ -28,11 +47,11 @@ const Representative = props => {
   const dets = props.repDets;
   return (
     <div>
-      <Card className={classes.root}>
+      <Card className="root">
         {/* representative picture */}
         <CardActionArea>
           <CardMedia
-            className={classes.media}
+            className="media"
             component="img"
             src={dets.photoUrl ? dets.photoUrl : "blankuser.png"}
             title={dets.name}
@@ -40,20 +59,20 @@ const Representative = props => {
         </CardActionArea>
 
         {/* representative contact details */}
-        <CardContent>
-          <Typography variant="h5">
+        <CardContent className="content">
+          <Typography variant="h5" className="repCardTitle">
             {dets.title} {dets.name}
           </Typography>
-          <p>Phone: {dets.phones[0]}</p>
-          <p>
-            Mailing: {dets.address[0].line1} {dets.address[0].city},{" "}
-            {dets.address[0].state}, {dets.address[0].zip}
-          </p>
+          <div className="repInfo">
+            <div>
+              <p>Phone: {dets.phones[0]}</p>
+              <p>
+                Mailing: {dets.address[0].line1} {dets.address[0].city},{" "}
+                {dets.address[0].state}, {dets.address[0].zip}
+              </p>
+            </div>
+          </div>
         </CardContent>
-
-        <CardActions>
-          <Button>See more</Button>
-        </CardActions>
       </Card>
     </div>
   );

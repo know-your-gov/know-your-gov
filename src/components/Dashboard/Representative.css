@@ -1,0 +1,47 @@
+.root {
+  width: 280px;
+  height: 510px;
+  margin: 0.5rem;
+  background: transparent;
+}
+
+.media {
+  width: 100%;
+}
+
+.content {
+  font-size: 1rem;
+  /* height: 100%; */
+}
+
+.repCardTitle {
+  font-size: 1rem;
+}
+
+.repInfo {
+  height: 100%;
+  font-size: 0.9rem;
+  padding-top: 0.5rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  color: rgb(19, 56, 189);
+
+  /* align-content: space-between; */
+}
+
+.repInfo p {
+  padding-bottom: 0.5rem;
+}
+
+.MuiPaper-root-32.MuiPaper-elevation1-35.MuiPaper-rounded-33.MuiCard-root-31 {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 640px) {
+  .root {
+    width: 100vw;
+    margin: 0;
+    height: auto;
+  }
+}

@@ -20,6 +20,7 @@ import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import ElectionList from "./ElectionList";
 import axios from "axios";
+import "./Dashboard.css";
 
 const styles = {
   root: {
@@ -126,7 +127,11 @@ class Dashboard extends Component {
     const { officials } = this.state;
     if (officials.length > 0) {
       return officials.map((official, i) => {
-        return <Representative repDets={official} key={i} />;
+        return (
+          <div className="rep">
+            <Representative repDets={official} key={i} />
+          </div>
+        );
       });
     }
   };
@@ -137,36 +142,30 @@ class Dashboard extends Component {
     // console.log(this.props);
     return (
       <div style={{ height: "100vh", marginTop: "5vh" }}>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "space-around",
-            height: "70vh",
-            margin: "0 auto"
-          }}
-        >
+        <div className="dashboard-main">
           {/* welcome card */}
-          <div style={{ width: "30vw" }}>
+          <div className="card">
             <Card>
               <CardContent>
                 <Typography variant="h6">
-                  Welcome {this.props.user && this.props.user.username}
+                  Welcome {this.props.user && this.props.user.username}!
                 </Typography>
               </CardContent>
             </Card>
-
-            <div style={{ width: "20vw", marginTop: "5vh" }}>
-              <Typography variant="h5">Recent Bills</Typography>
-              {this.billPanelShow()}
-            </div>
           </div>
 
+          <div className="typography">
+            <Typography variant="h5">Your U.S. Legislators</Typography>
+            <span className="undertext">(Based on your physical address)</span>
+          </div>
           {/* card showing senate representatitve */}
           {/* <Representative repDets = {this.state.senateRep}/>
           <Representative repDets = {this.state.congressRep}/> */}
-          {this.showReps()}
-          <ElectionList />
+
+          <div className="reps">{this.showReps()}</div>
+          <div className="elections">
+            <ElectionList />
+          </div>
         </div>
       </div>
     );
