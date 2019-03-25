@@ -1,0 +1,47 @@
+.dashboard-main {
+  height: 100%;
+  color: white;
+  /* background: black; */
+}
+
+/* dashboard main style display: "flex",
+flexWrap: "wrap",
+justifyContent: "center",
+height: "70vh",
+margin: "0 auto" */
+.card {
+  width: 60vw;
+  margin: 0 auto;
+}
+
+.reps {
+  width: 60vw;
+  margin: 0 auto;
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.undertext {
+  font-size: 0.8rem;
+}
+
+/* Card style={{ width: "30vw" }} */
+
+/* Typography style style={{ width: "20vw", marginTop: "5vh" }} */
+
+h5.MuiTypography-root-60.MuiTypography-h5-76 {
+  color: rgb(208, 49, 45);
+}
+.typography {
+  width: 100vw;
+  margin: 0 auto;
+  margin-top: 5vh;
+}
+
+@media (max-width: 903px) {
+  .reps {
+    flex-direction: column;
+    align-items: center;
+  }
+}
