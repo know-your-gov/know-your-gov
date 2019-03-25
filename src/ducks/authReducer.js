@@ -1,7 +1,8 @@
 const initialState = {
   authError: null,
   user: [],
-  billsFavored: []
+  billsFavored: [],
+  politiciansFavored: []
 };
 
 const SIGNIN = "SIGNIN";
@@ -11,6 +12,8 @@ const UPDATE = "UPDATE";
 const BILLFAVOR = "BILLFAVOR";
 const GETBILLSFAVORED = "GETBILLSFAVORED";
 const GETUSER = "GETUSER";
+const POLITICIANFAVOR = "POLITICIANFAVOR";
+const GETPOLITICIANSFAVORED = "GETPOLITICIANSFAVORED";
 
 export const signIn = credentials => {
   return (dispatch, getState, { getFirebase }) => {
@@ -173,6 +176,63 @@ export const getBillsFavored = () => {
   };
 };
 
+export const politicianFavor = poliDetails => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+
+    const split = poliDetails["id"].split("-");
+    const id = split[0];
+    const name = poliDetails["name"];
+    const title = poliDetails["title"];
+    const state = poliDetails["state"];
+    const party = poliDetails["party"];
+
+    firestore
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("politicians-favored")
+      .doc(poliDetails["id"])
+      .set({
+        id,
+        name,
+        title,
+        state,
+        party
+      })
+      .then(() => {
+        dispatch({ type: `${POLITICIANFAVOR}_SUCCESS` });
+      })
+      .catch(err => {
+        dispatch({ type: `${POLITICIANFAVOR}_ERROR`, err });
+      });
+  };
+};
+
+export const getPoliticiansFavored = () => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+
+    firestore
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("politicians-favored")
+      .get()
+      .then(querySnapshot => {
+        const dataArray = [];
+        querySnapshot.forEach(function(doc) {
+          dataArray.push(doc.data());
+        });
+        return dataArray;
+      })
+      .then(response => {
+        console.log(response);
+        dispatch({ type: `${GETPOLITICIANSFAVORED}_SUCCESS`, payload: response });
+      });
+  };
+};
+
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case `${SIGNIN}_ERROR`:
@@ -200,8 +260,14 @@ const authReducer = (state = initialState, action) => {
       return { ...state };
     case `${BILLFAVOR}_ERROR`:
       return { ...state };
+    case `${POLITICIANFAVOR}_SUCCESS`:
+      return { ...state };
+    case `${POLITICIANFAVOR}_ERROR`:
+      return { ...state };
     case `${GETBILLSFAVORED}_SUCCESS`:
       return { ...state, billsFavored: action.payload };
+    case `${GETPOLITICIANSFAVORED}_SUCCESS`:
+      return { ...state, politiciansFavored: action.payload };
     default:
       return state;
   }
