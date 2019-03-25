@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { getFirestore } from "redux-firestore";
-import { firestoreConnect, getFirebase } from "react-redux-firebase";
+// import { getFirestore } from "redux-firestore";
+// import { firestoreConnect, getFirebase } from "react-redux-firebase";
 // import firebase from "../../config/fbConfig";
 // import "firebase/auth";
 // import BillCard from "./BillCard";
-import { billFavor, getBillsFavored } from "../../ducks/authReducer";
+import { /*billFavor,*/ getBillsFavored } from "../../ducks/authReducer";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -19,6 +19,7 @@ import ArrowForwardIos from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIos from "@material-ui/icons/ArrowBackIos";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Input from '@material-ui/core/Input'
 
 class BillList extends Component {
   constructor() {
@@ -27,21 +28,14 @@ class BillList extends Component {
       bills: [],
       page: 0,
       rowsPerPage: 5,
-      tracked: false
+      tracked: false,
+      search: "",
     };
   }
   componentDidMount() {
     this.getRecentBills();
     this.props.getBillsFavored();
   }
-
-  // componentDidUpdate(prevProps) {
-  //   console.log(prevProps.bills);
-  //   console.log(this.props.bills);
-  //   if (this.props.bills !== prevProps.bills) {
-  //     this.props.getBillsFavored();
-  //   }
-  // }
 
   getRecentBills = () => {
     axios
@@ -68,7 +62,23 @@ class BillList extends Component {
         this.setState({ tracked: false });
       });
   };
-
+  searchInput =(e)=>{
+    this.setState({search:e.target.value})
+  }
+  searchBills = ()=>{
+    this.setState({tracked:false})
+    if(this.state.search.length>0){
+      let {search} = this.state
+      return axios.get(`https://api.propublica.org/congress/v1/bills/search.json?query=${search}`,{
+        headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
+      }).then(res=>{
+        const bills = res.data.results[0].bills;
+        this.setState({bills})
+      })  
+    }
+    
+  }
+ 
   LikedBillsList = () => {
     // this.setState({ bills: this.props.bills && this.props.bills });
     this.setState({ tracked: true });
@@ -149,8 +159,9 @@ class BillList extends Component {
     }
   };
 
+
   render() {
-    console.log(this.props);
+    // console.log(this.props);
     console.log(this.state);
     return (
       <div
@@ -163,11 +174,17 @@ class BillList extends Component {
       >
         <Button onClick={() => this.getRecentBills()}>See Recent</Button>
         <Button onClick={() => this.getUpcomingBills()}>See Upcoming</Button>
-        <Button onClick={this.LikedBillsList}>See Favored Bills </Button>
-        <Button>See Bills You're Against</Button>
+        <Button onClick={()=>this.LikedBillsList()}>See Favored Bills </Button>
+        <Button>See Bills You're Against</Button><br/>
+        <Input onChange = {(e)=>this.searchInput(e)}/>
+        <Button onClick = {()=>this.searchBills()}>Search Bills</Button>
+
         <Paper>
+
           <div>
+
             <Table>
+
               <TableHead>
                 <TableRow>
                   <TableCell>Bill Id</TableCell>
@@ -175,10 +192,12 @@ class BillList extends Component {
                   <TableCell>Committee</TableCell>
                 </TableRow>
               </TableHead>
+
               <TableBody>
                 {!this.state.tracked
                   ? this.listBills()
                   : this.listBillsTracked()}
+
               </TableBody>
 
               <TableFooter>
@@ -190,9 +209,13 @@ class BillList extends Component {
                   {/* <TableCell>Page {this.state.page+1}</TableCell> */}
                 </TableRow>
               </TableFooter>
+
             </Table>
+
           </div>
+
         </Paper>
+
       </div>
     );
   }
