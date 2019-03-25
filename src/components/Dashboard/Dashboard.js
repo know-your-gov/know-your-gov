@@ -40,7 +40,7 @@ class Dashboard extends Component {
   componentDidMount() {
     this.props.getUser();
     this.getRecentBills();
-    console.log(this.props.user);
+    // console.log(this.props.user);
     // this.props.user && this.getRepresentatives();
     // console.log(this.props);
   }
@@ -84,8 +84,8 @@ class Dashboard extends Component {
         }
       )
       .then(res => {
-        this.setState({ officials: res.data.officials }, () =>
-          console.log(this.state.officials)
+        this.setState({ officials: res.data.officials } /*, () =>
+          console.log(this.state.officials)*/
         );
       });
   };
@@ -139,7 +139,7 @@ class Dashboard extends Component {
   handleBillFavor = () => {};
 
   render() {
-    console.log(this.props);
+    // console.log(this.props);
     return (
       <div style={{ height: "100vh", marginTop: "5vh" }}>
         <div className="dashboard-main">

@@ -112,7 +112,7 @@ export const getUser = () => {
         return userData;
       })
       .then(response => {
-        console.log(response);
+        /*console.log(response);*/
         dispatch({ type: `${GETUSER}_SUCCESS`, payload: response });
       })
       .catch(err => {
@@ -236,12 +236,12 @@ export const getPoliticiansFavored = () => {
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case `${SIGNIN}_ERROR`:
-      console.log(action);
+      // console.log(action);
       return { ...state, authError: action.err.message };
     case `${SIGNIN}_SUCCESS`:
       return { ...state, authError: null };
     case `${SIGNOUT}_SUCCESS`:
-      console.log("signout success");
+      // console.log("signout success");
       return state;
     case `${SIGNUP}_ERROR`:
       return { ...state, authError: action.err.message };
@@ -252,7 +252,7 @@ const authReducer = (state = initialState, action) => {
     case `${UPDATE}_ERROR`:
       return { ...state, authError: action.err.message };
     case `${GETUSER}_SUCCESS`:
-      console.log(action);
+      // console.log(action);
       return { ...state, user: action.payload[0] };
     case `${GETUSER}_ERROR`:
       return { ...state, authError: action.err.message };

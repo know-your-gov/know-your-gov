@@ -74,10 +74,10 @@ class Account extends Component {
 
   render() {
     const { classes } = this.props;
-    console.log(this.state);
-    console.log(firebase.auth().currentUser);
+    // console.log(this.state);
+    // console.log(firebase.auth().currentUser);
     const { user } = this.props;
-    console.log(user);
+    // console.log(user);
     return (
       <div className="accountPage">
         {!this.state.edit ? (
