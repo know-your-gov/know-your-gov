@@ -19,6 +19,7 @@
     "redux": "^4.0.1",
     "redux-firestore": "^0.7.2",
     "redux-thunk": "^2.3.0",
+    "rimraf": "^2.6.3",
     "toastify": "^1.0.12"
   },
   "scripts": {
