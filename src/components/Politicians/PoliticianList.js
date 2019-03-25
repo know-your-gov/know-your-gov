@@ -12,6 +12,9 @@ import TableCell from "@material-ui/core/TableCell";
 import TableFooter from "@material-ui/core/TableFooter";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { connect } from "react-redux";
+import { compose } from "redux";
+import {getPoliticiansFavored} from "../../ducks/authReducer"
 
 export class PoliticianList extends Component {
   constructor() {
@@ -20,7 +23,8 @@ export class PoliticianList extends Component {
       selectedSenateState: "AL",
       selectedHouseState: "AL",
       senateList: [],
-      houseRepList: []
+      houseRepList: [],
+      favoredPoliticians: []
     };
     this.handleSenateChange = this.handleSenateChange.bind(this);
     this.handleHouseChange = this.handleHouseChange.bind(this);
@@ -33,6 +37,16 @@ export class PoliticianList extends Component {
   }
   handleHouseChange(e) {
     this.setState({ selectedHouseState: e.target.value });
+  }
+
+// componentDidMount(){
+//   this.props.getPoliticiansFavored()
+//   this.setState({favoredPoliticians: this.props.dataArray});
+//   console.log(this.state.favoredPoliticians)
+// }
+
+  jestTestSuccess() {
+    return "test works";
   }
 
   handleSenateSubmit(e) {
@@ -124,7 +138,7 @@ export class PoliticianList extends Component {
           return (
             <TableRow key={l}>
               <TableCell>
-                <Button size="small" style={{height:"5vh"}}>
+                <Button size="small" style={{ height: "5vh" }}>
                   <Link
                     to={`/politicians/${id}`}
                     style={{
@@ -136,47 +150,17 @@ export class PoliticianList extends Component {
                     {h.name}
                   </Link>
                 </Button>
-              </TableCell> 
-              
+              </TableCell>
+
               <TableCell>{h.id}</TableCell>
               <TableCell>{h.district}</TableCell>
               <TableCell>{h.party}</TableCell>
             </TableRow>
           );
         });
-    // <div key={l}>
-    /* <Card>
-                <div>
-                  <Typography>
-                    {" "}
-                    <Button size="large">
-                      <Link
-                        style={{
-                          textDecoration: "none",
-                          color: "black",
-                          fontSize: "200"
-                        }}
-                        to={`/politicians/${id}`}
-                      >
-                        {h.name}
-                      </Link>
-                    </Button>
-                    <Typography variant="h6"> ID: {h.id}</Typography>
-                    <Typography variant="h6"> District {h.district}</Typography>
-                    <Typography variant="h6"> Next Election: {h.next_election}</Typography>
-                  </Typography> */
-
-    /* </div>
-              </Card>{" "}
-              <br /> */
-    /* </div> */
-    //   );
-    // });
-
     return (
       <div>
         <div>
-         
           <form onSubmit={this.handleSenateSubmit}>
             <label>
               <Typography variant="title">
@@ -242,11 +226,13 @@ export class PoliticianList extends Component {
             <input type="submit" value="Submit" />
           </form>
         </div>
-        <br/>
+        <br />
         <div>
           <form onSubmit={this.handleHouseSubmit}>
             <label>
-              <Typography variant="title">Find House Representatives by State</Typography>
+              <Typography variant="title">
+                Find House Representatives by State
+              </Typography>
               <select
                 value={this.state.value}
                 onChange={this.handleHouseChange}
@@ -307,7 +293,6 @@ export class PoliticianList extends Component {
             <input type="submit" value="Submit" />
           </form>
         </div>
-        
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           {senateListDisplay}
         </div>
@@ -328,9 +313,27 @@ export class PoliticianList extends Component {
             </Table>
           </div>
         </Paper>
+        {/* Favored politicians:
+        {this.state.favoredPoliticians} */}
       </div>
     );
   }
 }
 
-export default PoliticianList;
+const mapStateToProps = state => {
+  return {
+    auth: state.firebase.auth,
+    politicians: state.auth.politiciansFavored
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getPoliticiansFavored: () => dispatch(getPoliticiansFavored())
+  }; /////////////////////
+};
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(PoliticianList);
