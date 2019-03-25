@@ -95,12 +95,18 @@ const mapDispatchToProps = dispatch => {
     billFavor: billDetails => dispatch(billFavor(billDetails))
   }; /////////////////////
 };
+
+
+
 export default compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
   )
 )(BillDetails);
+
+
+
 
 /*
   // const congSenId = /(?<=-)\d{1,6}/

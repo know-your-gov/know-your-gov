@@ -14,14 +14,24 @@ class PollingInfo extends React.Component{
   }
   componentDidMount(){
     this.getPollingInfo()
+    // console.log(this.props)
   }
+
+  componentDidUpdate(prevProps){
+    if(this.props.address!==prevProps.address){
+      this.getPollingInfo()
+    }
+  }
+
 
   getPollingInfo = async()=>{
     let id = this.props.electionID
+    let {address} = this.props
+    console.log(address)
     let info = await axios.get(`https://www.googleapis.com/civicinfo/v2/voterinfo`,{
     params: {
       key:process.env.REACT_APP_GOOGLE_CIVIC,
-      address:"500 South Ervay Street",
+      address,
       electionId: id
     }
     }
@@ -72,7 +82,8 @@ class PollingInfo extends React.Component{
   }
 }
 
-export default PollingInfo
+
+export default (PollingInfo)
 
 /* 
   api response structure

@@ -1,12 +1,22 @@
 import React from 'react'
+import axios from 'axios'
+
+//component imports 
+import PollingInfo from './PollingInfo'
+
+//redux imports
+import {connect} from 'react-redux'
+import {compose} from 'redux'
+import {getUser} from '../../ducks/authReducer'
+
+//material UI imports
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
-import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import PollingInfo from './PollingInfo'
+//End
 
 class ElectionList extends React.Component{
   constructor(){
@@ -17,7 +27,16 @@ class ElectionList extends React.Component{
   }
 
   componentDidMount(){
+    this.props.getUser()
     this.getUpcomingElections()
+    console.log(this.props)
+  }
+
+  componentDidUpdate(prevProps){
+    if(this.props.address!==prevProps.address){
+          return this.props.user && this.props.user
+      }
+      console.log(this.props)
   }
 
   getUpcomingElections=()=>{
@@ -38,7 +57,7 @@ class ElectionList extends React.Component{
           </ExpansionPanelSummary>
 
           <ExpansionPanelDetails>
-            <PollingInfo electionID = {election.id}/>
+            <PollingInfo electionID = {election.id} address = {this.props.user.address}/>
           </ExpansionPanelDetails>
         </ExpansionPanel>
       )
@@ -62,4 +81,18 @@ class ElectionList extends React.Component{
   }
 }
 
-export default ElectionList
+
+function mapStateToProps(state){
+  return{
+    user: state.auth.user,
+    auth: state.firebase.auth,
+  }
+}
+
+// function mapDispatchToProps(dispatch){
+//   return{
+//     getUser: ()=>dispatch(getUser())
+//   }
+// }
+
+export default compose(connect(mapStateToProps, {getUser}))(ElectionList)
