@@ -11,7 +11,7 @@ import axios from "axios";
 
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { politicianFavor } from "../../ducks/authReducer";
+import { politicianFavor, politicianOppose } from "../../ducks/authReducer";
 
 const styles = {
   card: {
@@ -29,7 +29,9 @@ export class PoliticianDetails extends Component {
     super();
     this.state = {
       politician: {},
-      committees: []
+      committees: [],
+      favored: false,
+      opposed: false,
     };
   }
 
@@ -145,6 +147,10 @@ const {politician} = this.state
           <div className="mainInfo" style={styles.card}>
             <Card>
               <div>
+              <div style={{display: "flex", float:"right"}}>
+              <img style={{padding:"10px"}}className="favorButton" src="upvote.png" alt="favor" width="28vw" height ="25vh" onClick ={() => this.props.politicianFavor(politician)}></img>
+              <img style={{padding: "10px"}} className="againstButton" src="downvote.png" alt="favor" width="25vw" height ="25vh" onClick ={() => this.props.politicianOppose(politician)}></img>
+           </div>
                 <Typography variant="caption">
                   {" "}
                   Member ID: {this.state.politician.id}{" "}
@@ -162,9 +168,7 @@ const {politician} = this.state
                 <Typography variant="caption">State:</Typography>
                 {this.state.politician.state}
               </div>
-              <hr/>
-              <img className="favor" src="greenupvote.ico" alt="favor" width="30vw" height ="25vh" onClick ={() => this.props.politicianFavor(politician)}></img>
-            </Card>
+               </Card>
           </div>
 
           <Chart/>
@@ -215,9 +219,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    politicianFavor: politician => dispatch(politicianFavor(politician))
+    politicianFavor: politician => dispatch(politicianFavor(politician)),
+    politicianOppose: politician => dispatch(politicianOppose(politician))
   };
 };
+
 export default compose(
   connect(
     mapStateToProps,
