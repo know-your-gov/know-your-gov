@@ -3,7 +3,7 @@ const initialState = {
   user: [],
   billsFavored: [],
   politiciansFavored: [],
-  politicianOpposed: []
+  politiciansOpposed: []
 };
 
 const SIGNIN = "SIGNIN";
