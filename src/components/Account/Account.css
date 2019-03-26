@@ -1,22 +1,34 @@
 .accountPage {
   width: 100%;
-  /* height: 100vh; */
+  height: 100vh;
 }
+
+/* .MuiPaper-root-35.MuiPaper-elevation1-38.MuiPaper-rounded-36.MuiCard-root-34.Account-card-30 {
+  background: transparent;
+  color: white;
+}
+
+.MuiTypography-root-63.MuiTypography-h5-79,
+.MuiTypography-root-63.MuiTypography-body1-72.MuiTypography-colorTextSecondary-96.MuiTypography-gutterBottom-90.Account-title-32 {
+  color: white;
+  text-align: left;
+} */
 
 .accountCard {
   width: 50%;
-  /* height: 100vh; */
+  height: 100vh;
   margin: 0 auto;
   margin-top: 10vh;
 }
-
+/* 
 .MuiTypography-colorTextSecondary-34 {
   color: rgba(0, 0, 0, 0.54);
   text-align: left;
-}
+} */
 
 .title {
   font-size: 1.5rem;
   padding-bottom: 1.5rem;
   text-decoration: underline;
+  color: white;
 }

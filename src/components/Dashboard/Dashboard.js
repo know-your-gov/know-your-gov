@@ -39,7 +39,6 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.props.getUser();
-    this.getRecentBills();
     // console.log(this.props.user);
     // this.props.user && this.getRepresentatives();
     // console.log(this.props);
@@ -48,26 +47,11 @@ class Dashboard extends Component {
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
       // console.log(prevProps);
-      // console.log(this.props);
+      console.log(this.props);
 
       this.props.user && this.getRepresentatives();
     }
   }
-
-  getRecentBills = () => {
-    axios
-      .get(
-        "https://api.propublica.org/congress/v1/115/both/bills/introduced.json",
-        {
-          headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
-        }
-      )
-      .then(res => {
-        const bills = res.data.results[0].bills;
-        const recents = bills.slice(0, 6);
-        this.setState({ bills: recents });
-      });
-  };
 
   getRepresentatives = () => {
     const { user } = this.props;
@@ -84,43 +68,14 @@ class Dashboard extends Component {
         }
       )
       .then(res => {
-        this.setState({ officials: res.data.officials } /*, () =>
+        console.log(res);
+        this.setState(
+          {
+            officials: res.data.officials
+          } /*, () =>
           console.log(this.state.officials)*/
         );
       });
-  };
-
-  billPanelShow = () => {
-    const { classes } = this.props;
-    const bills = this.state.bills;
-    if (bills.length > 0) {
-      return (
-        <div style={{ width: "20vw" }}>
-          {bills.map(bill => {
-            return (
-              <ExpansionPanel key={bill.bill_id} className={classes.root}>
-                <ExpansionPanelSummary>
-                  <Typography>Bill {bill.bill_id}</Typography>
-                </ExpansionPanelSummary>
-
-                <ExpansionPanelDetails>
-                  <Typography>
-                    {bill.title}
-                    <br />
-                    <FavoriteBorder />
-                    <Clear />
-                    <br />
-                    <Link to={`/bills/${bill.bill_id}`}>
-                      <Button>See Details</Button>
-                    </Link>
-                  </Typography>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-            );
-          })}
-        </div>
-      );
-    }
   };
 
   showReps = () => {
@@ -128,9 +83,9 @@ class Dashboard extends Component {
     if (officials.length > 0) {
       return officials.map((official, i) => {
         return (
-          <div className="rep">
+          <li>
             <Representative repDets={official} key={i} />
-          </div>
+          </li>
         );
       });
     }
@@ -139,7 +94,7 @@ class Dashboard extends Component {
   handleBillFavor = () => {};
 
   render() {
-    // console.log(this.props);
+    console.log(this.props.user);
     return (
       <div style={{ height: "100vh", marginTop: "5vh" }}>
         <div className="dashboard-main">
@@ -155,14 +110,15 @@ class Dashboard extends Component {
           </div>
 
           <div className="typography">
-            <Typography variant="h5">Your U.S. Legislators</Typography>
+            <Typography variant="h4">Your U.S. Legislators</Typography>
             <span className="undertext">(Based on your physical address)</span>
           </div>
           {/* card showing senate representatitve */}
           {/* <Representative repDets = {this.state.senateRep}/>
           <Representative repDets = {this.state.congressRep}/> */}
-
-          <div className="reps">{this.showReps()}</div>
+          <div className="reps">
+            <ul>{this.showReps()}</ul>
+          </div>
           <div className="elections">
             <ElectionList />
           </div>
