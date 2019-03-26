@@ -27,7 +27,8 @@ const styles = {
   card: {
     minWidth: 275,
     maxWidth: 700,
-    marginRight: "5%"
+    // marginRight: "5%",
+    background: "transparent"
   },
   bullet: {
     display: "inline-block",
@@ -35,10 +36,16 @@ const styles = {
     transform: "scale(0.8)"
   },
   title: {
-    fontSize: 14
+    fontSize: 14,
+    color: "white",
+    textAlign: "left"
   },
   pos: {
     marginBottom: 12
+  },
+  content: {
+    color: "white",
+    textAlign: "left"
   }
 };
 
@@ -94,8 +101,27 @@ class Account extends Component {
                 >
                   Email Address:
                 </Typography>
-                <Typography variant="h5" component="h2">
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  className={classes.content}
+                >
                   {firebase.auth().currentUser.email}
+                </Typography>
+                <br />
+                <Typography
+                  className={classes.title}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  Username:
+                </Typography>
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  className={classes.content}
+                >
+                  {user && user[0].username}
                 </Typography>
                 <br />
                 <Typography
@@ -105,7 +131,11 @@ class Account extends Component {
                 >
                   Address:
                 </Typography>
-                <Typography variant="h5" component="h2">
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  className={classes.content}
+                >
                   {user && user[0].address}
                 </Typography>
                 <br />
@@ -116,7 +146,11 @@ class Account extends Component {
                 >
                   City:
                 </Typography>
-                <Typography variant="h5" component="h2">
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  className={classes.content}
+                >
                   {user && user[0].city}
                 </Typography>
                 <br />
@@ -127,7 +161,11 @@ class Account extends Component {
                 >
                   State:
                 </Typography>
-                <Typography variant="h5" component="h2">
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  className={classes.content}
+                >
                   {user && user[0].state}
                 </Typography>
                 <br />
@@ -138,12 +176,20 @@ class Account extends Component {
                 >
                   Zip Code:
                 </Typography>
-                <Typography variant="h5" component="h2">
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  className={classes.content}
+                >
                   {user && user[0].zip}
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small" onClick={this.toggleEdit}>
+                <Button
+                  size="small"
+                  onClick={this.toggleEdit}
+                  className={classes.content}
+                >
                   Edit Information
                 </Button>
               </CardActions>

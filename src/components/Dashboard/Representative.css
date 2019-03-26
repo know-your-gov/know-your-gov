@@ -17,6 +17,13 @@
 .repCardTitle {
   font-size: 1rem;
 }
+h5.MuiTypography-root-60.MuiTypography-h5-76.republican {
+  color: rgb(208, 49, 45);
+}
+
+h5.MuiTypography-root-60.MuiTypography-h5-76.democrat {
+  color: rgb(4, 146, 194);
+}
 
 .repInfo {
   height: 100%;
@@ -25,8 +32,7 @@
   text-align: left;
   display: flex;
   flex-direction: column;
-  color: rgb(19, 56, 189);
-
+  color: white;
   /* align-content: space-between; */
 }
 
@@ -34,8 +40,8 @@
   padding-bottom: 0.5rem;
 }
 
-.MuiPaper-root-32.MuiPaper-elevation1-35.MuiPaper-rounded-33.MuiCard-root-31 {
-  background: rgba(0, 0, 0, 0.2);
+.MuiPaper-root-32.MuiPaper-elevation1-35.MuiPaper-rounded-33.MuiCard-root-31.root {
+  background: rgba(198, 198, 208, 0.05);
 }
 
 @media (max-width: 640px) {

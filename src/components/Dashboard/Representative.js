@@ -17,12 +17,15 @@ import "./Representative.css";
 
 const styles = {
   media: {
-    width: "100%"
+    minWidth: "50%"
+    // objectFit: "cover"
   },
   root: {
-    width: "280px",
-    height: "500px",
-    margin: "0.5rem"
+    width: "500px",
+    height: "280px",
+    margin: "0.5rem",
+    display: "flex",
+    background: "rgba(198, 198, 208, 0.05)"
   },
   content: {
     fontSize: "1rem"
@@ -45,13 +48,14 @@ const styles = {
 const Representative = props => {
   const { classes } = props;
   const dets = props.repDets;
+  console.log(dets);
   return (
     <div>
-      <Card className="root">
+      <Card className={classes.root}>
         {/* representative picture */}
         <CardActionArea>
           <CardMedia
-            className="media"
+            className={classes.media}
             component="img"
             src={dets.photoUrl ? dets.photoUrl : "blankuser.png"}
             title={dets.name}
@@ -59,18 +63,25 @@ const Representative = props => {
         </CardActionArea>
 
         {/* representative contact details */}
-        <CardContent className="content">
-          <Typography variant="h5" className="repCardTitle">
+        <CardContent className={classes.content}>
+          <Typography
+            variant="h5"
+            className={
+              dets.party === "Republican Party"
+                ? "repCardTitle republican"
+                : dets.party === "Democratic Party"
+                ? "repCardTitle democrat"
+                : "repCardTitle"
+            }
+          >
             {dets.title} {dets.name}
           </Typography>
-          <div className="repInfo">
-            <div>
-              <p>Phone: {dets.phones[0]}</p>
-              <p>
-                Mailing: {dets.address[0].line1} {dets.address[0].city},{" "}
-                {dets.address[0].state}, {dets.address[0].zip}
-              </p>
-            </div>
+          <div className={classes.repInfo}>
+            <p>Phone: {dets.phones[0]}</p>
+            <p>
+              Mailing: {dets.address[0].line1} {dets.address[0].city},{" "}
+              {dets.address[0].state}, {dets.address[0].zip}
+            </p>
           </div>
         </CardContent>
       </Card>
