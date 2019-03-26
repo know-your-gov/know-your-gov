@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { firestoreConnect } from "react-redux-firebase";
+// import { firestoreConnect } from "react-redux-firebase";
 import { getUser } from "../../ducks/authReducer";
 // import firebase from "../../config/fbConfig";
 import "firebase/auth";
