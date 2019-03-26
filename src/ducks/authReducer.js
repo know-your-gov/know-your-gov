@@ -3,6 +3,7 @@ const initialState = {
   user: [],
   billsFavored: [],
   politiciansFavored: [],
+  politiciansOpposed: [],
   billsOpposed: []
 };
 
@@ -17,6 +18,8 @@ const GET_BILLS_OPPOSED = "GET_BILLS_OPPOSED"
 const GETUSER = "GETUSER";
 const POLITICIANFAVOR = "POLITICIANFAVOR";
 const GETPOLITICIANSFAVORED = "GETPOLITICIANSFAVORED";
+const POLITICIANOPPOSE = "POLITICIANOPPOSE"
+const GETPOLITICIANSOPPOSED = "GETPOLITICIANSOPPOSED"
 
 export const signIn = credentials => {
   return (dispatch, getState, { getFirebase }) => {
@@ -260,6 +263,64 @@ export const getPoliticiansFavored = () => {
   };
 };
 
+export const politicianOppose = poliDetails => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+
+  const split = poliDetails["id"].split("-");
+  const id = split[0];
+  const name = poliDetails["name"];
+  const title = poliDetails["title"];
+  const state = poliDetails["state"];
+  const party = poliDetails["party"];
+  firestore
+  .collection("users")
+  .doc(firebase.auth().currentUser.uid)
+  .collection("politicians-favored")
+  .doc(poliDetails["id"])
+  .set({
+    id,
+    name,
+    title,
+    state,
+    party
+  })
+      .then(() => {
+        dispatch({ type: `${POLITICIANOPPOSE}_SUCCESS` });
+      })
+      .catch(err => {
+        dispatch({ type: `${POLITICIANOPPOSE}_ERROR`, err });
+      });
+  };
+}
+
+
+export const getPoliticiansOpposed = () => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+
+    firestore
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("politicians-opposed")
+      .get()
+      .then(querySnapshot => {
+        const dataArray = [];
+        querySnapshot.forEach(function(doc) {
+          dataArray.push(doc.data());
+        });
+        return dataArray;
+      })
+      .then(response => {
+        console.log(response);
+        dispatch({ type: `${GETPOLITICIANSOPPOSED}_SUCCESS`, payload: response });
+      });
+  };
+};
+
+
 export const billOppose=(billDetails)=>{
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
@@ -326,6 +387,8 @@ const authReducer = (state = initialState, action) => {
       return { ...state, billsFavored: action.payload };
     case `${GETPOLITICIANSFAVORED}_SUCCESS`:
       return { ...state, politiciansFavored: action.payload };
+    case `${GETPOLITICIANSOPPOSED}_SUCCESS`:
+      return { ...state, politiciansOpposed: action.payload };
     case `${BILL_OPPOSE}_SUCCESS`:
       return {...state};
     case `${BILL_OPPOSE}_ERROR`:
