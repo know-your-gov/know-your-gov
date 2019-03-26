@@ -1,22 +1,19 @@
 import React from 'react'
 import axios from 'axios'
-
-//component imports 
+/*-----component imports-----*/
 import PollingInfo from './PollingInfo'
-
-//redux imports
+/*-----redux imports-----*/
 import {connect} from 'react-redux'
 import {compose} from 'redux'
 import {getUser} from '../../ducks/authReducer'
-
-//material UI imports
+/*-----material UI imports-----*/
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-//End
+/*-----End-----*/
 
 class ElectionList extends React.Component{
   constructor(){
@@ -32,23 +29,25 @@ class ElectionList extends React.Component{
     console.log(this.props)
   }
 
-  componentDidUpdate(prevProps){
-    if(this.props.address!==prevProps.address){
-          return this.props.user && this.props.user
-      }
-      console.log(this.props)
-  }
+  // componentDidUpdate(prevProps){
+  //   if(this.props!==prevProps){
+  //     // this.props.user && this.props.getUser()
+  //     console.log(this.props)
+  //   }
+  // }
 
   getUpcomingElections=()=>{
     axios.get(`https://www.googleapis.com/civicinfo/v2/elections`,{
       params:{key: process.env.REACT_APP_GOOGLE_CIVIC}
     }).then((res)=>{
       this.setState({elections: res.data.elections})
-     })
+    })
   }
 
   electionsList = ()=>{
     const {elections} = this.state
+    let loadingAddress = {address:"1600 Pennsylvania Avenue NW",city:"Washington",zip:"20500",state:"DC"}
+    const {address,city,state,zip} = this.props.user.city? this.props.user: loadingAddress
     return(elections.map((election)=>{
       return(
         <ExpansionPanel key = {election.id}>
@@ -57,7 +56,7 @@ class ElectionList extends React.Component{
           </ExpansionPanelSummary>
 
           <ExpansionPanelDetails>
-            <PollingInfo electionID = {election.id} address = {this.props.user.address}/>
+            <PollingInfo electionID = {election.id} address = {`${address},${city},${state} ${zip}`}/>
           </ExpansionPanelDetails>
         </ExpansionPanel>
       )

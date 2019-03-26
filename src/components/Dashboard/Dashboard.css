@@ -9,30 +9,52 @@ flexWrap: "wrap",
 justifyContent: "center",
 height: "70vh",
 margin: "0 auto" */
+.card
+  .MuiPaper-root-32.MuiPaper-elevation1-35.MuiPaper-rounded-33.MuiCard-root-31 {
+  background: rgba(198, 198, 208, 0.05);
+  box-shadow: none;
+}
+
+.MuiTypography-root-60.MuiTypography-h6-77 {
+  color: white;
+  font-size: 2.5rem;
+  font-family: "Lato", sans-serif;
+}
+
 .card {
   width: 60vw;
   margin: 0 auto;
 }
 
-.reps {
-  width: 60vw;
+h4.MuiTypography-root-60.MuiTypography-h4-75 {
+  font-size: 1.8rem;
+  color: white;
+  font-family: "Lato", sans-serif;
+}
+
+.reps ul {
+  width: 100vw;
   margin: 0 auto;
   margin-top: 1.5rem;
   display: flex;
   justify-content: space-around;
 }
 
+/* .reps ul:first-child {
+  position: relative;
+  left: 10%;
+  z-index: 2;
+} */
+
 .undertext {
   font-size: 0.8rem;
+  color: rgb(198, 198, 208);
 }
 
 /* Card style={{ width: "30vw" }} */
 
 /* Typography style style={{ width: "20vw", marginTop: "5vh" }} */
 
-h5.MuiTypography-root-60.MuiTypography-h5-76 {
-  color: rgb(208, 49, 45);
-}
 .typography {
   width: 100vw;
   margin: 0 auto;
