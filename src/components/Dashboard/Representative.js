@@ -34,24 +34,37 @@ const styles = {
     fontSize: "1rem"
   },
   repInfo: {
-    height: "100%",
-    fontSize: "0.9rem",
-    paddingTop: ".5rem",
+    height: "90%",
+    fontSize: ".89rem",
     textAlign: "left",
     display: "flex",
     flexDirection: "column",
     alignItems: "space-between",
-    padding: "0"
+    justifyContent: "space-around",
+    padding: "0",
+    overflow: "show"
+  },
+  rep: {
+    color: "rgb(208, 49, 45)",
+    fontSize: "1.2rem"
+  },
+  dem: {
+    color: "rgb(4, 146, 194)",
+    fontSize: "1.2rem"
+  },
+  socialLinks: {
+    display: "flex",
+    justifyContent: "space-around"
   }
 };
 
 const Representative = props => {
-  // const { classes } = props;
+  const { classes } = props;
   const dets = props.repDets;
   console.log(dets);
   return (
     <div>
-      <Card className={classes.root}>
+      <Card className={classes.root} id="root">
         {/* representative picture */}
         <CardActionArea>
           <CardMedia
@@ -68,20 +81,40 @@ const Representative = props => {
             variant="h5"
             className={
               dets.party === "Republican Party"
-                ? "repCardTitle republican"
+                ? classes.rep
                 : dets.party === "Democratic Party"
-                ? "repCardTitle democrat"
-                : "repCardTitle"
+                ? classes.dem
+                : classes.content
             }
           >
             {dets.title} {dets.name}
           </Typography>
-          <div className={classes.repInfo}>
-            <p>Phone: {dets.phones[0]}</p>
+          <div className={classes.repInfo} id="repInfo">
             <p>
+              <p>Phone: {dets.phones[0]}</p>
               Mailing: {dets.address[0].line1} {dets.address[0].city},{" "}
               {dets.address[0].state}, {dets.address[0].zip}
             </p>
+            <div className={classes.socialLinks} id="social">
+              <a
+                href={`https://www.facebook.com/${dets.channels[0].id}`}
+                target="_blank"
+              >
+                <img src="facebook.png" alt="facebook" />
+              </a>
+              <a
+                href={`https://twitter.com/${dets.channels[1].id}`}
+                target="_blank"
+              >
+                <img src="twitter.png" alt="twitter" />
+              </a>
+              <a
+                href={`https://youtube.com/${dets.channels[2].id}`}
+                target="_blank"
+              >
+                <img src="youtube.png" alt="youtube" />
+              </a>
+            </div>
           </div>
         </CardContent>
       </Card>
