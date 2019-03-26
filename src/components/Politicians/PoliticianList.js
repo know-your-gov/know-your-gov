@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import PoliticianCard from "./PoliticianCard";
 import { Typography } from "@material-ui/core";
 import axios from "axios";
 import Card from "@material-ui/core/Card";
@@ -14,7 +13,12 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { getPoliticiansFavored, getPoliticiansOpposed } from "../../ducks/authReducer";
+import {
+  getPoliticiansFavored,
+  getPoliticiansOpposed
+} from "../../ducks/authReducer";
+import StateSelector from "./StateSelect";
+import "./PoliticianList.css";
 
 export class PoliticianList extends Component {
   constructor() {
@@ -26,7 +30,9 @@ export class PoliticianList extends Component {
       houseRepList: [],
       favoredPoliticians: [],
       showFavored: false,
-      showOpposed: false
+      showOpposed: false,
+      showHouseReps: false,
+      showSenate: false
     };
     this.handleSenateChange = this.handleSenateChange.bind(this);
     this.handleHouseChange = this.handleHouseChange.bind(this);
@@ -45,8 +51,7 @@ export class PoliticianList extends Component {
     this.props.getPoliticiansFavored();
     this.props.getPoliticiansOpposed();
     this.setState({ favoredPoliticians: this.props.politicians });
-
-    console.log(this.props);
+    // console.log(this.props);
   }
 
   jestTestSuccess() {
@@ -67,8 +72,15 @@ export class PoliticianList extends Component {
       .then(res => {
         const senateList = res.data.results;
 
-        this.setState({ senateList: senateList }, () =>
-          console.log(senateList)
+        this.setState(
+          {
+            senateList: senateList,
+            showFavored: false,
+            showHouseReps: false,
+            showOpposed: false,
+            showSenate: true
+          },
+          () => console.log(senateList)
         );
       });
   }
@@ -87,24 +99,41 @@ export class PoliticianList extends Component {
       .then(res => {
         const houseRepList = res.data.results;
 
-        this.setState({ houseRepList: houseRepList });
-        console.log(houseRepList);
+        this.setState({
+          houseRepList: houseRepList,
+          showHouseReps: true,
+          showSenate: false,
+          showOpposed: false,
+          showFavored: false
+        });
+        // console.log(houseRepList);
       });
   }
 
   setFavoredList() {
-    this.setState({ showFavored: true });
+    this.setState({
+      showFavored: true,
+      showOpposed: false,
+      showSenate: false,
+      showHouseReps: false
+    });
   }
 
   setOpposedList() {
-    this.setState({showOpposed: true})
+    this.setState({
+      showOpposed: true,
+      showFavored: false,
+      showSenate: false,
+      showHouseReps: false
+    });
   }
 
   listPoliticiansFavored = () => {
-    const { politicians } = this.props;
-    console.log(politicians);
-    if (politicians.length > 0) {
-      return politicians.map(politician => {
+    const { politiciansFavored } = this.props;
+    // console.log(politiciansFavored);
+
+    if (politiciansFavored.length > 0) {
+      return politiciansFavored.map(politician => {
         let title = politician.title;
         let id = politician.id;
         let name = politician.name;
@@ -112,34 +141,35 @@ export class PoliticianList extends Component {
         let party = politician.party;
 
         return (
-          <Card key={id}>
-            <div>
-              <Button>
-              <Link
-                to={`/politicians/${id}`}
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                {id}
-              </Link>
-              </Button>
-            </div>
-            <div>{title}</div>
-            <div>{name}</div>
-            <div>{party}</div>
-            <div>{state}</div>
-            <hr/>
-          </Card>
-          
+          <div>
+            <Card key={id} style={{ width: "20vw", margin: "auto" }}>
+              <div>
+                <Button>
+                  <Link
+                    to={`/politicians/${id}`}
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    {id}
+                  </Link>
+                </Button>
+              </div>
+              <div>{title}</div>
+              <div>{name}</div>
+              <div>{party}</div>
+              <div>{state}</div>
+              <hr />
+            </Card>
+          </div>
         );
       });
     }
   };
 
   listPoliticiansOpposed = () => {
-    const { politicians } = this.props;
-    console.log(this.props);
-    if (politicians.length > 0) {
-      return politicians.map(politician => {
+    const { politiciansOpposed } = this.props;
+    // console.log(this.props);
+    if (politiciansOpposed.length > 0) {
+      return politiciansOpposed.map(politician => {
         let title = politician.title;
         let id = politician.id;
         let name = politician.name;
@@ -150,19 +180,19 @@ export class PoliticianList extends Component {
           <Card key={id}>
             <div>
               <Button>
-              <Link
-                to={`/politicians/${id}`}
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                {id}
-              </Link>
+                <Link
+                  to={`/politicians/${id}`}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  {id}
+                </Link>
               </Button>
             </div>
             <div>{title}</div>
             <div>{name}</div>
             <div>{party}</div>
             <div>{state}</div>
-            <hr/>
+            <hr />
           </Card>
         );
       });
@@ -207,52 +237,35 @@ export class PoliticianList extends Component {
         );
       });
 
-    const houseRepListDisplay =
-      this.state.houseRepList
-        .sort((a, b) => {
-          return a.district - b.district;
-        })
-        .map((h, l) => {
-          const id = h.id;
-          return (
-            <Paper style={{ width: "70vw", margin: "auto", textAlign:"center" }}>
-              <div>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell style={{width: "15vw"}}>Name</TableCell>
-                      <TableCell>Id</TableCell>
-                      <TableCell>District</TableCell>
-                      <TableCell>Party</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow key={l}>
-                      <TableCell>
-                        <Button size="small" style={{ height: "5vh" }}>
-                          <Link
-                            to={`/politicians/${id}`}
-                            style={{
-                              textDecoration: "none",
-                              color: "darkblue",
-                              fontSize: "100%"
-                            }}
-                          >
-                            {h.name}
-                          </Link>
-                        </Button>
-                      </TableCell>
-                      <TableCell>{h.id}</TableCell>
-                      <TableCell>{h.district}</TableCell>
-                      <TableCell>{h.party}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                  <TableFooter />
-                </Table>
-              </div>
-            </Paper>
-          );
-        });
+    const houseRepListDisplay = this.state.houseRepList
+      .sort((a, b) => {
+        return a.district - b.district;
+      })
+      .map((h, l) => {
+        const id = h.id;
+        return (
+          <TableRow key={l}>
+            <TableCell>
+              <Button size="small" style={{ height: "5vh" }}>
+                <Link
+                  to={`/politicians/${id}`}
+                  style={{
+                    textDecoration: "none",
+                    color: "darkblue",
+                    fontSize: "100%"
+                  }}
+                >
+                  {h.name}
+                </Link>
+              </Button>
+            </TableCell>
+            <TableCell>{h.id}</TableCell>
+            <TableCell>{h.district}</TableCell>
+            <TableCell>{h.party}</TableCell>
+          </TableRow>
+        );
+      });
+
     return (
       <div>
         <div>
@@ -266,57 +279,7 @@ export class PoliticianList extends Component {
                   value={this.state.value}
                   onChange={this.handleSenateChange}
                 >
-                  <option value="AL">Alabama</option>
-                  <option value="AK">Alaska</option>
-                  <option value="AZ">Arizona</option>
-                  <option value="AR">Arkansas</option>
-                  <option value="CA">California</option>
-                  <option value="CO">Colorado</option>
-                  <option value="CT">Connecticut</option>
-                  <option value="DE">Delaware</option>
-                  <option value="DC">District Of Columbia</option>
-                  <option value="FL">Florida</option>
-                  <option value="GA">Georgia</option>
-                  <option value="HI">Hawaii</option>
-                  <option value="ID">Idaho</option>
-                  <option value="IL">Illinois</option>
-                  <option value="IN">Indiana</option>
-                  <option value="IA">Iowa</option>
-                  <option value="KS">Kansas</option>
-                  <option value="KY">Kentucky</option>
-                  <option value="LA">Louisiana</option>
-                  <option value="ME">Maine</option>
-                  <option value="MD">Maryland</option>
-                  <option value="MA">Massachusetts</option>
-                  <option value="MI">Michigan</option>
-                  <option value="MN">Minnesota</option>
-                  <option value="MS">Mississippi</option>
-                  <option value="MO">Missouri</option>
-                  <option value="MT">Montana</option>
-                  <option value="NE">Nebraska</option>
-                  <option value="NV">Nevada</option>
-                  <option value="NH">New Hampshire</option>
-                  <option value="NJ">New Jersey</option>
-                  <option value="NM">New Mexico</option>
-                  <option value="NY">New York</option>
-                  <option value="NC">North Carolina</option>
-                  <option value="ND">North Dakota</option>
-                  <option value="OH">Ohio</option>
-                  <option value="OK">Oklahoma</option>
-                  <option value="OR">Oregon</option>
-                  <option value="PA">Pennsylvania</option>
-                  <option value="RI">Rhode Island</option>
-                  <option value="SC">South Carolina</option>
-                  <option value="SD">South Dakota</option>
-                  <option value="TN">Tennessee</option>
-                  <option value="TX">Texas</option>
-                  <option value="UT">Utah</option>
-                  <option value="VT">Vermont</option>
-                  <option value="VA">Virginia</option>
-                  <option value="WA">Washington</option>
-                  <option value="WV">West Virginia</option>
-                  <option value="WI">Wisconsin</option>
-                  <option value="WY">Wyoming</option>
+                  <StateSelector />
                 </select>
               </label>
               <input type="submit" value="Submit" />
@@ -333,83 +296,61 @@ export class PoliticianList extends Component {
                   value={this.state.value}
                   onChange={this.handleHouseChange}
                 >
-                  <option value="AL">Alabama</option>
-                  <option value="AK">Alaska</option>
-                  <option value="AZ">Arizona</option>
-                  <option value="AR">Arkansas</option>
-                  <option value="CA">California</option>
-                  <option value="CO">Colorado</option>
-                  <option value="CT">Connecticut</option>
-                  <option value="DE">Delaware</option>
-                  <option value="DC">District Of Columbia</option>
-                  <option value="FL">Florida</option>
-                  <option value="GA">Georgia</option>
-                  <option value="HI">Hawaii</option>
-                  <option value="ID">Idaho</option>
-                  <option value="IL">Illinois</option>
-                  <option value="IN">Indiana</option>
-                  <option value="IA">Iowa</option>
-                  <option value="KS">Kansas</option>
-                  <option value="KY">Kentucky</option>
-                  <option value="LA">Louisiana</option>
-                  <option value="ME">Maine</option>
-                  <option value="MD">Maryland</option>
-                  <option value="MA">Massachusetts</option>
-                  <option value="MI">Michigan</option>
-                  <option value="MN">Minnesota</option>
-                  <option value="MS">Mississippi</option>
-                  <option value="MO">Missouri</option>
-                  <option value="MT">Montana</option>
-                  <option value="NE">Nebraska</option>
-                  <option value="NV">Nevada</option>
-                  <option value="NH">New Hampshire</option>
-                  <option value="NJ">New Jersey</option>
-                  <option value="NM">New Mexico</option>
-                  <option value="NY">New York</option>
-                  <option value="NC">North Carolina</option>
-                  <option value="ND">North Dakota</option>
-                  <option value="OH">Ohio</option>
-                  <option value="OK">Oklahoma</option>
-                  <option value="OR">Oregon</option>
-                  <option value="PA">Pennsylvania</option>
-                  <option value="RI">Rhode Island</option>
-                  <option value="SC">South Carolina</option>
-                  <option value="SD">South Dakota</option>
-                  <option value="TN">Tennessee</option>
-                  <option value="TX">Texas</option>
-                  <option value="UT">Utah</option>
-                  <option value="VT">Vermont</option>
-                  <option value="VA">Virginia</option>
-                  <option value="WA">Washington</option>
-                  <option value="WV">West Virginia</option>
-                  <option value="WI">Wisconsin</option>
-                  <option value="WY">Wyoming</option>
+                  <StateSelector />
                 </select>
               </label>
               <input type="submit" value="Submit" />
             </form>
           </div>
-          
-            <Button
-              style={{ color: "white" }}
-              onClick={() => this.setFavoredList()}> Favored Politicians </Button>
-              <div>
-            {this.state.showFavored ? this.listPoliticiansFavored() : null}
-          </div>
-          </div>
-          
-            <Button
-              style={{ color: "white" }}
-              onClick={() => this.setOpposedList()}> Opposed Politicians </Button>
-              <div>
-            {this.state.showOpposed ? this.listPoliticiansOpposed() : null}
-         
 
+          <Button
+            style={{ color: "white" }}
+            onClick={() => this.setFavoredList()}
+          >
+            {" "}
+            Favored Politicians{" "}
+          </Button>
+          <Button
+            style={{ color: "white" }}
+            onClick={() => this.setOpposedList()}
+          >
+            {" "}
+            Opposed Politicians{" "}
+          </Button>
+          <div>
+            <div>
+              {this.state.showFavored ? this.listPoliticiansFavored() : null}
+            </div>
+          </div>
+
+          {this.state.showOpposed ? this.listPoliticiansOpposed() : null}
         </div>
+
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           {senateListDisplay}
         </div>
-        <div>{houseRepListDisplay}</div>
+
+        {this.state.showHouseReps === false ? (
+          <div> </div>
+        ) : (
+          <Paper style={{ width: "70vw", margin: "auto", textAlign: "center" }}>
+            <div>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell style={{ width: "15vw" }}>Name</TableCell>
+                    <TableCell>Id</TableCell>
+                    <TableCell>District</TableCell>
+                    <TableCell>Party</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody> {houseRepListDisplay} </TableBody>
+                <TableFooter />
+              </Table>
+            </div>
+          </Paper>
+        )}
+        <div />
       </div>
     );
   }
@@ -418,7 +359,8 @@ export class PoliticianList extends Component {
 const mapStateToProps = state => {
   return {
     auth: state.firebase.auth,
-    politicians: state.auth.politiciansFavored
+    politiciansFavored: state.auth.politiciansFavored,
+    politiciansOpposed: state.auth.politiciansOpposed
   };
 };
 const mapDispatchToProps = dispatch => {

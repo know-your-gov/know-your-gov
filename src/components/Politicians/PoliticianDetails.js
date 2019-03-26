@@ -37,11 +37,7 @@ export class PoliticianDetails extends Component {
 
   componentDidMount() {
     const {id} = this.props.match.params
-    //pass the memberId down from the politician card for axios, or maybe later through search?
     axios
-      // .get(`https://api.propublica.org/congress/v1/members/${memberId}.json`, {
-      //   headers: { "X-API-Key": "6mvDJez0i0forqt6pqCgyV1QFLPMbHCx4JbsSJq4" }
-      // })
       .get(`https://api.propublica.org/congress/v1/members/${id}.json`, {
         headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
       })
