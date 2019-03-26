@@ -46,7 +46,7 @@ const styles = {
 };
 
 const Representative = props => {
-  // const { classes } = props;
+  const { classes } = props;
   const dets = props.repDets;
   console.log(dets);
   return (
