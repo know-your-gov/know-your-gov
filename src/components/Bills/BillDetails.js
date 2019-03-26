@@ -4,7 +4,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-import { billFavor } from "../../ducks/authReducer";
+import { billFavor,billOppose } from "../../ducks/authReducer";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -46,10 +46,13 @@ class BillDetails extends Component {
     console.log(billDetails);
     return (
       <div style={{ width: "65%", margin: "0 auto", marginTop: "5vh" }}>
+
         <Card>
+
           <CardContent>
             <Typography variant="h6">{billDetails.title}</Typography>
             <p>{billDetails.committees}</p>
+
             <p>
               Sponsored by:{" "}
               <Link to={`/politicians/${billDetails.sponsor_id}`}>
@@ -57,6 +60,7 @@ class BillDetails extends Component {
                 {billDetails.sponsor_party}, {billDetails.sponsor_state})
               </Link>
             </p>
+
             <p>Introduced(yyyy/mm/dd): {billDetails.introduced_date}</p>
             <p>
               {" "}
@@ -68,18 +72,22 @@ class BillDetails extends Component {
                 See more information here
               </a>
             </p>
+
             <div>
               <CardActionArea>
                 <CardActions>
                   <FavoriteBorder
                     onClick={() => this.props.billFavor(billDetails)}
                   />
-                  <Clear />
+                  <Clear onClick = {()=> this.props.billOppose(billDetails)} />
                 </CardActions>
               </CardActionArea>
             </div>
+
           </CardContent>
+
         </Card>
+
       </div>
     );
   }
@@ -92,7 +100,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    billFavor: billDetails => dispatch(billFavor(billDetails))
+    billFavor: billDetails => dispatch(billFavor(billDetails)),
+    billOppose: billDetails => dispatch(billOppose(billDetails))
   }; /////////////////////
 };
 

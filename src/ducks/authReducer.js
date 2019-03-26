@@ -2,7 +2,8 @@ const initialState = {
   authError: null,
   user: [],
   billsFavored: [],
-  politiciansFavored: []
+  politiciansFavored: [],
+  billsOpposed: []
 };
 
 const SIGNIN = "SIGNIN";
@@ -10,7 +11,9 @@ const SIGNOUT = "SIGNOUT";
 const SIGNUP = "SIGNUP";
 const UPDATE = "UPDATE";
 const BILLFAVOR = "BILLFAVOR";
+const BILL_OPPOSE = "BILL_OPPOSE"
 const GETBILLSFAVORED = "GETBILLSFAVORED";
+const GET_BILLS_OPPOSED = "GET_BILLS_OPPOSED"
 const GETUSER = "GETUSER";
 const POLITICIANFAVOR = "POLITICIANFAVOR";
 const GETPOLITICIANSFAVORED = "GETPOLITICIANSFAVORED";
@@ -176,6 +179,30 @@ export const getBillsFavored = () => {
   };
 };
 
+export const getBillsOpposed = ()=>{
+  return (dispatch,getState,{getFirebase, getFirestore})=>{
+    const firebase = getFirebase()
+    const firestore = getFirestore()
+
+    firestore.collection("users")
+    . doc(firebase.auth().currentUser.uid)
+    .collection("bills-opposed")
+    .get()
+    .then(querySnapshot=>{
+      const dataArray =[];
+      querySnapshot.forEach((doc)=>{
+        dataArray.push(doc.data())
+      })
+      return dataArray
+    }).then(response=>{
+      dispatch({
+        type: `${GET_BILLS_OPPOSED}_SUCCESS`,
+        payload: response
+      })
+    })
+  }
+}
+
 export const politicianFavor = poliDetails => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
@@ -233,6 +260,37 @@ export const getPoliticiansFavored = () => {
   };
 };
 
+export const billOppose=(billDetails)=>{
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+
+    const split = billDetails["bill_id"].split("-");
+    const congress = split[1];
+    const billSlug = split[0];
+    const title = billDetails.title;
+    const committee = billDetails.committees;
+
+    firestore
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("bills-opposed")
+      .doc(billDetails["bill_id"])
+      .set({
+        congress,
+        billSlug,
+        title,
+        committee
+      })
+      .then(() => {
+        dispatch({ type: `${BILL_OPPOSE}_SUCCESS` });
+      })
+      .catch(err => {
+        dispatch({ type: `${BILL_OPPOSE}_ERROR`, err });
+      });
+  }
+}
+
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case `${SIGNIN}_ERROR`:
@@ -268,6 +326,12 @@ const authReducer = (state = initialState, action) => {
       return { ...state, billsFavored: action.payload };
     case `${GETPOLITICIANSFAVORED}_SUCCESS`:
       return { ...state, politiciansFavored: action.payload };
+    case `${BILL_OPPOSE}_SUCCESS`:
+      return {...state};
+    case `${BILL_OPPOSE}_ERROR`:
+      return{...state};
+    case `${GET_BILLS_OPPOSED}_SUCCESS`:
+      return {...state, billsOpposed: action.payload};
     default:
       return state;
   }

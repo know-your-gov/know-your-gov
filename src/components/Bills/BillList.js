@@ -1,12 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
-// import { getFirestore } from "redux-firestore";
-// import { firestoreConnect, getFirebase } from "react-redux-firebase";
-// import firebase from "../../config/fbConfig";
-// import "firebase/auth";
-// import BillCard from "./BillCard";
-import { /*billFavor,*/ getBillsFavored } from "../../ducks/authReducer";
+import { /*billFavor,*/ getBillsFavored, getBillsOpposed } from "../../ducks/authReducer";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -159,10 +154,49 @@ class BillList extends Component {
     }
   };
 
+  showOpposedBills =()=>{
+    this.props.getBillsOpposed()
+    this.setState({tracked:false})
+    const {opposed} = this.props
+    const newOpposed = opposed.map(bill=>{
+      return Object.assign({},{
+        bill_id:`${bill.billSlug}-${bill.congress}`,
+        short_title: bill.title,
+        committees: bill.committee
+      })
+    })
+    if(newOpposed.length>0){
+      console.log(newOpposed)
+      this.setState({bills:newOpposed})
+    }   
+  }
+
+  buttonRender=(fun,buttonText,i)=>{
+    return <Button onClick = {()=>fun()} key = {i}>{buttonText}</Button>
+  }
+
+  buttonShow = ()=>{
+    let buttons = {
+      "See Recent": this.getRecentBills,
+      "See Upcoming": this.getUpcomingBills, 
+      "See Favored": this.LikedBillsList, 
+      "See Opposed": this.showOpposedBills, 
+      "Search Bills": this.searchBills
+    }
+    let buttonsArr = []
+
+    for(let button in buttons){
+      buttonsArr.push({text: button,
+        action:buttons[button]})
+    }
+    return buttonsArr.map((button,i)=>{
+      return this.buttonRender(button.action,button.text,i)
+    })
+
+  }
+
 
   render() {
-    // console.log(this.props);
-    console.log(this.state);
     return (
       <div
         style={{
@@ -172,12 +206,9 @@ class BillList extends Component {
           overflow: "scroll"
         }}
       >
-        <Button onClick={() => this.getRecentBills()}>See Recent</Button>
-        <Button onClick={() => this.getUpcomingBills()}>See Upcoming</Button>
-        <Button onClick={()=>this.LikedBillsList()}>See Favored Bills </Button>
-        <Button>See Bills You're Against</Button><br/>
+     
+        {this.buttonShow()}<br/>
         <Input onChange = {(e)=>this.searchInput(e)}/>
-        <Button onClick = {()=>this.searchBills()}>Search Bills</Button>
 
         <Paper>
 
@@ -224,12 +255,14 @@ class BillList extends Component {
 const mapStateToProps = state => {
   return {
     auth: state.firebase.auth,
-    bills: state.auth.billsFavored
+    bills: state.auth.billsFavored,
+    opposed: state.auth.billsOpposed
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getBillsFavored: () => dispatch(getBillsFavored())
+    getBillsFavored: () => dispatch(getBillsFavored()),
+    getBillsOpposed: ()=> dispatch(getBillsOpposed())
   }; /////////////////////
 };
 export default compose(
@@ -238,3 +271,22 @@ export default compose(
     mapDispatchToProps
   )
 )(BillList);
+
+
+/*
+Pit of redundancy
+import { getFirestore } from "redux-firestore";
+import { firestoreConnect, getFirebase } from "react-redux-firebase";
+import firebase from "../../config/fbConfig";
+import "firebase/auth";
+import BillCard from "./BillCard";
+
+
+<Button onClick={() => this.getRecentBills()}>See Recent</Button>
+<Button onClick={() => this.getUpcomingBills()}>See Upcoming</Button>
+<Button onClick={()=>this.LikedBillsList()}>See Favored Bills </Button>
+<Button onClick = {()=>this.showOpposedBills()}>See Opposed Bills</Button><br/>
+<Input onChange = {(e)=>this.searchInput(e)}/>
+<Button onClick = {()=>this.searchBills()}>Search Bills</Button> 
+
+*/
