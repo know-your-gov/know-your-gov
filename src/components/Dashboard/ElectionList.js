@@ -1,32 +1,52 @@
-import React from 'react'
-import axios from 'axios'
+import React from "react";
+import axios from "axios";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 /*-----component imports-----*/
-import PollingInfo from './PollingInfo'
+import PollingInfo from "./PollingInfo";
 /*-----redux imports-----*/
-import {connect} from 'react-redux'
-import {compose} from 'redux'
-import {getUser} from '../../ducks/authReducer'
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { getUser } from "../../ducks/authReducer";
 /*-----material UI imports-----*/
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import Typography from '@material-ui/core/Typography'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel'
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 /*-----End-----*/
 
-class ElectionList extends React.Component{
-  constructor(){
-    super()
+const styles = {
+  root: {
+    width: "550px",
+    height: "300px",
+    margin: "0 auto",
+    background: "rgba(198, 198, 208, 0.05)",
+    overflowY: "auto",
+    marginBottom: "3rem",
+    marginTop: "3rem"
+  },
+  title: {
+    color: "white"
+  },
+  details: {
+    background: "transparent"
+  }
+};
+
+class ElectionList extends React.Component {
+  constructor() {
+    super();
     this.state = {
       elections: []
-    }
+    };
   }
 
-  componentDidMount(){
-    this.props.getUser()
-    this.getUpcomingElections()
-    console.log(this.props)
+  componentDidMount() {
+    this.props.getUser();
+    this.getUpcomingElections();
+    console.log(this.props);
   }
 
   // componentDidUpdate(prevProps){
@@ -36,56 +56,74 @@ class ElectionList extends React.Component{
   //   }
   // }
 
-  getUpcomingElections=()=>{
-    axios.get(`https://www.googleapis.com/civicinfo/v2/elections`,{
-      params:{key: process.env.REACT_APP_GOOGLE_CIVIC}
-    }).then((res)=>{
-      this.setState({elections: res.data.elections})
-    })
-  }
+  getUpcomingElections = () => {
+    axios
+      .get(`https://www.googleapis.com/civicinfo/v2/elections`, {
+        params: { key: process.env.REACT_APP_GOOGLE_CIVIC }
+      })
+      .then(res => {
+        this.setState({ elections: res.data.elections });
+      });
+  };
 
-  electionsList = ()=>{
-    const {elections} = this.state
-    let loadingAddress = {address:"1600 Pennsylvania Avenue NW",city:"Washington",zip:"20500",state:"DC"}
-    const {address,city,state,zip} = this.props.user.city? this.props.user: loadingAddress
-    return(elections.map((election)=>{
-      return(
-        <ExpansionPanel key = {election.id}>
+  electionsList = () => {
+    const { classes } = this.props;
+    const { elections } = this.state;
+    let loadingAddress = {
+      address: "1600 Pennsylvania Avenue NW",
+      city: "Washington",
+      zip: "20500",
+      state: "DC"
+    };
+    const { address, city, state, zip } = this.props.user.city
+      ? this.props.user
+      : loadingAddress;
+    return elections.map(election => {
+      return (
+        <ExpansionPanel key={election.id}>
           <ExpansionPanelSummary>
-            <Typography variant = "h5">{election.name}   {election.electionDay}</Typography>
+            <Typography variant="h5">
+              {election.name} {election.electionDay}
+            </Typography>
           </ExpansionPanelSummary>
 
-          <ExpansionPanelDetails>
-            <PollingInfo electionID = {election.id} address = {`${address},${city},${state} ${zip}`}/>
+          <ExpansionPanelDetails className={classes.details}>
+            <PollingInfo
+              electionID={election.id}
+              address={`${address},${city},${state} ${zip}`}
+            />
           </ExpansionPanelDetails>
         </ExpansionPanel>
-      )
-    }))
-  }
+      );
+    });
+  };
 
-  render(){
-    return(
+  render() {
+    const { classes } = this.props;
+    return (
       <div>
-        <Card>
+        <Card className={classes.root} id="scrollbar">
           <CardContent>
-            <Typography variant = "h5">Polling Info</Typography>
+            <Typography variant="h5" className={classes.title}>
+              Polling Info
+            </Typography>
             {this.electionsList()}
           </CardContent>
-
-          
         </Card>
       </div>
-
-    )
+    );
   }
 }
 
+ElectionList.propTypes = {
+  classes: PropTypes.object.isRequired
+};
 
-function mapStateToProps(state){
-  return{
+function mapStateToProps(state) {
+  return {
     user: state.auth.user,
-    auth: state.firebase.auth,
-  }
+    auth: state.firebase.auth
+  };
 }
 
 // function mapDispatchToProps(dispatch){
@@ -94,4 +132,10 @@ function mapStateToProps(state){
 //   }
 // }
 
-export default compose(connect(mapStateToProps, {getUser}))(ElectionList)
+export default compose(
+  connect(
+    mapStateToProps,
+    { getUser }
+  ),
+  withStyles(styles)
+)(ElectionList);

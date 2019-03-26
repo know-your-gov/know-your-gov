@@ -96,7 +96,7 @@ class Dashboard extends Component {
   render() {
     console.log(this.props.user);
     return (
-      <div style={{ height: "100vh", marginTop: "5vh" }}>
+      <div style={{ height: "100%", marginTop: "5vh" }}>
         <div className="dashboard-main">
           {/* welcome card */}
           <div className="card">

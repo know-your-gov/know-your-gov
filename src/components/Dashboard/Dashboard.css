@@ -38,6 +38,7 @@ h4.MuiTypography-root-60.MuiTypography-h4-75 {
   margin-top: 1.5rem;
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 /* .reps ul:first-child {
@@ -61,9 +62,30 @@ h4.MuiTypography-root-60.MuiTypography-h4-75 {
   margin-top: 5vh;
 }
 
+#social img {
+  height: 40px;
+}
+
 @media (max-width: 903px) {
-  .reps {
+  .reps ul {
     flex-direction: column;
     align-items: center;
+  }
+  .card {
+    width: 100vw;
+    font-size: 1.5rem;
+  }
+
+  #repInfo {
+    height: 80%;
+    align-content: center;
+  }
+
+  #social img {
+    height: 30px;
+  }
+  #social {
+    display: flex;
+    justify-content: space-around;
   }
 }
