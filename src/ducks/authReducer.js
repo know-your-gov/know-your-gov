@@ -277,7 +277,7 @@ export const politicianOppose = poliDetails => {
   firestore
   .collection("users")
   .doc(firebase.auth().currentUser.uid)
-  .collection("politicians-favored")
+  .collection("politicians-opposed")
   .doc(poliDetails["id"])
   .set({
     id,
