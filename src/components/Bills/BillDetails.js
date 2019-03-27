@@ -4,7 +4,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-import { billFavor,billOppose } from "../../ducks/authReducer";
+import { billFavor,billOppose, getBillVotes } from "../../ducks/authReducer";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -101,11 +101,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     billFavor: billDetails => dispatch(billFavor(billDetails)),
-    billOppose: billDetails => dispatch(billOppose(billDetails))
+    billOppose: billDetails => dispatch(billOppose(billDetails)),
+    // getBillVotes: billDetails => dispatch(getBillVotes(billDetails))
   }; /////////////////////
 };
-
-
 
 export default compose(
   connect(
