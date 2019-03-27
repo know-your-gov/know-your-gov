@@ -20,16 +20,16 @@ import {
 import StateSelector from "./StateSelect";
 import "./PoliticianList.css";
 
-const styles = {
-  rep: {
-    color: "rgb(208, 49, 45)",
-    fontSize: "1.2rem"
-  },
-  dem: {
-    color: "rgb(4, 146, 194)",
-    fontSize: "1.2rem"
-  }
-};
+// const styles = {
+//   rep: {
+//     color: "rgb(208, 49, 45)",
+//     fontSize: "1.2rem"
+//   },
+//   dem: {
+//     color: "rgb(4, 146, 194)",
+//     fontSize: "1.2rem"
+//   }
+// };
 
 export class PoliticianList extends Component {
   constructor() {
