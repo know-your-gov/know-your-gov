@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { /*billFavor,*/ getBillsFavored, getBillsOpposed } from "../../ducks/authReducer";
+import { /*billFavor,*/ getBillsFavored, getBillsOpposed, deleteBill } from "../../ducks/authReducer";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -12,6 +12,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import ArrowForwardIos from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIos from "@material-ui/icons/ArrowBackIos";
+import DeleteOutline from '@material-ui/icons/DeleteOutline'
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Input from '@material-ui/core/Input'
@@ -25,6 +26,7 @@ class BillList extends Component {
       rowsPerPage: 5,
       tracked: false,
       search: "",
+      favoredOrOpposed: false,
     };
   }
   componentDidMount() {
@@ -33,6 +35,7 @@ class BillList extends Component {
   }
 
   getRecentBills = () => {
+    this.setState({favoredOrOpposed:false})
     axios
       .get(
         `https://api.propublica.org/congress/v1/115/both/bills/active.json`,
@@ -47,6 +50,7 @@ class BillList extends Component {
   };
 
   getUpcomingBills = () => {
+    this.setState({favoredOrOpposed:false})
     axios
       .get(`https://api.propublica.org/congress/v1/bills/upcoming/house.json`, {
         headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
@@ -55,13 +59,16 @@ class BillList extends Component {
         const bills = res.data.results[0].bills;
         this.setState({ bills });
         this.setState({ tracked: false });
-      });
-  };
+    });
+  }
+
   searchInput =(e)=>{
     this.setState({search:e.target.value})
   }
+
   searchBills = ()=>{
     this.setState({tracked:false})
+    this.setState({favoredOrOpposed: false})
     if(this.state.search.length>0){
       let {search} = this.state
       return axios.get(`https://api.propublica.org/congress/v1/bills/search.json?query=${search}`,{
@@ -71,15 +78,11 @@ class BillList extends Component {
         this.setState({bills})
       })  
     }
-    
   }
  
   LikedBillsList = () => {
-    // this.setState({ bills: this.props.bills && this.props.bills });
     this.setState({ tracked: true });
   };
-
-  getDislikedBills = () => {};
 
   pageChange = str => {
     let { page, rowsPerPage, bills } = this.state;
@@ -110,6 +113,7 @@ class BillList extends Component {
               >
                 {bill.bill_id}
               </Link>
+              {this.deleteIconShow("",bill.bill_id)}
             </TableCell>
             <TableCell>{title}</TableCell>
             <TableCell>{bill.committees} </TableCell>
@@ -130,24 +134,32 @@ class BillList extends Component {
         const id = `${bill.billSlug}-${bill.congress}`;
         return (
           <TableRow key={id}>
+
             <TableCell>
+
               <Link
                 to={`/bills/${id}`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 {id}
               </Link>
+
+              <DeleteOutline onClick = {()=>this.props.deleteBill("bills-favored", id)}/>
+
             </TableCell>
+
             <TableCell>
               {title
                 ? title
                 : "Excepteur mollit commodo ipsum esse qui elit labore do do ex tempor aliqua."}
             </TableCell>
+
             <TableCell>
               {bill.committee
                 ? bill.committee
                 : "Aute occaecat consectetur labore esse."}{" "}
             </TableCell>
+
           </TableRow>
         );
       });
@@ -157,6 +169,7 @@ class BillList extends Component {
   showOpposedBills =()=>{
     this.props.getBillsOpposed()
     this.setState({tracked:false})
+    this.setState({favoredOrOpposed:true})
     const {opposed} = this.props
     const newOpposed = opposed.map(bill=>{
       return Object.assign({},{
@@ -166,7 +179,7 @@ class BillList extends Component {
       })
     })
     if(newOpposed.length>0){
-      console.log(newOpposed)
+      // console.log(newOpposed)
       this.setState({bills:newOpposed})
     }   
   }
@@ -185,15 +198,20 @@ class BillList extends Component {
     }
     let buttonsArr = []
 
-    for(let button in buttons){
-      buttonsArr.push({text: button,
-        action:buttons[button]})
+    for(let butt in buttons){
+      buttonsArr.push({text: butt,
+        action:buttons[butt]})
     }
     return buttonsArr.map((button,i)=>{
       return this.buttonRender(button.action,button.text,i)
     })
-
   }
+
+  deleteIconShow = (loc,billId)=>{
+    return this.state.favoredOrOpposed? <DeleteOutline onClick = {()=>this.props.deleteBill("bills-opposed",billId)
+  }/>: null
+  }
+
 
 
   render() {
@@ -259,16 +277,16 @@ const mapStateToProps = state => {
     opposed: state.auth.billsOpposed
   };
 };
-const mapDispatchToProps = dispatch => {
-  return {
-    getBillsFavored: () => dispatch(getBillsFavored()),
-    getBillsOpposed: ()=> dispatch(getBillsOpposed())
-  }; /////////////////////
-};
+// const mapDispatchToProps =dispatch => {
+//   return {
+//     getBillsFavored: () => dispatch(getBillsFavored()),
+//     getBillsOpposed: ()=> dispatch(getBillsOpposed()),
+//     deleteBill: ()=>dispatch(deleteBill),
+//   }; /////////////////////
+// };
 export default compose(
   connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps,{getBillsFavored,getBillsOpposed,deleteBill}  
   )
 )(BillList);
 
@@ -288,5 +306,23 @@ import BillCard from "./BillCard";
 <Button onClick = {()=>this.showOpposedBills()}>See Opposed Bills</Button><br/>
 <Input onChange = {(e)=>this.searchInput(e)}/>
 <Button onClick = {()=>this.searchBills()}>Search Bills</Button> 
+// this.setState({ bills: this.props.bills && this.props.bills });
+
+  // getDislikedBills = () => {};
+
+  
+  deleteTrackedBill = (loc, billId)=>{
+    if(loc==="favored"){
+      this.props.deleteBill('bills-favored',billId)
+      // alert(`deleting ${billId} from favored`)
+      // return("bills-favored",billId)
+      
+    } else{
+      this.props.deleteBill('bills-opposed',billId)
+      // alert(`deleting ${billId} from opposed`)
+      // return("bills-opposed",billId)
+     
+    }
+  }
 
 */

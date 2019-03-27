@@ -20,6 +20,7 @@ const POLITICIANFAVOR = "POLITICIANFAVOR";
 const GETPOLITICIANSFAVORED = "GETPOLITICIANSFAVORED";
 const POLITICIANOPPOSE = "POLITICIANOPPOSE"
 const GETPOLITICIANSOPPOSED = "GETPOLITICIANSOPPOSED"
+const DELETE_BILL = "DELETE_BILL"
 
 export const signIn = credentials => {
   return (dispatch, getState, { getFirebase }) => {
@@ -352,6 +353,21 @@ export const billOppose=(billDetails)=>{
   }
 }
 
+export const deleteBill=(loc,billId)=>{
+  console.log({collection:loc,billId})
+  return(dispatch,getState,{getFirebase,getFirestore})=>{
+    const firebase = getFirebase()
+    const firestore = getFirestore()
+
+    firestore.collection("users").doc(firebase.auth().currentUser.uid).collection(loc).doc(billId).delete().then(()=>{
+      console.log("success")
+      dispatch({type: `${DELETE_BILL}_SUCCESS`})
+      console.log("success")
+    })
+    .catch(err=>dispatch({type: `${DELETE_BILL}_ERROR`}))
+  }
+}
+
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case `${SIGNIN}_ERROR`:
@@ -395,6 +411,8 @@ const authReducer = (state = initialState, action) => {
       return{...state};
     case `${GET_BILLS_OPPOSED}_SUCCESS`:
       return {...state, billsOpposed: action.payload};
+    case `${DELETE_BILL}_SUCCESS`:
+      return{...state}
     default:
       return state;
   }
