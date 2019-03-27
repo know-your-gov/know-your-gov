@@ -10,7 +10,9 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          {window.location.hash === "#/" ? null : <Navbar />}
+          {window.location.hash && window.location.hash !== "#/" ? (
+            <Navbar />
+          ) : null}
           {routes}
         </div>
       </Router>
