@@ -221,23 +221,44 @@ export const getBillsOpposed = () => {
   };
 };
 
-export const getBillVotes = (bill_id) => {
-  return (dispatch, getState, {getFirestore}) => {
+export const getBillVotes = bill_id => {
+  return (dispatch, getState, { getFirestore }) => {
     const firestore = getFirestore();
 
-    firestore.collection("bills-favored")
-    .doc(bill_id)
-    .collection("users")
-    .get()
-    .then(response => {
-      dispatch({
-type: "GETBILLVOTES_SUCCESS",
-payload: response
+    firestore
+      .collection("bills-favored")
+      .doc(bill_id)
+      .collection("users")
+      .get()
+      .then(querySnapshot => {
+        const dataArray = [];
+        querySnapshot.forEach(function(doc) {
+          dataArray.push(doc.data());
+        });
+        return dataArray;
       })
-      
-    })
-  }
-}
+      .then(response => {
+        dispatch({
+          type: "GETBILLVOTES_SUCCESS",
+          payload: response
+        });
+      })
+      .then(response => {
+        firestore
+          .collection("bills-opposed")
+          .doc(bill_id)
+          .collection("users")
+          .get()
+          .then(querySnapshot => {
+            const dataArray = [];
+            querySnapshot.forEach(function(doc) {
+              dataArray.push(doc.data());
+            });
+            return dataArray;
+          });
+      });
+  };
+};
 
 export const politicianFavor = poliDetails => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -385,6 +406,17 @@ export const billOppose = billDetails => {
       })
       .catch(err => {
         dispatch({ type: `${BILL_OPPOSE}_ERROR`, err });
+      })
+      .then(response => {
+        firestore
+          .collection("bills-opposed")
+          .doc(billDetails["bill_id"])
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid)
+          .set({
+            user: firebase.auth().currentUser.uid,
+            vote: 1
+          });
       });
   };
 };
@@ -455,8 +487,9 @@ const authReducer = (state = initialState, action) => {
       return { ...state, billsOpposed: action.payload };
     case `${DELETE_BILL}_SUCCESS`:
       return { ...state };
-      case "GETBILLVOTES_SUCCESS":
-      return {...state, billVotes: action.payload}
+    case "GETBILLVOTES_SUCCESS":
+      console.log(action);
+      return { ...state, billVotes: action.payload };
     default:
       return state;
   }

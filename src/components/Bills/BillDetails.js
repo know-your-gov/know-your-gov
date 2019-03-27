@@ -3,8 +3,8 @@ import axios from "axios";
 // import Button from '@material-ui/core/Button'
 import { connect } from "react-redux";
 import { compose } from "redux";
-
-import { billFavor,billOppose, getBillVotes } from "../../ducks/authReducer";
+import Chart from "../Chart/Chart";
+import { billFavor, billOppose, getBillVotes } from "../../ducks/authReducer";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -15,14 +15,16 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import { Link } from "react-router-dom";
 
 class BillDetails extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       billDetails: {}
     };
   }
   componentDidMount = () => {
+    const { billId } = this.props.match.params;
     this.getBillDetails();
+    this.props.getBillVotes(billId);
   };
   getBillDetails = () => {
     const { billId } = this.props.match.params;
@@ -46,9 +48,7 @@ class BillDetails extends Component {
     console.log(billDetails);
     return (
       <div style={{ width: "65%", margin: "0 auto", marginTop: "5vh" }}>
-
         <Card>
-
           <CardContent>
             <Typography variant="h6">{billDetails.title}</Typography>
             <p>{billDetails.committees}</p>
@@ -79,15 +79,13 @@ class BillDetails extends Component {
                   <FavoriteBorder
                     onClick={() => this.props.billFavor(billDetails)}
                   />
-                  <Clear onClick = {()=> this.props.billOppose(billDetails)} />
+                  <Clear onClick={() => this.props.billOppose(billDetails)} />
                 </CardActions>
               </CardActionArea>
             </div>
-
           </CardContent>
-
+          <Chart billVotes={this.props.billVotes} />
         </Card>
-
       </div>
     );
   }
@@ -95,14 +93,15 @@ class BillDetails extends Component {
 
 const mapStateToProps = state => {
   return {
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    billVotes: state.auth.billVotes
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
     billFavor: billDetails => dispatch(billFavor(billDetails)),
     billOppose: billDetails => dispatch(billOppose(billDetails)),
-    // getBillVotes: billDetails => dispatch(getBillVotes(billDetails))
+    getBillVotes: billDetails => dispatch(getBillVotes(billDetails))
   }; /////////////////////
 };
 
@@ -112,9 +111,6 @@ export default compose(
     mapDispatchToProps
   )
 )(BillDetails);
-
-
-
 
 /*
   // const congSenId = /(?<=-)\d{1,6}/
