@@ -4,7 +4,8 @@ const initialState = {
   billsFavored: [],
   politiciansFavored: [],
   politiciansOpposed: [],
-  billsOpposed: []
+  billsOpposed: [],
+  billVotes: []
 };
 
 const SIGNIN = "SIGNIN";
@@ -12,15 +13,15 @@ const SIGNOUT = "SIGNOUT";
 const SIGNUP = "SIGNUP";
 const UPDATE = "UPDATE";
 const BILLFAVOR = "BILLFAVOR";
-const BILL_OPPOSE = "BILL_OPPOSE"
+const BILL_OPPOSE = "BILL_OPPOSE";
 const GETBILLSFAVORED = "GETBILLSFAVORED";
-const GET_BILLS_OPPOSED = "GET_BILLS_OPPOSED"
+const GET_BILLS_OPPOSED = "GET_BILLS_OPPOSED";
 const GETUSER = "GETUSER";
 const POLITICIANFAVOR = "POLITICIANFAVOR";
 const GETPOLITICIANSFAVORED = "GETPOLITICIANSFAVORED";
-const POLITICIANOPPOSE = "POLITICIANOPPOSE"
-const GETPOLITICIANSOPPOSED = "GETPOLITICIANSOPPOSED"
-const DELETE_BILL = "DELETE_BILL"
+const POLITICIANOPPOSE = "POLITICIANOPPOSE";
+const GETPOLITICIANSOPPOSED = "GETPOLITICIANSOPPOSED";
+const DELETE_BILL = "DELETE_BILL";
 
 export const signIn = credentials => {
   return (dispatch, getState, { getFirebase }) => {
@@ -155,6 +156,17 @@ export const billFavor = billDetails => {
       })
       .catch(err => {
         dispatch({ type: `${BILLFAVOR}_ERROR`, err });
+      })
+      .then(() => {
+        firestore
+          .collection("bills-favored")
+          .doc(billDetails["bill_id"])
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid)
+          .set({
+            user: firebase.auth().currentUser.uid,
+            vote: 1
+          });
       });
   };
 };
@@ -183,26 +195,46 @@ export const getBillsFavored = () => {
   };
 };
 
-export const getBillsOpposed = ()=>{
-  return (dispatch,getState,{getFirebase, getFirestore})=>{
-    const firebase = getFirebase()
-    const firestore = getFirestore()
+export const getBillsOpposed = () => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
 
-    firestore.collection("users")
-    . doc(firebase.auth().currentUser.uid)
-    .collection("bills-opposed")
+    firestore
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("bills-opposed")
+      .get()
+      .then(querySnapshot => {
+        const dataArray = [];
+        querySnapshot.forEach(doc => {
+          dataArray.push(doc.data());
+        });
+        return dataArray;
+      })
+      .then(response => {
+        dispatch({
+          type: `${GET_BILLS_OPPOSED}_SUCCESS`,
+          payload: response
+        });
+      });
+  };
+};
+
+export const getBillVotes = (bill_id) => {
+  return (dispatch, getState, {getFirestore}) => {
+    const firestore = getFirestore();
+
+    firestore.collection("bills-favored")
+    .doc(bill_id)
+    .collection("users")
     .get()
-    .then(querySnapshot=>{
-      const dataArray =[];
-      querySnapshot.forEach((doc)=>{
-        dataArray.push(doc.data())
-      })
-      return dataArray
-    }).then(response=>{
+    .then(response => {
       dispatch({
-        type: `${GET_BILLS_OPPOSED}_SUCCESS`,
-        payload: response
+type: "GETBILLVOTES_SUCCESS",
+payload: response
       })
+      
     })
   }
 }
@@ -259,7 +291,10 @@ export const getPoliticiansFavored = () => {
       })
       .then(response => {
         console.log(response);
-        dispatch({ type: `${GETPOLITICIANSFAVORED}_SUCCESS`, payload: response });
+        dispatch({
+          type: `${GETPOLITICIANSFAVORED}_SUCCESS`,
+          payload: response
+        });
       });
   };
 };
@@ -269,24 +304,24 @@ export const politicianOppose = poliDetails => {
     const firebase = getFirebase();
     const firestore = getFirestore();
 
-  const split = poliDetails["id"].split("-");
-  const id = split[0];
-  const name = poliDetails["name"];
-  const title = poliDetails["title"];
-  const state = poliDetails["state"];
-  const party = poliDetails["party"];
-  firestore
-  .collection("users")
-  .doc(firebase.auth().currentUser.uid)
-  .collection("politicians-opposed")
-  .doc(poliDetails["id"])
-  .set({
-    id,
-    name,
-    title,
-    state,
-    party
-  })
+    const split = poliDetails["id"].split("-");
+    const id = split[0];
+    const name = poliDetails["name"];
+    const title = poliDetails["title"];
+    const state = poliDetails["state"];
+    const party = poliDetails["party"];
+    firestore
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("politicians-opposed")
+      .doc(poliDetails["id"])
+      .set({
+        id,
+        name,
+        title,
+        state,
+        party
+      })
       .then(() => {
         dispatch({ type: `${POLITICIANOPPOSE}_SUCCESS` });
       })
@@ -294,8 +329,7 @@ export const politicianOppose = poliDetails => {
         dispatch({ type: `${POLITICIANOPPOSE}_ERROR`, err });
       });
   };
-}
-
+};
 
 export const getPoliticiansOpposed = () => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -316,13 +350,15 @@ export const getPoliticiansOpposed = () => {
       })
       .then(response => {
         console.log(response);
-        dispatch({ type: `${GETPOLITICIANSOPPOSED}_SUCCESS`, payload: response });
+        dispatch({
+          type: `${GETPOLITICIANSOPPOSED}_SUCCESS`,
+          payload: response
+        });
       });
   };
 };
 
-
-export const billOppose=(billDetails)=>{
+export const billOppose = billDetails => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
     const firestore = getFirestore();
@@ -350,23 +386,29 @@ export const billOppose=(billDetails)=>{
       .catch(err => {
         dispatch({ type: `${BILL_OPPOSE}_ERROR`, err });
       });
-  }
-}
+  };
+};
 
-export const deleteBill=(loc,billId)=>{
-  console.log({collection:loc,billId})
-  return(dispatch,getState,{getFirebase,getFirestore})=>{
-    const firebase = getFirebase()
-    const firestore = getFirestore()
+export const deleteBill = (loc, billId) => {
+  console.log({ collection: loc, billId });
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
 
-    firestore.collection("users").doc(firebase.auth().currentUser.uid).collection(loc).doc(billId).delete().then(()=>{
-      console.log("success")
-      dispatch({type: `${DELETE_BILL}_SUCCESS`})
-      console.log("success")
-    })
-    .catch(err=>dispatch({type: `${DELETE_BILL}_ERROR`}))
-  }
-}
+    firestore
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection(loc)
+      .doc(billId)
+      .delete()
+      .then(() => {
+        console.log("success");
+        dispatch({ type: `${DELETE_BILL}_SUCCESS` });
+        console.log("success");
+      })
+      .catch(err => dispatch({ type: `${DELETE_BILL}_ERROR` }));
+  };
+};
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -406,13 +448,15 @@ const authReducer = (state = initialState, action) => {
     case `${GETPOLITICIANSOPPOSED}_SUCCESS`:
       return { ...state, politiciansOpposed: action.payload };
     case `${BILL_OPPOSE}_SUCCESS`:
-      return {...state};
+      return { ...state };
     case `${BILL_OPPOSE}_ERROR`:
-      return{...state};
+      return { ...state };
     case `${GET_BILLS_OPPOSED}_SUCCESS`:
-      return {...state, billsOpposed: action.payload};
+      return { ...state, billsOpposed: action.payload };
     case `${DELETE_BILL}_SUCCESS`:
-      return{...state}
+      return { ...state };
+      case "GETBILLVOTES_SUCCESS":
+      return {...state, billVotes: action.payload}
     default:
       return state;
   }
