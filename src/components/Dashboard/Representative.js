@@ -42,7 +42,8 @@ const styles = {
     alignItems: "space-between",
     justifyContent: "space-around",
     padding: "0",
-    overflow: "show"
+    overflow: "show",
+    color: "white"
   },
   rep: {
     color: "rgb(208, 49, 45)",
@@ -91,7 +92,8 @@ const Representative = props => {
           </Typography>
           <div className={classes.repInfo} id="repInfo">
             <p>
-              <p>Phone: {dets.phones[0]}</p>
+              <span>Phone: {dets.phones[0]}</span>
+              <br />
               Mailing: {dets.address[0].line1} {dets.address[0].city},{" "}
               {dets.address[0].state}, {dets.address[0].zip}
             </p>
@@ -109,7 +111,11 @@ const Representative = props => {
                 <img src="twitter.png" alt="twitter" />
               </a>
               <a
-                href={`https://youtube.com/${dets.channels[2].id}`}
+                href={
+                  dets.channels[2]
+                    ? `https://youtube.com/${dets.channels[2].id}`
+                    : null
+                }
                 target="_blank"
               >
                 <img src="youtube.png" alt="youtube" />
