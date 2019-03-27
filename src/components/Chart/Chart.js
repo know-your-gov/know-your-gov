@@ -11,15 +11,13 @@ export default class Chart extends Component {
   }
 
   componentDidMount() {
-    // axios.get(`request here`)
-    //   .then(res => {
-    //     const graph = res.data;
-    //    create variables that equal arrays here that have values drilled through props for reusability
-    // let arr1 = [this.props]
-    // let arr2= [this.props]
-    //       graph.forEach loop here
+    const { politicianVotes } = this.props; 
+       const poliVoteArr = politicianVotes && politicianVotes.length;
+
     const { billVotes } = this.props;
-    const voteArr = billVotes && billVotes.length;
+    
+    const billVoteArr = billVotes && billVotes.length;
+
     this.setState({
       Data: {
         labels: [
@@ -30,7 +28,7 @@ export default class Chart extends Component {
         datasets: [
           {
             label: "ease my suffering",
-            data: [voteArr, 2, 3], //another mapped arr here for data
+            data: [billVoteArr, 2],
             backgroundColor: [
               "rgba(50,200,95,0.5)",
               "rgba(240,10,10,0.5)",
@@ -61,15 +59,18 @@ export default class Chart extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
+      const { politicianVotes } = this.props
+      const poliVoteArr = politicianVotes && politicianVotes.length
+
       const { billVotes } = this.props;
-      const voteArr = billVotes && billVotes.length;
+      const billVoteArr = billVotes && billVotes.length;
       this.setState({
         Data: {
           labels: ["Votes Favored", "Votes Against"],
           datasets: [
             {
               label: "ease my suffering",
-              data: [voteArr, 2], //another mapped arr here for data
+              data: [billVoteArr, 2], //another mapped arr here for data
               backgroundColor: [
                 "rgba(50,200,95,0.5)",
                 "rgba(240,10,10,0.5)",

@@ -11,7 +11,7 @@ import axios from "axios";
 
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { politicianFavor, politicianOppose } from "../../ducks/authReducer";
+import { politicianFavor, politicianOppose, getPoliticianVotes } from "../../ducks/authReducer";
 
 const styles = {
   card: {
@@ -25,90 +25,94 @@ const styles = {
 };
 
 export class PoliticianDetails extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       politician: {},
       committees: [],
-      favored: false,
-      opposed: false
     };
   }
 
   componentDidMount() {
     const { id } = this.props.match.params;
+   this.getPoliticianDetails()
+    this.props.getPoliticianVotes(id);
+    console.log(this.props)
+  }
+
+  getPoliticianDetails(){
+    const { id } = this.props.match.params
     axios
-      .get(`https://api.propublica.org/congress/v1/members/${id}.json`, {
-        headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
-      })
-      .then(res => {
-        const repInfo = res.data.results[0];
-        const committeeInfo = repInfo.roles[0];
+  .get(`https://api.propublica.org/congress/v1/members/${id}.json`, {
+    headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
+  })
+  .then(res => {
+    const repInfo = res.data.results[0];
+    const committeeInfo = repInfo.roles[0];
 
-        const name = repInfo.first_name + " " + repInfo.last_name;
-        const birthDate = repInfo.date_of_birth;
-        const state = repInfo.roles[0].state;
-        const url = repInfo.url;
-        const id = repInfo.member_id;
+    const name = repInfo.first_name + " " + repInfo.last_name;
+    const birthDate = repInfo.date_of_birth;
+    const state = repInfo.roles[0].state;
+    const url = repInfo.url;
+    const id = repInfo.member_id;
 
-        function writeParty(param) {
-          if (param === "R") {
-            return "Republican";
-          }
-          if (param === "D") {
-            return "Democrat";
-          } else {
-            return "Other";
-          }
-        }
-        function writeGender(param) {
-          if (param === "M") {
-            return "Male";
-          }
-          if (param === "F") {
-            return "Female";
-          } else {
-            return "Other";
-          }
-        }
+    function writeParty(param) {
+      if (param === "R") {
+        return "Republican";
+      }
+      if (param === "D") {
+        return "Democrat";
+      } else {
+        return "Other";
+      }
+    }
+    function writeGender(param) {
+      if (param === "M") {
+        return "Male";
+      }
+      if (param === "F") {
+        return "Female";
+      } else {
+        return "Other";
+      }
+    }
 
-        function writeChamber(param) {
-          if (param === "House") {
-            return "House of Representatives";
-          }
-          return param;
-        }
+    function writeChamber(param) {
+      if (param === "House") {
+        return "House of Representatives";
+      }
+      return param;
+    }
 
-        const gender = writeGender(repInfo.gender);
-        const party = writeParty(repInfo.current_party);
-        const chamber = writeChamber(committeeInfo.chamber);
-        const office = committeeInfo.office;
-        const phone = committeeInfo.phone;
-        const title = committeeInfo.title;
-        const district = committeeInfo.district;
-        const billsSponsored = committeeInfo.bills_sponsored;
+    const gender = writeGender(repInfo.gender);
+    const party = writeParty(repInfo.current_party);
+    const chamber = writeChamber(committeeInfo.chamber);
+    const office = committeeInfo.office;
+    const phone = committeeInfo.phone;
+    const title = committeeInfo.title;
+    const district = committeeInfo.district;
+    const billsSponsored = committeeInfo.bills_sponsored;
 
-        const politician = {
-          name,
-          birthDate,
-          gender,
-          url,
-          id,
-          party,
-          office,
-          phone,
-          chamber,
-          title,
-          billsSponsored,
-          district,
-          state
-        };
+    const politician = {
+      name,
+      birthDate,
+      gender,
+      url,
+      id,
+      party,
+      office,
+      phone,
+      chamber,
+      title,
+      billsSponsored,
+      district,
+      state
+    };
 
-        const committees = committeeInfo.committees;
+    const committees = committeeInfo.committees;
 
-        this.setState({ politician: politician, committees: committees });
-        console.log(this.state.committees);
-      });
+    this.setState({ politician: politician, committees: committees });
+  });
   }
 
   render() {
@@ -183,7 +187,7 @@ export class PoliticianDetails extends Component {
             </Card>
           </div>
 
-          <Chart />
+          <Chart politicianVotes = {this.props.politicianVotes} />
 
           <div className="committeeInfo">
             <br />
@@ -236,7 +240,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     politicianFavor: politician => dispatch(politicianFavor(politician)),
-    politicianOppose: politician => dispatch(politicianOppose(politician))
+    politicianOppose: politician => dispatch(politicianOppose(politician)),
+    getPoliticianVotes: politician => dispatch(getPoliticianVotes(politician))
   };
 };
 
