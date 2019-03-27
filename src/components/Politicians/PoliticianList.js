@@ -20,6 +20,17 @@ import {
 import StateSelector from "./StateSelect";
 import "./PoliticianList.css";
 
+const styles= {
+rep: {
+  color: "rgb(208, 49, 45)",
+  fontSize: "1.2rem"
+},
+dem: {
+  color: "rgb(4, 146, 194)",
+  fontSize: "1.2rem"
+}
+}
+
 export class PoliticianList extends Component {
   constructor() {
     super();
@@ -29,10 +40,9 @@ export class PoliticianList extends Component {
       senateList: [],
       houseRepList: [],
       favoredPoliticians: [],
-      showFavored: false,
-      showOpposed: false,
       showHouseReps: false,
-      showSenate: false
+      showSenate: false,
+      showTracked: false
     };
     this.handleSenateChange = this.handleSenateChange.bind(this);
     this.handleHouseChange = this.handleHouseChange.bind(this);
@@ -54,10 +64,6 @@ export class PoliticianList extends Component {
     // console.log(this.props);
   }
 
-  jestTestSuccess() {
-    return "test works";
-  }
-
   handleSenateSubmit(e) {
     e.preventDefault();
     axios
@@ -75,9 +81,7 @@ export class PoliticianList extends Component {
         this.setState(
           {
             senateList: senateList,
-            showFavored: false,
             showHouseReps: false,
-            showOpposed: false,
             showSenate: true
           },
           () => console.log(senateList)
@@ -103,28 +107,16 @@ export class PoliticianList extends Component {
           houseRepList: houseRepList,
           showHouseReps: true,
           showSenate: false,
-          showOpposed: false,
-          showFavored: false
+          showTracked: false
         });
-        // console.log(houseRepList);
       });
   }
 
-  setFavoredList() {
+  setTrackedList() {
     this.setState({
-      showFavored: true,
-      showOpposed: false,
       showSenate: false,
-      showHouseReps: false
-    });
-  }
-
-  setOpposedList() {
-    this.setState({
-      showOpposed: true,
-      showFavored: false,
-      showSenate: false,
-      showHouseReps: false
+      showHouseReps: false,
+      showTracked: true
     });
   }
 
@@ -142,22 +134,21 @@ export class PoliticianList extends Component {
 
         return (
           <div>
-            <Card key={id} style={{ width: "20vw", margin: "auto" }}>
+            <Card key={id} style={{ width: "20vw", margin: "auto",}}>
               <div>
                 <Button>
                   <Link
                     to={`/politicians/${id}`}
                     style={{ textDecoration: "none", color: "black" }}
                   >
-                    {id}
+                    {name}
                   </Link>
                 </Button>
               </div>
+              <div>{id}</div>
               <div>{title}</div>
-              <div>{name}</div>
               <div>{party}</div>
-              <div>{state}</div>
-              <hr />
+              <div>{state + "."}</div>
             </Card>
           </div>
         );
@@ -177,22 +168,21 @@ export class PoliticianList extends Component {
         let party = politician.party;
 
         return (
-          <Card key={id}>
+          <Card key={id} style={{ width: "20vw", margin: "auto", display:"flex",  flexDirection:"column"}}>
             <div>
               <Button>
                 <Link
                   to={`/politicians/${id}`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
-                  {id}
+                  {name}
                 </Link>
               </Button>
             </div>
+            <div>{id}</div>
             <div>{title}</div>
-            <div>{name}</div>
             <div>{party}</div>
-            <div>{state}</div>
-            <hr />
+            <div>{state + "."}</div>
           </Card>
         );
       });
@@ -305,33 +295,42 @@ export class PoliticianList extends Component {
 
           <Button
             style={{ color: "white" }}
-            onClick={() => this.setFavoredList()}
+            onClick={() => this.setTrackedList()}
           >
-            {" "}
-            Favored Politicians{" "}
+            My Politicians
           </Button>
-          <Button
-            style={{ color: "white" }}
-            onClick={() => this.setOpposedList()}
-          >
-            {" "}
-            Opposed Politicians{" "}
-          </Button>
-          <div>
-            <div>
-              {this.state.showFavored ? this.listPoliticiansFavored() : null}
+          <div style={{display:"flex"}}>
+         
+            <div style={{marginLeft: "auto", marginRight:"auto"}}>
+              {this.state.showTracked ? (
+               
+                this.listPoliticiansFavored()
+              ) : null}
             </div>
+            
+            <div style={{marginLeft: "auto", marginRight:"auto"}}>
+              {this.state.showTracked ? (
+           
+                this.listPoliticiansOpposed()
+              ) : null}
+            </div>
+          </div>
+
+          <div>
+            {this.state.showFavored ? this.listPoliticiansFavored() : null}
           </div>
 
           {this.state.showOpposed ? this.listPoliticiansOpposed() : null}
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-          {senateListDisplay}
+          {this.state.showSenate === true ? (
+            senateListDisplay
+          ) : null}
         </div>
 
         {this.state.showHouseReps === false ? (
-          <div> </div>
+          null
         ) : (
           <Paper style={{ width: "70vw", margin: "auto", textAlign: "center" }}>
             <div>
@@ -355,6 +354,11 @@ export class PoliticianList extends Component {
     );
   }
 }
+
+export function JestTest(testparam1) {
+  return testparam1;
+}
+//just a test for jest to reach inside react components
 
 const mapStateToProps = state => {
   return {
