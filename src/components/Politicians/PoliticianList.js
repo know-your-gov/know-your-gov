@@ -133,8 +133,8 @@ export class PoliticianList extends Component {
         let party = politician.party;
 
         return (
-          <div>
-            <Card key={id} style={{ width: "20vw", margin: "auto",}}>
+          <div key={id}>
+            <Card  style={{ width: "20vw", margin: "auto",}}>
               <div>
                 <Button>
                   <Link
