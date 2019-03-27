@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 // import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 // import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 // import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import Chart from "../Chart.Js/ReusableChart";
+import Chart from "../Chart/Chart";
 import axios from "axios";
 
 import { connect } from "react-redux";
@@ -31,12 +31,12 @@ export class PoliticianDetails extends Component {
       politician: {},
       committees: [],
       favored: false,
-      opposed: false,
+      opposed: false
     };
   }
 
   componentDidMount() {
-    const {id} = this.props.match.params
+    const { id } = this.props.match.params;
     axios
       .get(`https://api.propublica.org/congress/v1/members/${id}.json`, {
         headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
@@ -47,7 +47,7 @@ export class PoliticianDetails extends Component {
 
         const name = repInfo.first_name + " " + repInfo.last_name;
         const birthDate = repInfo.date_of_birth;
-        const state = repInfo.roles[0].state
+        const state = repInfo.roles[0].state;
         const url = repInfo.url;
         const id = repInfo.member_id;
 
@@ -87,7 +87,6 @@ export class PoliticianDetails extends Component {
         const title = committeeInfo.title;
         const district = committeeInfo.district;
         const billsSponsored = committeeInfo.bills_sponsored;
-        
 
         const politician = {
           name,
@@ -113,16 +112,16 @@ export class PoliticianDetails extends Component {
   }
 
   render() {
-const {politician} = this.state
+    const { politician } = this.state;
 
-    const committeeDisplay = this.state.committees.map((e) => {
+    const committeeDisplay = this.state.committees.map(e => {
       return (
         <div key={e.code}>
           <Card>
-            <div >
+            <div>
               <Typography variant="h5">{e.name}</Typography>
               <Typography variant="h6">{e.title}</Typography>
-             <Typography variant="h6">Rank {e.rank_in_party}</Typography> 
+              <Typography variant="h6">Rank {e.rank_in_party}</Typography>
             </div>
           </Card>{" "}
           <br />
@@ -130,9 +129,10 @@ const {politician} = this.state
       );
     });
     return (
-      <div style={{}}><Typography variant="h5">
-                  District: {this.state.politician.district}
-                </Typography>
+      <div style={{}}>
+        <Typography variant="h5">
+          District: {this.state.politician.district}
+        </Typography>
         <div
           style={{
             display: "flex",
@@ -143,10 +143,26 @@ const {politician} = this.state
           <div className="mainInfo" style={styles.card}>
             <Card>
               <div>
-              <div style={{display: "flex", float:"right"}}>
-              <img style={{padding:"10px"}}className="favorButton" src="upvote.png" alt="favor" width="28vw" height ="25vh" onClick ={() => this.props.politicianFavor(politician)}></img>
-              <img style={{padding: "10px"}} className="againstButton" src="downvote.png" alt="favor" width="25vw" height ="25vh" onClick ={() => this.props.politicianOppose(politician)}></img>
-           </div>
+                <div style={{ display: "flex", float: "right" }}>
+                  <img
+                    style={{ padding: "10px" }}
+                    className="favorButton"
+                    src="upvote.png"
+                    alt="favor"
+                    width="28vw"
+                    height="25vh"
+                    onClick={() => this.props.politicianFavor(politician)}
+                  />
+                  <img
+                    style={{ padding: "10px" }}
+                    className="againstButton"
+                    src="downvote.png"
+                    alt="favor"
+                    width="25vw"
+                    height="25vh"
+                    onClick={() => this.props.politicianOppose(politician)}
+                  />
+                </div>
                 <Typography variant="caption">
                   {" "}
                   Member ID: {this.state.politician.id}{" "}
@@ -164,10 +180,10 @@ const {politician} = this.state
                 <Typography variant="caption">State:</Typography>
                 {this.state.politician.state}
               </div>
-               </Card>
+            </Card>
           </div>
 
-          <Chart/>
+          <Chart />
 
           <div className="committeeInfo">
             <br />
@@ -176,14 +192,10 @@ const {politician} = this.state
         </div>
         <div className="subInfo" style={styles.card}>
           <div className="mainInfo" style={styles.card}>
-            
-              <div style={{ marginRight: "5%" }}>
-                
-                {/* <Typography variant="caption">Bills Sponsored:</Typography>
+            <div style={{ marginRight: "5%" }}>
+              {/* <Typography variant="caption">Bills Sponsored:</Typography>
                 {this.state.politician.billsSponsored} */}
-
-              </div>
-            
+            </div>
           </div>
         </div>
         <div className="contactInfo">
@@ -193,13 +205,21 @@ const {politician} = this.state
               {this.state.politician.office}{" "}
             </Typography>
             <Typography>
-             <Typography variant="caption">Contact number:</Typography> 
-             <Typography variant="h5">{this.state.politician.phone}</Typography> 
+              <Typography variant="caption">Contact number:</Typography>
+              <Typography variant="h5">
+                {this.state.politician.phone}
+              </Typography>
             </Typography>
             <Typography>
-              <Button style={{fontSize:"130%"}}>
-            <a href={`${this.state.politician.url}`} target="_blank" rel="noopener noreferrer">{this.state.politician.url}</a>
-            </Button>
+              <Button style={{ fontSize: "130%" }}>
+                <a
+                  href={`${this.state.politician.url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {this.state.politician.url}
+                </a>
+              </Button>
             </Typography>
           </Card>
         </div>
