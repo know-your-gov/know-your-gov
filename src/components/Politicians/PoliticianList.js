@@ -20,16 +20,16 @@ import {
 import StateSelector from "./StateSelect";
 import "./PoliticianList.css";
 
-const styles= {
-rep: {
-  color: "rgb(208, 49, 45)",
-  fontSize: "1.2rem"
-},
-dem: {
-  color: "rgb(4, 146, 194)",
-  fontSize: "1.2rem"
-}
-}
+// const styles= {
+// rep: {
+//   color: "rgb(208, 49, 45)",
+//   fontSize: "1.2rem"
+// },
+// dem: {
+//   color: "rgb(4, 146, 194)",
+//   fontSize: "1.2rem"
+// }
+// }
 
 export class PoliticianList extends Component {
   constructor() {
@@ -134,7 +134,7 @@ export class PoliticianList extends Component {
 
         return (
           <div key={id}>
-            <Card  style={{ width: "20vw", margin: "auto",}}>
+            <Card style={{ width: "20vw", margin: "auto" }}>
               <div>
                 <Button>
                   <Link
@@ -168,7 +168,15 @@ export class PoliticianList extends Component {
         let party = politician.party;
 
         return (
-          <Card key={id} style={{ width: "20vw", margin: "auto", display:"flex",  flexDirection:"column"}}>
+          <Card
+            key={id}
+            style={{
+              width: "20vw",
+              margin: "auto",
+              display: "flex",
+              flexDirection: "column"
+            }}
+          >
             <div>
               <Button>
                 <Link
@@ -299,20 +307,13 @@ export class PoliticianList extends Component {
           >
             My Politicians
           </Button>
-          <div style={{display:"flex"}}>
-         
-            <div style={{marginLeft: "auto", marginRight:"auto"}}>
-              {this.state.showTracked ? (
-               
-                this.listPoliticiansFavored()
-              ) : null}
+          <div style={{ display: "flex" }}>
+            <div style={{ marginLeft: "auto", marginRight: "auto" }}>
+              {this.state.showTracked ? this.listPoliticiansFavored() : null}
             </div>
-            
-            <div style={{marginLeft: "auto", marginRight:"auto"}}>
-              {this.state.showTracked ? (
-           
-                this.listPoliticiansOpposed()
-              ) : null}
+
+            <div style={{ marginLeft: "auto", marginRight: "auto" }}>
+              {this.state.showTracked ? this.listPoliticiansOpposed() : null}
             </div>
           </div>
 
@@ -324,14 +325,10 @@ export class PoliticianList extends Component {
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-          {this.state.showSenate === true ? (
-            senateListDisplay
-          ) : null}
+          {this.state.showSenate === true ? senateListDisplay : null}
         </div>
 
-        {this.state.showHouseReps === false ? (
-          null
-        ) : (
+        {this.state.showHouseReps === false ? null : (
           <Paper style={{ width: "70vw", margin: "auto", textAlign: "center" }}>
             <div>
               <Table>

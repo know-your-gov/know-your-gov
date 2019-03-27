@@ -1,18 +1,16 @@
 import React, { Component } from "react";
-import AccountInfo from "./AccountInfo";
+
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { withStyles } from "@material-ui/core/styles";
-import firebase from "../../config/fbConfig";
+
 import "firebase/auth";
 import { updateAccount } from "../../ducks/authReducer";
 import PropTypes from "prop-types";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
+
 import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
+
 import Paper from "@material-ui/core/Paper";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -35,7 +33,7 @@ const styles = theme => ({
   button: {
     width: "20%",
     margin: "0 auto",
-    margin: theme.spacing.unit,
+
     backgroundColor: primary,
     color: secondary,
     textDecoration: "none",
