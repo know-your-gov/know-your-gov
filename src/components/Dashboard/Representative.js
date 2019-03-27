@@ -101,12 +101,14 @@ const Representative = props => {
               <a
                 href={`https://www.facebook.com/${dets.channels[0].id}`}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <img src="facebook.png" alt="facebook" />
               </a>
               <a
                 href={`https://twitter.com/${dets.channels[1].id}`}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <img src="twitter.png" alt="twitter" />
               </a>
@@ -117,6 +119,7 @@ const Representative = props => {
                     : null
                 }
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {dets.channels[2] ? (
                   <img src="youtube.png" alt="youtube" />

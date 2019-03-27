@@ -6,16 +6,11 @@ import { getUser } from "../../ducks/authReducer";
 // import firebase from "../../config/fbConfig";
 import "firebase/auth";
 import Card from "@material-ui/core/Card";
-import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
+
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Representative from "./Representative";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-import Clear from "@material-ui/icons/Clear";
+
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import ElectionList from "./ElectionList";
