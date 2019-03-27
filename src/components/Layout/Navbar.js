@@ -1,13 +1,23 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { compose } from "redux";
+import { withRouter } from "react-router-dom";
 import SignedInLinks from "./SignedInLinks";
 import SignedOutLinks from "./SignedOutLinks";
 import { connect } from "react-redux";
+import "./NavBarStyling.css";
 
 const Navbar = props => {
   const { auth } = props;
+  // console.log(props);
   return (
-    <div style={{ backgroundColor: "lightgray", width:"100vw"}}>
-      {auth.uid ? <SignedInLinks /> : <SignedOutLinks />}
+    <div class="header">
+      <Link to="/dashboard" style={{ textDecoration: "none" }}>
+        <h2>KnowYourGov.com</h2>
+      </Link>
+      <div className="links">
+        {auth.uid ? <SignedInLinks /> : <SignedOutLinks />}
+      </div>
     </div>
   );
 };
@@ -18,4 +28,7 @@ const mapStateToPtops = state => {
   };
 };
 
-export default connect(mapStateToPtops)(Navbar);
+export default compose(
+  withRouter,
+  connect(mapStateToPtops)
+)(Navbar);

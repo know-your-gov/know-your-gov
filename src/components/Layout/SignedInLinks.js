@@ -1,5 +1,7 @@
 import React from "react";
+import { compose } from "redux";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import { signOut } from "../../ducks/authReducer";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
@@ -9,38 +11,45 @@ import Button from "@material-ui/core/Button";
 // import Toolbar from "@material-ui/core/Toolbar";
 // import IconButton from "@material-ui/core/IconButton";
 // import MenuIcon from "@material-ui/icons/Menu";
-import "./NavBarStyling.css"
+import "./NavBarStyling.css";
+import { withStyles } from "@material-ui/core";
+
+const styles = {
+  button: {
+    color: "white"
+  }
+};
 
 const SignedInLinks = props => {
-  
+  const { classes } = props;
   return (
     <div>
-    <div className="navTitle">
-      
-        KnowYourGov.com
-</div>
-<div className="navLinks" >
-        <Link to="/dashboard">
-          <Button color="primary">Dashboard</Button>
+      <div className="navLinks">
+        {/* <Link to="/dashboard" style={{ textDecoration: "none" }}>
+          <Button className={classes.button}>Dashboard</Button>
+        </Link> */}
+
+        <Link to={`/account`} style={{ textDecoration: "none" }}>
+          <Button className={classes.button}> Account </Button>
         </Link>
-       
-        <Link to={`/account`}>
-          <Button color="primary"> Account </Button>
+        <Link to="/bills" style={{ textDecoration: "none" }}>
+          <Button className={classes.button}> Bills </Button>
         </Link>
-        <Link to="/bills">
-          <Button color="primary"> Bills </Button>
+        <Link to="/politicians" style={{ textDecoration: "none" }}>
+          <Button className={classes.button}> Politicians</Button>
         </Link>
-        <Link to="/politicians">
-          <Button color="primary"> Politicians</Button>
-        </Link>
-        <Link to="/">
-          <Button color="primary" onClick={props.signOut}>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <Button className={classes.button} onClick={props.signOut}>
             Logout{" "}
           </Button>
         </Link>
-        </div>
+      </div>
     </div>
   );
+};
+
+SignedInLinks.propTypes = {
+  classes: PropTypes.object.isRequired
 };
 
 const mapDispatchToProps = dispatch => {
@@ -49,7 +58,10 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  null,
-  mapDispatchToProps
+export default compose(
+  connect(
+    null,
+    mapDispatchToProps
+  ),
+  withStyles(styles)
 )(SignedInLinks);

@@ -97,7 +97,7 @@ export class Login extends Component {
       <div className={classes.main}>
         <CssBaseline />
         <Paper className={classes.paper}>
-          <Link to="/signup">
+          <Link to="/signup" style={{ textDecoration: "none" }}>
             <Button
               fullWidth
               variant="contained"

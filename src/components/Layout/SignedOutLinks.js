@@ -7,33 +7,25 @@ import Button from "@material-ui/core/Button";
 // import Toolbar from "@material-ui/core/Toolbar";
 // import IconButton from "@material-ui/core/IconButton";
 // import MenuIcon from "@material-ui/icons/Menu";
-import "./NavBarStyling.css"
+import "./NavBarStyling.css";
 
 const SignedOutLinks = () => {
-  
-
   return (
     <div>
-    <div className="navTitle">
-      
-        KnowYourGov.com
-</div>
-<div className="navLinks">
-        <Link to="/dashboard">
+      <div className="navLinks">
+        <Link to="/dashboard" style={{ textDecoration: "none" }}>
           <Button color="primary">Dashboard</Button>
         </Link>
-        <Link to="/bills">
+        <Link to="/bills" style={{ textDecoration: "none" }}>
           <Button color="primary"> Bills </Button>
         </Link>
-        <Link to="/politicians">
+        <Link to="/politicians" style={{ textDecoration: "none" }}>
           <Button color="primary"> Politicians</Button>
         </Link>
-        <Link to="/login">
-          <Button color="primary">
-            Login
-          </Button>
+        <Link to="/login" style={{ textDecoration: "none" }}>
+          <Button color="primary">Login</Button>
         </Link>
-        </div>
+      </div>
     </div>
   );
 };
