@@ -20,7 +20,7 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 const styles = {
   root: {
     width: "550px",
-    height: "300px",
+    height: "35vh",
     margin: "0 auto",
     background: "rgba(198, 198, 208, 0.05)",
     overflowY: "auto",
@@ -31,7 +31,22 @@ const styles = {
     color: "white"
   },
   details: {
-    background: "transparent"
+    background: "rgba(198, 198, 208, 0.3)"
+  },
+  election: {
+    background: "rgba(198, 198, 208, 0.1)",
+    "&::after": {
+      background: "rgba(198, 198, 208, 0.3)"
+    }
+  },
+  electionExpanded: {
+    background: "rgba(198, 198, 208, 0.3)"
+  },
+  electionTitle: {
+    color: "white"
+  },
+  electionTypography: {
+    color: "white"
   }
 };
 
@@ -39,7 +54,8 @@ class ElectionList extends React.Component {
   constructor() {
     super();
     this.state = {
-      elections: []
+      elections: [],
+      expanded: false
     };
   }
 
@@ -66,9 +82,13 @@ class ElectionList extends React.Component {
       });
   };
 
+  handleExpanded = () => {
+    this.setState({ expanded: !this.state.expanded });
+  };
+
   electionsList = () => {
     const { classes } = this.props;
-    const { elections } = this.state;
+    const { elections, expanded } = this.state;
     let loadingAddress = {
       address: "1600 Pennsylvania Avenue NW",
       city: "Washington",
@@ -80,9 +100,15 @@ class ElectionList extends React.Component {
       : loadingAddress;
     return elections.map(election => {
       return (
-        <ExpansionPanel key={election.id}>
-          <ExpansionPanelSummary>
-            <Typography variant="h5">
+        <ExpansionPanel
+          key={election.id}
+          className={classes.election}
+          onClick={this.handleExpanded}
+        >
+          <ExpansionPanelSummary
+            className={expanded ? classes.electionExpanded : classes.election}
+          >
+            <Typography variant="h5" className={classes.electionTypography}>
               {election.name} {election.electionDay}
             </Typography>
           </ExpansionPanelSummary>

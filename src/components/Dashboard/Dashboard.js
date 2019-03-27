@@ -23,8 +23,25 @@ import axios from "axios";
 import "./Dashboard.css";
 
 const styles = {
-  root: {
-    width: "250px"
+  card: {
+    background: "rgba(198, 198, 208, 0.05)"
+
+    // margin: "0 auto"
+  },
+  cardTitle: {
+    color: "white",
+    fontSize: "2.5rem",
+    fontFamily: "Lato, sans-serif",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap"
+  },
+  cardImg: {
+    marginLeft: "1.5rem"
+  },
+  cardTypography: {
+    color: "white"
   }
 };
 
@@ -83,7 +100,7 @@ class Dashboard extends Component {
     if (officials.length > 0) {
       return officials.map((official, i) => {
         return (
-          <li>
+          <li key={i}>
             <Representative repDets={official} key={i} />
           </li>
         );
@@ -94,23 +111,31 @@ class Dashboard extends Component {
   handleBillFavor = () => {};
 
   render() {
+    const { classes } = this.props;
     console.log(this.props.user);
     return (
       <div style={{ height: "100%", marginTop: "5vh" }}>
-        <div className="dashboard-main">
+        <div>
           {/* welcome card */}
           <div className="card">
-            <Card>
+            <Card className={classes.card}>
               <CardContent>
-                <Typography variant="h6">
-                  Welcome {this.props.user && this.props.user.username}!
+                <Typography variant="h6" className={classes.cardTitle}>
+                  Welcome {this.props.user && this.props.user.username}!{" "}
+                  <img
+                    src="united-states.png"
+                    alt="flag"
+                    className={classes.cardImg}
+                  />
                 </Typography>
               </CardContent>
             </Card>
           </div>
 
           <div className="typography">
-            <Typography variant="h4">Your U.S. Legislators</Typography>
+            <Typography variant="h4" className={classes.cardTypography}>
+              Your U.S. Legislators
+            </Typography>
             <span className="undertext">(Based on your physical address)</span>
           </div>
           {/* card showing senate representatitve */}
