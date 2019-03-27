@@ -171,6 +171,7 @@ class BillList extends Component {
     this.setState({tracked:false})
     this.setState({favoredOrOpposed:true})
     const {opposed} = this.props
+    console.log(opposed)
     const newOpposed = opposed.map(bill=>{
       return Object.assign({},{
         bill_id:`${bill.billSlug}-${bill.congress}`,
@@ -181,6 +182,8 @@ class BillList extends Component {
     if(newOpposed.length>0){
       // console.log(newOpposed)
       this.setState({bills:newOpposed})
+    }else{
+      this.setState({bills:[]})
     }   
   }
 
@@ -274,7 +277,7 @@ const mapStateToProps = state => {
   return {
     auth: state.firebase.auth,
     bills: state.auth.billsFavored,
-    opposed: state.auth.billsOpposed
+    opposed: state.auth.billsOpposed,
   };
 };
 // const mapDispatchToProps =dispatch => {
