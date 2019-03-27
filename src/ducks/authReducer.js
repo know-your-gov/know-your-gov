@@ -5,7 +5,8 @@ const initialState = {
   politiciansFavored: [],
   politiciansOpposed: [],
   billsOpposed: [],
-  billVotes: []
+  billVotes: [],
+  politicianVotes: []
 };
 
 const SIGNIN = "SIGNIN";
@@ -260,6 +261,44 @@ export const getBillVotes = bill_id => {
   };
 };
 
+export const getPoliticianVotes = id => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+
+    firestore
+      .collection("politicians-favored")
+      .doc(id)
+      .collection("users")
+      .get()
+      .then(querySnapshot => {
+        const dataArray = [];
+        querySnapshot.forEach(function(doc) {
+          dataArray.push(doc.data());
+        });
+        return dataArray;
+      })
+      .then(response => {
+        dispatch({
+          type: "GETPOLITICIANVOTES_SUCCESS",
+          payload: response
+        });
+      })
+      .then(response => {
+        firestore
+          .collection("politicians-opposed")
+          .doc(id)
+          .collection("users")
+          .get()
+          .then(querySnapshot => {
+            const dataArray = [];
+            querySnapshot.forEach(function(doc) {
+              dataArray.push(doc.data());
+            });
+            return dataArray;
+          });
+      });
+  };
+};
 export const politicianFavor = poliDetails => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
@@ -289,6 +328,17 @@ export const politicianFavor = poliDetails => {
       })
       .catch(err => {
         dispatch({ type: `${POLITICIANFAVOR}_ERROR`, err });
+      })
+      .then(() => {
+        firestore
+        .collection("politicians-favored")
+        .doc(poliDetails["id"])
+        .collection("users")
+        .doc(firebase.auth().currentUser.uid)
+        .set({
+          user: firebase.auth().currentUser.uid,
+          vote: 1
+        })
       });
   };
 };
@@ -490,6 +540,9 @@ const authReducer = (state = initialState, action) => {
     case "GETBILLVOTES_SUCCESS":
       console.log(action);
       return { ...state, billVotes: action.payload };
+    case "GETPOLITICIANVOTES_SUCCESS":
+    console.log(action)
+      return { ...state, politicianVotes: action.payload };
     default:
       return state;
   }
