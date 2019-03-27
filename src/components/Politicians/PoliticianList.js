@@ -29,7 +29,7 @@ import "./PoliticianList.css";
 //     color: "rgb(4, 146, 194)",
 //     fontSize: "1.2rem"
 //   }
-// };
+// }
 
 export class PoliticianList extends Component {
   constructor() {
