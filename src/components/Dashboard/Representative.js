@@ -118,7 +118,9 @@ const Representative = props => {
                 }
                 target="_blank"
               >
-                <img src="youtube.png" alt="youtube" />
+                {dets.channels[2] ? (
+                  <img src="youtube.png" alt="youtube" />
+                ) : null}
               </a>
             </div>
           </div>
