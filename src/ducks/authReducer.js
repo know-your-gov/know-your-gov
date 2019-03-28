@@ -130,6 +130,10 @@ export const getUser = () => {
   };
 };
 
+export const add=(num1,num2)=>{
+  return num1+num2
+}
+
 export const billFavor = billDetails => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
