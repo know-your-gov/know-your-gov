@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Pie } from "react-chartjs-2";
-// import axios from "axios";
 
-export default class Chart extends Component {
+export default class PoliChart extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,11 +12,7 @@ export default class Chart extends Component {
   componentDidMount() {
     const { politicianVotes } = this.props; 
        const poliVoteArr = politicianVotes && politicianVotes.length;
-
-    const { billVotes } = this.props;
-    
-    const billVoteArr = billVotes && billVotes.length;
-
+console.log(this.props)
     this.setState({
       Data: {
         labels: [
@@ -28,7 +23,7 @@ export default class Chart extends Component {
         datasets: [
           {
             label: "ease my suffering",
-            data: this.props.billVotes ? [billVoteArr, 2] : [poliVoteArr, 2],
+            data: [poliVoteArr, 2],
             backgroundColor: [
               "rgba(50,200,95,0.5)",
               "rgba(240,10,10,0.5)",
@@ -62,15 +57,13 @@ export default class Chart extends Component {
       const { politicianVotes } = this.props
       const poliVoteArr = politicianVotes && politicianVotes.length
 
-      const { billVotes } = this.props;
-      const billVoteArr = billVotes && billVotes.length;
       this.setState({
         Data: {
           labels: ["Votes Favored", "Votes Against"],
           datasets: [
             {
               label: "ease my suffering",
-              data: this.props.billVotes ? [billVoteArr, 2] : [poliVoteArr, 2], //another mapped arr here for data
+              data: [poliVoteArr, 2], //another mapped arr here for data
               backgroundColor: [
                 "rgba(50,200,95,0.5)",
                 "rgba(240,10,10,0.5)",

@@ -1,8 +1,8 @@
 module.exports = {
-    testingFUCKINGsucks: function(param){
+    jestcommunicationtest: function(param){
         return param + 1
     },
-    stupidassfuckingjesttestnumbertwo: function(param){
+    jesttest2: function(param){
         return param
     }
 }
