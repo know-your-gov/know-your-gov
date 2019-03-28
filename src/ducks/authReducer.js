@@ -81,6 +81,10 @@ export const signUp = newUser => {
   };
 };
 
+export const add = (num1, num2) => {
+  return num1 + num2;
+};
+
 export const updateAccount = newInfo => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
@@ -332,14 +336,14 @@ export const politicianFavor = poliDetails => {
       })
       .then(() => {
         firestore
-        .collection("politicians-favored")
-        .doc(poliDetails["id"])
-        .collection("users")
-        .doc(firebase.auth().currentUser.uid)
-        .set({
-          user: firebase.auth().currentUser.uid,
-          vote: 1
-        })
+          .collection("politicians-favored")
+          .doc(poliDetails["id"])
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid)
+          .set({
+            user: firebase.auth().currentUser.uid,
+            vote: 1
+          });
       });
   };
 };
@@ -542,7 +546,7 @@ const authReducer = (state = initialState, action) => {
       console.log(action);
       return { ...state, billVotes: action.payload };
     case "GETPOLITICIANVOTES_SUCCESS":
-    console.log(action)
+      console.log(action);
       return { ...state, politicianVotes: action.payload };
     default:
       return state;

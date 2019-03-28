@@ -1,20 +1,28 @@
-import authReducer from "../ducks/authReducer";
+import { billFavor, add } from "../ducks/authReducer";
 import { initialState } from "../ducks/authReducer";
 
 describe("authReducer", () => {
-  test("check if bill id is used in billFavor function", () => {
+  it("check if bill id is used in billFavor function", () => {
     let billDetails = {
       bill_id: "h234-115"
     };
-    expect(authReducer.billFavor(billDetails)).toEqual(expect.anything());
+    expect(billFavor(billDetails)).toEqual(expect.anything());
   });
 
-  test("check addition function to test jest", () => {
-    expect(authReducer.add(1, 2)).toEqual(3);
+  it("check addition function to test jest", () => {
+    expect(add(1, 2)).toEqual(3);
   });
 });
 
 /*
+describe("firestore, (" => {
+  var db;
+  before(() => {
+    var config = {
+      
+    }
+  })
+})
 
   test('check if bill id is used in billFavor function',()=>{
     const mock = jest.fn()
