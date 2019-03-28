@@ -299,6 +299,7 @@ export const getPoliticianVotes = id => {
       });
   };
 };
+
 export const politicianFavor = poliDetails => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();

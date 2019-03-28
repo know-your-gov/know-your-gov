@@ -28,7 +28,7 @@ export default class Chart extends Component {
         datasets: [
           {
             label: "ease my suffering",
-            data: [billVoteArr, 2],
+            data: this.props.billVotes ? [billVoteArr, 2] : [poliVoteArr, 2],
             backgroundColor: [
               "rgba(50,200,95,0.5)",
               "rgba(240,10,10,0.5)",
@@ -70,7 +70,7 @@ export default class Chart extends Component {
           datasets: [
             {
               label: "ease my suffering",
-              data: [billVoteArr, 2], //another mapped arr here for data
+              data: this.props.billVotes ? [billVoteArr, 2] : [poliVoteArr, 2], //another mapped arr here for data
               backgroundColor: [
                 "rgba(50,200,95,0.5)",
                 "rgba(240,10,10,0.5)",

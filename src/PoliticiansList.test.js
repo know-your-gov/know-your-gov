@@ -1,6 +1,6 @@
 const JestTest = require("./PoliticianFunctions")
-test("please just fucking work", () => {
-  expect(JestTest.testingFUCKINGsucks(3)).toEqual(4);
+test("please just work", () => {
+  expect(JestTest.jestcommunicationtest(3)).toEqual(4);
 });
 
 // test("Bill Details page renders",()=>{

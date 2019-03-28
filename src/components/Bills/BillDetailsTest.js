@@ -1,3 +1,5 @@
+/* 
+CHANGE FILE NAME TO BillDetails.test.js later
 import React from 'react'
 import renderer from 'react-test-renderer'
 import BillDetails from './BillDetails'
@@ -16,3 +18,4 @@ test("Bill Details page renders",()=>{
   )
   expect(component.toJSON()).toMatchSnapshot();
 })
+*/
