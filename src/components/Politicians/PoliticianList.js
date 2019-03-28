@@ -317,17 +317,10 @@ export class PoliticianList extends Component {
             </div>
           </div>
 
-          <div>
-            {this.state.showFavored ? this.listPoliticiansFavored() : null}
-          </div>
-
-          {this.state.showOpposed ? this.listPoliticiansOpposed() : null}
-        </div>
-
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           {this.state.showSenate === true ? senateListDisplay : null}
         </div>
-
+</div>
         {this.state.showHouseReps === false ? null : (
           <Paper style={{ width: "70vw", margin: "auto", textAlign: "center" }}>
             <div>
@@ -351,11 +344,6 @@ export class PoliticianList extends Component {
     );
   }
 }
-
-export function JestTest(testparam1) {
-  return testparam1;
-}
-//just a test for jest to reach inside react components
 
 const mapStateToProps = state => {
   return {
