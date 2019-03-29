@@ -11,9 +11,9 @@ export default class Chart extends Component {
   }
 
   componentDidMount() {
-    const { politicianVotes } = this.props; 
-       const poliVoteArr = politicianVotes && politicianVotes.length;
-
+    const { politicianVotes, politicianOpposedVotes } = this.props; 
+    const poliVoteArr = politicianVotes && politicianVotes.length;
+    const poliVoteOpposedArr = politicianOpposedVotes && politicianOpposedVotes.length;
     const { billVotes } = this.props;
     
     const billVoteArr = billVotes && billVotes.length;
@@ -28,7 +28,7 @@ export default class Chart extends Component {
         datasets: [
           {
             label: "ease my suffering",
-            data: this.props.billVotes ? [billVoteArr, 2] : [poliVoteArr, 2],
+            data: this.props.billVotes ? [billVoteArr, 2] : [poliVoteArr, poliVoteOpposedArr],
             backgroundColor: [
               "rgba(50,200,95,0.5)",
               "rgba(240,10,10,0.5)",
@@ -59,18 +59,21 @@ export default class Chart extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props !== prevProps) {
-      const { politicianVotes } = this.props
-      const poliVoteArr = politicianVotes && politicianVotes.length
-
+      const { politicianVotes, politicianOpposedVotes } = this.props; 
+      const poliVoteArr = politicianVotes && politicianVotes.length;
+      const poliVoteOpposedArr = politicianOpposedVotes && politicianOpposedVotes.length;
       const { billVotes } = this.props;
       const billVoteArr = billVotes && billVotes.length;
+
+      console.log(poliVoteArr)
+      console.log(poliVoteOpposedArr)
       this.setState({
         Data: {
           labels: ["Votes Favored", "Votes Against"],
           datasets: [
             {
               label: "ease my suffering",
-              data: this.props.billVotes ? [billVoteArr, 2] : [poliVoteArr, 2], //another mapped arr here for data
+              data: this.props.billVotes ? [billVoteArr, 2] : [poliVoteArr, poliVoteOpposedArr], //another mapped arr here for data
               backgroundColor: [
                 "rgba(50,200,95,0.5)",
                 "rgba(240,10,10,0.5)",

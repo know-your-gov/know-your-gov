@@ -40,7 +40,6 @@ describe("sam auth reducer test", () => {
   /*
   const app = firebase.initializeApp(creds);
   const db = firebase.firestore();
-
   const creds = {
     apiKey: "AIzaSyAMaIjjfZy96z1XxGF5pZPJCA8KiAAtIVI",
     authDomain: "knowyourgov-bfddd.firebaseapp.com",

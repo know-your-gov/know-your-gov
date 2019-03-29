@@ -19,7 +19,7 @@ describe("firestore", () => {
       state: "TX",
       zip: "75201"
     };
-
+ 
     return db
       .collection("users")
       .doc("test-user-id")

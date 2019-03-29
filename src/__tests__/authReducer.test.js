@@ -23,7 +23,6 @@ describe("firestore, (" => {
     }
   })
 })
-
   test('check if bill id is used in billFavor function',()=>{
     const mock = jest.fn()
     authReducer.billFavor(mock)
@@ -31,13 +30,9 @@ describe("firestore, (" => {
       bill_id: expect.stringContaining(String)
     }))
   })
-
-
   it("should set a document", () => {
     var data = {};
     return db.collection("users").doc("newUserId").collection("bills-favored").doc("newBillId").set(data)
-
     // [END cities_document_set]
 });
-
 */
