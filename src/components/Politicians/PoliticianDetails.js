@@ -1,8 +1,10 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Card from "@material-ui/core/Card";
 // import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
 // import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 // import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 // import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -14,19 +16,51 @@ import { compose } from "redux";
 import {
   politicianFavor,
   politicianOppose,
-  getPoliticianVotes,
-  getPoliticianOpposedVotes,
-  deletePolitician
+  getPoliticianVotes
 } from "../../ducks/politicianReducer";
+import "./PoliticianDetails.css";
 
 const styles = {
   card: {
-    minWidth: 240,
-    maxWidth: 700,
-    marginRight: "5%",
-    marginTop: "5%",
-    textAlign: "left",
-    display: "flex"
+    width: "400px",
+    width: "450px",
+    // marginRight: "5%",
+    // marginTop: "5%",
+    textAlign: "left"
+    // display: "flex"
+  },
+  cardInner: {
+    background: "rgba(198, 198, 208, 0.05)",
+    color: "white",
+    padding: "1rem"
+  },
+  typography: {
+    color: "white"
+  },
+  subText: {
+    color: "rgb(198, 198, 208)",
+    paddingTop: "1rem",
+    paddingBottom: "0.5rem"
+  },
+  layout: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-around"
+  },
+  contactInfo: {
+    width: "450px",
+    margin: "0 auto",
+    marginTop: "2rem",
+    marginBottom: "2rem",
+    background: "rgba(198, 198, 208, 0.05)",
+    color: "white",
+    padding: "1rem"
+  },
+  committeeInfo: {
+    width: "100vw",
+    display: "flex",
+    justifyContent: "space-around",
+    flexWrap: "wrap"
   }
 };
 
@@ -43,7 +77,6 @@ export class PoliticianDetails extends Component {
     const { id } = this.props.match.params;
     this.getPoliticianDetails();
     this.props.getPoliticianVotes(id);
-    this.props.getPoliticianOpposedVotes(id)
     console.log(this.props);
   }
 
@@ -122,21 +155,24 @@ export class PoliticianDetails extends Component {
       });
   }
 
-  componentDidUpdate() {
-    console.log(this.props.politicianVotes);
-  }
-
   render() {
     const { politician } = this.state;
+    const { classes } = this.props;
 
     const committeeDisplay = this.state.committees.map(e => {
       return (
         <div key={e.code}>
-          <Card>
+          <Card className={classes.cardInner}>
             <div>
-              <Typography variant="h5">{e.name}</Typography>
-              <Typography variant="h6">{e.title}</Typography>
-              <Typography variant="h6">Rank {e.rank_in_party}</Typography>
+              <Typography variant="h5" className={classes.typography}>
+                {e.name}
+              </Typography>
+              <Typography variant="h6" className={classes.typography}>
+                {e.title}
+              </Typography>
+              <Typography variant="h6" className={classes.typography}>
+                Rank {e.rank_in_party}
+              </Typography>
             </div>
           </Card>{" "}
           <br />
@@ -145,18 +181,12 @@ export class PoliticianDetails extends Component {
     });
     return (
       <div style={{}}>
-        <Typography variant="h5">
+        <Typography variant="h5" className={classes.typography}>
           District: {this.state.politician.district}
         </Typography>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "space-around"
-          }}
-        >
-          <div className="mainInfo" style={styles.card}>
-            <Card>
+        <div className={classes.layout}>
+          <div className={classes.card}>
+            <Card className={classes.cardInner}>
               <div>
                 <div style={{ display: "flex", float: "right" }}>
                   <img
@@ -178,35 +208,35 @@ export class PoliticianDetails extends Component {
                     onClick={() => this.props.politicianOppose(politician)}
                   />
                 </div>
-                <Typography variant="caption">
+                <Typography variant="caption" className={classes.subText}>
                   {" "}
                   Member ID: {this.state.politician.id}{" "}
                 </Typography>
 
-                <Typography variant="h4">
+                <Typography variant="h4" className={classes.typography}>
                   {this.state.politician.name}
                 </Typography>
-                <Typography>{this.state.politician.gender} </Typography>
+                <Typography className={classes.subText}>
+                  {this.state.politician.gender}{" "}
+                </Typography>
 
-                <Typography variant="caption">Chamber:</Typography>
+                <Typography variant="caption" className={classes.subText}>
+                  Chamber:
+                </Typography>
                 {this.state.politician.chamber}
-                <Typography variant="caption">Party:</Typography>
+                <Typography variant="caption" className={classes.subText}>
+                  Party:
+                </Typography>
                 {this.state.politician.party}
-                <Typography variant="caption">State:</Typography>
+                <Typography variant="caption" className={classes.subText}>
+                  State:
+                </Typography>
                 {this.state.politician.state}
               </div>
             </Card>
           </div>
-
-          <Chart
-            politicianVotes={this.props.politicianVotes}
-            politicianOpposedVotes={this.props.politicianOpposedVotes}
-          />
-
-          <div className="committeeInfo">
-            <br />
-            <Typography variant="h5">{committeeDisplay}</Typography>
-          </div>
+          {/* CHART COMPONENT */}
+          <Chart politicianVotes={this.props.politicianVotes} />
         </div>
         <div className="subInfo" style={styles.card}>
           <div className="mainInfo" style={styles.card}>
@@ -217,23 +247,31 @@ export class PoliticianDetails extends Component {
           </div>
         </div>
         <div className="contactInfo">
-          <Card>
-            <Typography variant="caption">Office:</Typography>
-            <Typography variant="h5">
+          <Card className={classes.contactInfo}>
+            <Typography variant="caption" className={classes.subText}>
+              Office:
+            </Typography>
+            <Typography variant="h5" className={classes.typography}>
               {this.state.politician.office}{" "}
             </Typography>
             <Typography>
-              <Typography variant="caption">Contact number:</Typography>
-              <Typography variant="h5">
+              <Typography variant="caption" className={classes.subText}>
+                Contact number:
+              </Typography>
+              <Typography variant="h5" className={classes.typography}>
                 {this.state.politician.phone}
               </Typography>
             </Typography>
             <Typography>
-              <Button style={{ fontSize: "130%" }}>
+              <Button
+                style={{ fontSize: "130%" }}
+                className={classes.typography}
+              >
                 <a
                   href={`${this.state.politician.url}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="polLink"
                 >
                   {this.state.politician.url}
                 </a>
@@ -241,15 +279,22 @@ export class PoliticianDetails extends Component {
             </Typography>
           </Card>
         </div>
+        <div className={classes.committeeInfo}>
+          <Typography variant="h5">{committeeDisplay}</Typography>
+        </div>
       </div>
     );
   }
 }
+
+PoliticianDetails.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
 const mapStateToProps = state => {
   return {
     politicians: state.firebase.auth,
-    politicianVotes: state.politicians.politicianVotes,
-    politicianOpposedVotes: state.politicians.politicianOpposedVotes
+    politicianVotes: state.politicians.politicianVotes
   };
 };
 
@@ -257,10 +302,7 @@ const mapDispatchToProps = dispatch => {
   return {
     politicianFavor: politician => dispatch(politicianFavor(politician)),
     politicianOppose: politician => dispatch(politicianOppose(politician)),
-    getPoliticianVotes: politician => dispatch(getPoliticianVotes(politician)),
-    getPoliticianOpposedVotes: politician =>
-      dispatch(getPoliticianOpposedVotes(politician)),
-      deletePolitician: politician => dispatch(deletePolitician)
+    getPoliticianVotes: politician => dispatch(getPoliticianVotes(politician))
   };
 };
 
@@ -268,5 +310,6 @@ export default compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )
+  ),
+  withStyles(styles)
 )(PoliticianDetails);

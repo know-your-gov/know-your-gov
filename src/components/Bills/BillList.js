@@ -39,6 +39,12 @@ class BillList extends Component {
     this.props.getBillsOpposed();
   }
 
+  componentDidUpdate(prevProps){
+    if(this.props.opposed !== prevProps.opposed){
+      this.showOpposedBills()
+    }
+  }
+
   getRecentBills = () => {
     this.setState({ favoredOrOpposed: false });
     axios
@@ -175,11 +181,9 @@ class BillList extends Component {
   };
 
   showOpposedBills =async ()=>{
-    // this.props.getBillsOpposed()
     this.setState({tracked:false})
     this.setState({favoredOrOpposed:true})
     const {opposed} = this.props
-    console.log(opposed)
     const newOpposed = opposed.map(bill=>{
       return Object.assign({},{
         bill_id:`${bill.billSlug}-${bill.congress}`,
@@ -188,7 +192,6 @@ class BillList extends Component {
       })
     })
     if(newOpposed.length&&newOpposed.length>0){
-      // console.log(newOpposed)
       this.setState({bills:newOpposed})
     }
     else{
@@ -222,12 +225,23 @@ class BillList extends Component {
     });
   };
 
+  billOpposedDelete=(billId)=>{
+    const opposedBills = this.state.bills.slice(0)
+    const bill = opposedBills.filter(billDets => {
+      return `${billDets.billSlug}-${billDets.congress}`===billId
+    })
+    const toDel = opposedBills.indexOf(bill[0])
+    opposedBills.splice(toDel,1)
+    this.setState({bills:opposedBills})
+  }
+
   deleteIconShow = (loc,billId)=>{
     return this.state.favoredOrOpposed? <DeleteOutline onClick = {async()=>{
+      await this.billOpposedDelete(billId)
       await this.props.deleteBill("bills-opposed",billId)
-      console.log(this.state.bills)
       await this.props.getBillsOpposed()
       await this.showOpposedBills()
+      
     }
   }/>: null
   }
