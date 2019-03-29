@@ -34,6 +34,7 @@ class BillList extends Component {
     };
   }
   componentDidMount() {
+    this.setState({favoredOrOpposed:false})
     this.getRecentBills();
     this.props.getBillsFavored();
     this.props.getBillsOpposed();
@@ -159,7 +160,10 @@ class BillList extends Component {
               </Link>
 
               <DeleteOutline
-                onClick={() => this.props.deleteBill("bills-favored", id)}
+                onClick={async () => {
+                  await this.props.deleteBill("bills-favored", id)
+                  await this.props.getBillsFavored()
+                }}
               />
             </TableCell>
 

@@ -312,10 +312,13 @@ export const deleteBill = (loc, billId) => {
       .collection(loc)
       .doc(billId)
       .delete()
-      .then(() => {
-        console.log("success");
-        dispatch({ type: `${DELETE_BILL}_SUCCESS` });
-        console.log("success");
+      .then(()=>{
+        firestore.collection(loc).doc(billId).collection("users").doc(firebase.auth().currentUser.uid).delete()
+        .then(() => {
+          console.log("success");
+          dispatch({ type: `${DELETE_BILL}_SUCCESS` });
+          console.log("success");
+        })
       })
       .catch(err => dispatch({ type: `${DELETE_BILL}_ERROR` }));
   };
