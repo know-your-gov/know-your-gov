@@ -11,7 +11,7 @@ const Navbar = props => {
   const { auth } = props;
   // console.log(props);
   return (
-    <div class="header">
+    <div className="header">
       <Link to="/dashboard" style={{ textDecoration: "none" }}>
         <h2>KnowYourGov.com</h2>
       </Link>
