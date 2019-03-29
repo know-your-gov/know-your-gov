@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
+import { withStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
 import {
   /*billFavor,*/ getBillsFavored,
   getBillsOpposed,
@@ -20,6 +22,30 @@ import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Input from "@material-ui/core/Input";
+import { classes } from "istanbul-lib-coverage";
+
+const styles = {
+  main: {
+    width: "80vw",
+    marginTop: "3rem",
+    margin: "0 auto"
+  },
+  button: {
+    color: "white"
+  },
+  paper: {
+    background: "rgba(198, 198, 208, 0.05)"
+  },
+  typography: {
+    color: "white",
+    padding: "2rem"
+  },
+  subText: {
+    color: "rgb(198, 198, 208)",
+    paddingTop: "1rem",
+    paddingBottom: "0.5rem"
+  }
+};
 
 class BillList extends Component {
   constructor() {
@@ -34,15 +60,15 @@ class BillList extends Component {
     };
   }
   componentDidMount() {
-    this.setState({favoredOrOpposed:false})
+    this.setState({ favoredOrOpposed: false });
     this.getRecentBills();
     this.props.getBillsFavored();
     this.props.getBillsOpposed();
   }
 
-  componentDidUpdate(prevProps){
-    if(this.props.opposed !== prevProps.opposed){
-      this.showOpposedBills()
+  componentDidUpdate(prevProps) {
+    if (this.props.opposed !== prevProps.opposed) {
+      this.showOpposedBills();
     }
   }
 
@@ -116,24 +142,28 @@ class BillList extends Component {
 
   listBills = () => {
     const { bills, page, rowsPerPage } = this.state;
+    const { classes } = this.props;
     const startRow = page * rowsPerPage;
     const endRow = startRow + rowsPerPage;
+
     if (bills.length > 0) {
       return bills.slice(startRow, endRow).map(bill => {
         let title = bill.short_title ? bill.short_title : bill.description;
         return (
           <TableRow key={bill.bill_id}>
-            <TableCell>
+            <TableCell className={classes.typography}>
               <Link
                 to={`/bills/${bill.bill_id}`}
-                style={{ textDecoration: "none", color: "black" }}
+                style={{ textDecoration: "none", color: "white" }}
               >
                 {bill.bill_id}
               </Link>
               {this.deleteIconShow("", bill.bill_id)}
             </TableCell>
-            <TableCell>{title}</TableCell>
-            <TableCell>{bill.committees} </TableCell>
+            <TableCell className={classes.typography}>{title}</TableCell>
+            <TableCell className={classes.typography}>
+              {bill.committees}{" "}
+            </TableCell>
           </TableRow>
         );
       });
@@ -142,7 +172,7 @@ class BillList extends Component {
 
   listBillsTracked = () => {
     const { page, rowsPerPage } = this.state;
-    const { bills } = this.props;
+    const { bills, classes } = this.props;
     const startRow = page * rowsPerPage;
     const endRow = startRow + rowsPerPage;
     if (bills && bills.length > 0) {
@@ -151,29 +181,29 @@ class BillList extends Component {
         const id = `${bill.billSlug}-${bill.congress}`;
         return (
           <TableRow key={id}>
-            <TableCell>
+            <TableCell className={classes.typography}>
               <Link
                 to={`/bills/${id}`}
-                style={{ textDecoration: "none", color: "black" }}
+                style={{ textDecoration: "none", color: "white" }}
               >
                 {id}
               </Link>
 
               <DeleteOutline
                 onClick={async () => {
-                  await this.props.deleteBill("bills-favored", id)
-                  await this.props.getBillsFavored()
+                  await this.props.deleteBill("bills-favored", id);
+                  await this.props.getBillsFavored();
                 }}
               />
             </TableCell>
 
-            <TableCell>
+            <TableCell className={classes.typography}>
               {title
                 ? title
                 : "Excepteur mollit commodo ipsum esse qui elit labore do do ex tempor aliqua."}
             </TableCell>
 
-            <TableCell>
+            <TableCell className={classes.typography}>
               {bill.committee
                 ? bill.committee
                 : "Aute occaecat consectetur labore esse."}{" "}
@@ -184,28 +214,31 @@ class BillList extends Component {
     }
   };
 
-  showOpposedBills =async ()=>{
-    this.setState({tracked:false})
-    this.setState({favoredOrOpposed:true})
-    const {opposed} = this.props
-    const newOpposed = opposed.map(bill=>{
-      return Object.assign({},{
-        bill_id:`${bill.billSlug}-${bill.congress}`,
-        short_title: bill.title,
-        committees: bill.committee
-      })
-    })
-    if(newOpposed.length&&newOpposed.length>0){
-      this.setState({bills:newOpposed})
+  showOpposedBills = async () => {
+    this.setState({ tracked: false });
+    this.setState({ favoredOrOpposed: true });
+    const { opposed } = this.props;
+    const newOpposed = opposed.map(bill => {
+      return Object.assign(
+        {},
+        {
+          bill_id: `${bill.billSlug}-${bill.congress}`,
+          short_title: bill.title,
+          committees: bill.committee
+        }
+      );
+    });
+    if (newOpposed.length && newOpposed.length > 0) {
+      this.setState({ bills: newOpposed });
+    } else {
+      this.setState({ bills: [] });
     }
-    else{
-      this.setState({bills:[]})
-    }   
-  }
+  };
 
   buttonRender = (fun, buttonText, i) => {
+    const { classes } = this.props;
     return (
-      <Button onClick={() => fun()} key={i}>
+      <Button onClick={() => fun()} key={i} className={classes.button}>
         {buttonText}
       </Button>
     );
@@ -229,49 +262,45 @@ class BillList extends Component {
     });
   };
 
-  billOpposedDelete=(billId)=>{
-    const opposedBills = this.state.bills.slice(0)
+  billOpposedDelete = billId => {
+    const opposedBills = this.state.bills.slice(0);
     const bill = opposedBills.filter(billDets => {
-      return `${billDets.billSlug}-${billDets.congress}`===billId
-    })
-    const toDel = opposedBills.indexOf(bill[0])
-    opposedBills.splice(toDel,1)
-    this.setState({bills:opposedBills})
-  }
+      return `${billDets.billSlug}-${billDets.congress}` === billId;
+    });
+    const toDel = opposedBills.indexOf(bill[0]);
+    opposedBills.splice(toDel, 1);
+    this.setState({ bills: opposedBills });
+  };
 
-  deleteIconShow = (loc,billId)=>{
-    return this.state.favoredOrOpposed? <DeleteOutline onClick = {async()=>{
-      await this.billOpposedDelete(billId)
-      await this.props.deleteBill("bills-opposed",billId)
-      await this.props.getBillsOpposed()
-      await this.showOpposedBills()
-      
-    }
-  }/>: null
-  }
+  deleteIconShow = (loc, billId) => {
+    return this.state.favoredOrOpposed ? (
+      <DeleteOutline
+        onClick={async () => {
+          await this.billOpposedDelete(billId);
+          await this.props.deleteBill("bills-opposed", billId);
+          await this.props.getBillsOpposed();
+          await this.showOpposedBills();
+        }}
+      />
+    ) : null;
+  };
 
   render() {
+    const { classes } = this.props;
     return (
-      <div
-        style={{
-          width: "80vw",
-          marginLeft: "5vw",
-          marginTop: "5vh",
-          overflow: "scroll"
-        }}
-      >
+      <div className={classes.main}>
         {this.buttonShow()}
         <br />
         <Input onChange={e => this.searchInput(e)} />
 
-        <Paper>
+        <Paper className={classes.paper}>
           <div>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Bill Id</TableCell>
-                  <TableCell>Bill Title</TableCell>
-                  <TableCell>Committee</TableCell>
+                  <TableCell className={classes.subText}>Bill Id</TableCell>
+                  <TableCell className={classes.subText}>Bill Title</TableCell>
+                  <TableCell className={classes.subText}>Committee</TableCell>
                 </TableRow>
               </TableHead>
 
@@ -284,8 +313,14 @@ class BillList extends Component {
               <TableFooter>
                 <TableRow>
                   <TableCell>
-                    <ArrowBackIos onClick={() => this.pageChange("back")} />
-                    <ArrowForwardIos onClick={() => this.pageChange("next")} />
+                    <ArrowBackIos
+                      onClick={() => this.pageChange("back")}
+                      className={classes.subText}
+                    />
+                    <ArrowForwardIos
+                      onClick={() => this.pageChange("next")}
+                      className={classes.subText}
+                    />
                   </TableCell>
                   {/* <TableCell>Page {this.state.page+1}</TableCell> */}
                 </TableRow>
@@ -297,6 +332,10 @@ class BillList extends Component {
     );
   }
 }
+
+BillList.propTypes = {
+  classes: PropTypes.object.isRequired
+};
 
 const mapStateToProps = state => {
   return {
@@ -310,7 +349,8 @@ export default compose(
   connect(
     mapStateToProps,
     { getBillsFavored, getBillsOpposed, deleteBill }
-  )
+  ),
+  withStyles(styles)
 )(BillList);
 
 /*
@@ -348,7 +388,6 @@ import BillCard from "./BillCard";
   }
 
 */
-
 
 /*const mapDispatchToProps =dispatch => {
   return {
