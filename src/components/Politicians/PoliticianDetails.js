@@ -16,7 +16,8 @@ import { compose } from "redux";
 import {
   politicianFavor,
   politicianOppose,
-  getPoliticianVotes
+  getPoliticianVotes,
+  getPoliticianOpposedVotes
 } from "../../ducks/politicianReducer";
 import "./PoliticianDetails.css";
 
@@ -77,6 +78,7 @@ export class PoliticianDetails extends Component {
     const { id } = this.props.match.params;
     this.getPoliticianDetails();
     this.props.getPoliticianVotes(id);
+    this.props.getPoliticianOpposedVotes(id)
     console.log(this.props);
   }
 
@@ -235,8 +237,8 @@ export class PoliticianDetails extends Component {
               </div>
             </Card>
           </div>
-          {/* CHART COMPONENT */}
-          <Chart politicianVotes={this.props.politicianVotes} />
+          <Chart politicianVotes={this.props.politicianVotes}
+          politicianOpposedVotes= {this.props.politicianOpposedVotes} />
         </div>
         <div className="subInfo" style={styles.card}>
           <div className="mainInfo" style={styles.card}>
@@ -294,7 +296,8 @@ PoliticianDetails.propTypes = {
 const mapStateToProps = state => {
   return {
     politicians: state.firebase.auth,
-    politicianVotes: state.politicians.politicianVotes
+    politicianVotes: state.politicians.politicianVotes,
+    getPoliticianOpposedVotes: state.politicians.politicianOpposedVotes
   };
 };
 
@@ -302,7 +305,8 @@ const mapDispatchToProps = dispatch => {
   return {
     politicianFavor: politician => dispatch(politicianFavor(politician)),
     politicianOppose: politician => dispatch(politicianOppose(politician)),
-    getPoliticianVotes: politician => dispatch(getPoliticianVotes(politician))
+    getPoliticianVotes: politician => dispatch(getPoliticianVotes(politician)),
+    getPoliticianOpposedVotes: politician => dispatch(getPoliticianOpposedVotes(politician)),
   };
 };
 
