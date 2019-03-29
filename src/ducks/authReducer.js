@@ -2,9 +2,8 @@ const initialState = {
   authError: null,
   user: [],
   billsFavored: [],
-
   billsOpposed: [],
-  billVotes: [],
+  billVotes: []
 };
 
 const SIGNIN = "SIGNIN";
