@@ -19,6 +19,7 @@ import {
   getPoliticianVotes,
   getPoliticianOpposedVotes
 } from "../../ducks/politicianReducer";
+
 import "./PoliticianDetails.css";
 
 const styles = {
@@ -297,7 +298,7 @@ const mapStateToProps = state => {
   return {
     politicians: state.firebase.auth,
     politicianVotes: state.politicians.politicianVotes,
-    getPoliticianOpposedVotes: state.politicians.politicianOpposedVotes
+    politicianOpposedVotes: state.politicians.politicianOpposedVotes
   };
 };
 
@@ -306,14 +307,13 @@ const mapDispatchToProps = dispatch => {
     politicianFavor: politician => dispatch(politicianFavor(politician)),
     politicianOppose: politician => dispatch(politicianOppose(politician)),
     getPoliticianVotes: politician => dispatch(getPoliticianVotes(politician)),
-    getPoliticianOpposedVotes: politician => dispatch(getPoliticianOpposedVotes(politician)),
+    getPoliticianOpposedVotes: politician =>
+      dispatch(getPoliticianOpposedVotes(politician))
   };
 };
 
-export default compose(
+export default compose(withStyles(styles),
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  withStyles(styles)
-)(PoliticianDetails);
+  ))(PoliticianDetails) ;
