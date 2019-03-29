@@ -20,6 +20,7 @@ import FormControl from "@material-ui/core/FormControl";
 // import Avatar from "@material-ui/core/Avatar";
 import grey from "@material-ui/core/colors/grey";
 import "./Account.css";
+import DeleteConfirm from './DeleteConfirm'
 // import axios from "axios";
 
 const primary = grey[300];
@@ -69,7 +70,8 @@ class EditInfo extends Component {
       city: "",
       state: "",
       zip: "",
-      address: ""
+      address: "",
+      deleteProfile: false
     };
   }
 
@@ -83,6 +85,24 @@ class EditInfo extends Component {
     this.props.toggleEdit();
   };
 
+  deleteConfirmShow = ()=>{
+    if(this.state.deleteProfile === true){
+      return <DeleteConfirm confirmToggle = {this.deleteConfirmToggle}/>
+    }
+  }
+  
+  deleteConfirmToggle=()=>{
+    if(this.state.deleteProfile){
+      this.setState({deleteProfile:false})
+      console.log(this.state.deleteProfile)
+    }else{
+      this.setState({deleteProfile:true})
+      console.log(this.state.deleteProfile)
+    }
+    
+  }
+
+
   resetPassword = () => {};
 
   render() {
@@ -93,6 +113,7 @@ class EditInfo extends Component {
     // console.log(user);
     return (
       <div className="accountCard">
+        
         <Paper className={classes.main}>
           <div className="title">
             <h1>Edit Account Information</h1>
@@ -117,10 +138,11 @@ class EditInfo extends Component {
             variant="contained"
             color="primary"
             className={classes.deleteButton}
-            onClick={this.props.toggleEdit}
+            onClick={()=>this.deleteConfirmToggle()}
           >
             Delete Account
           </Button>
+          <div>{this.deleteConfirmShow()}</div>
           <form className={classes.form} onSubmit={this.handleSubmit}>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="email" className={classes.label}>

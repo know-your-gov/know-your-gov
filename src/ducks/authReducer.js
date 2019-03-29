@@ -16,6 +16,7 @@ const GETBILLSFAVORED = "GETBILLSFAVORED";
 const GET_BILLS_OPPOSED = "GET_BILLS_OPPOSED";
 const GETUSER = "GETUSER";
 const DELETE_BILL = "DELETE_BILL";
+const DELETE_ACCOUNT = "DELETE_ACCOUNT"
 
 export const signIn = credentials => {
   return (dispatch, getState, { getFirebase }) => {
@@ -73,6 +74,26 @@ export const signUp = newUser => {
       });
   };
 };
+
+export const deleteAccount = ()=>{
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+    const user = firebase.auth().currentUser
+
+    user.delete().then(()=>{
+      console.log("deleting user")
+      firestore.collection("users")
+      .doc(firebase.auth().currentUser.uid).delete()
+      .then(()=>{
+        dispatch({type: `${DELETE_ACCOUNT}_SUCCESS`})
+      })
+    })
+   .catch(err=>{
+      dispatch({type: `${DELETE_ACCOUNT}_ERROR`})
+    })
+  } 
+}
 
 export const add = (num1, num2) => {
   return num1 + num2;
@@ -364,6 +385,8 @@ const authReducer = (state = initialState, action) => {
     case "GETBILLVOTES_SUCCESS":
       console.log(action);
       return { ...state, billVotes: action.payload };
+    case `${DELETE_ACCOUNT}_SUCCESS`:
+      return{...state, user:[]}
 
     default:
       return state;
