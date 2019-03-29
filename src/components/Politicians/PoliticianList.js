@@ -16,7 +16,7 @@ import { compose } from "redux";
 import {
   getPoliticiansFavored,
   getPoliticiansOpposed
-} from "../../ducks/authReducer";
+} from "../../ducks/politicianReducer";
 import StateSelector from "./StateSelect";
 import "./PoliticianList.css";
 
@@ -39,7 +39,6 @@ export class PoliticianList extends Component {
       selectedHouseState: "AL",
       senateList: [],
       houseRepList: [],
-      favoredPoliticians: [],
       showHouseReps: false,
       showSenate: false,
       showTracked: false
@@ -60,7 +59,6 @@ export class PoliticianList extends Component {
   componentDidMount() {
     this.props.getPoliticiansFavored();
     this.props.getPoliticiansOpposed();
-    this.setState({ favoredPoliticians: this.props.politicians });
     // console.log(this.props);
   }
 
@@ -83,8 +81,7 @@ export class PoliticianList extends Component {
             senateList: senateList,
             showHouseReps: false,
             showSenate: true
-          },
-          () => console.log(senateList)
+          }
         );
       });
   }
@@ -122,7 +119,6 @@ export class PoliticianList extends Component {
 
   listPoliticiansFavored = () => {
     const { politiciansFavored } = this.props;
-    // console.log(politiciansFavored);
 
     if (politiciansFavored.length > 0) {
       return politiciansFavored.map(politician => {
@@ -317,17 +313,10 @@ export class PoliticianList extends Component {
             </div>
           </div>
 
-          <div>
-            {this.state.showFavored ? this.listPoliticiansFavored() : null}
-          </div>
-
-          {this.state.showOpposed ? this.listPoliticiansOpposed() : null}
-        </div>
-
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           {this.state.showSenate === true ? senateListDisplay : null}
         </div>
-
+</div>
         {this.state.showHouseReps === false ? null : (
           <Paper style={{ width: "70vw", margin: "auto", textAlign: "center" }}>
             <div>
@@ -352,16 +341,11 @@ export class PoliticianList extends Component {
   }
 }
 
-export function JestTest(testparam1) {
-  return testparam1;
-}
-//just a test for jest to reach inside react components
-
 const mapStateToProps = state => {
   return {
-    auth: state.firebase.auth,
-    politiciansFavored: state.auth.politiciansFavored,
-    politiciansOpposed: state.auth.politiciansOpposed
+    politicians: state.firebase.auth,
+    politiciansFavored: state.politicians.politiciansFavored,
+    politiciansOpposed: state.politicians.politiciansOpposed
   };
 };
 const mapDispatchToProps = dispatch => {

@@ -11,7 +11,7 @@ import axios from "axios";
 
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { politicianFavor, politicianOppose, getPoliticianVotes } from "../../ducks/authReducer";
+import { politicianFavor, politicianOppose, getPoliticianVotes } from "../../ducks/politicianReducer";
 
 const styles = {
   card: {
@@ -233,8 +233,8 @@ export class PoliticianDetails extends Component {
 }
 const mapStateToProps = state => {
   return {
-    auth: state.firebase.auth,
-    politicianVotes: state.auth.politicianVotes
+    politicians: state.firebase.auth,
+    politicianVotes: state.politicians.politicianVotes
   };
 };
 
