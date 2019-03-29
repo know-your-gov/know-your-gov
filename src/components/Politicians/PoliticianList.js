@@ -77,13 +77,11 @@ export class PoliticianList extends Component {
       .then(res => {
         const senateList = res.data.results;
 
-        this.setState(
-          {
-            senateList: senateList,
-            showHouseReps: false,
-            showSenate: true
-          }
-        );
+        this.setState({
+          senateList: senateList,
+          showHouseReps: false,
+          showSenate: true
+        });
       });
   }
   handleHouseSubmit(e) {
@@ -131,7 +129,16 @@ export class PoliticianList extends Component {
 
         return (
           <div key={id}>
-            <Card style={{ width: "20vw", margin: "auto" }}>
+            <Card
+              key={id}
+              style={{
+                width: "20vw",
+                margin: "auto",
+                display: "flex",
+                flexDirection: "column"
+              }}
+            >
+              {" "}
               <div>
                 <Button>
                   <Link
@@ -146,6 +153,14 @@ export class PoliticianList extends Component {
               <div>{title}</div>
               <div>{party}</div>
               <div>{state + "."}</div>
+              <button
+                onClick={async () => {
+                  await this.props.deletePolitician("politicians-favored", id);
+                  await this.props.getPoliticiansFavored();
+                }}
+              >
+                Remove
+              </button>
             </Card>
           </div>
         );
@@ -188,6 +203,14 @@ export class PoliticianList extends Component {
             <div>{title}</div>
             <div>{party}</div>
             <div>{state + "."}</div>
+            <button
+              onClick={async () => {
+                await this.props.deletePolitician("politicians-opposed", id);
+                await this.props.getPoliticiansOpposed();
+              }}
+            >
+              Remove
+            </button>
           </Card>
         );
       });
@@ -306,18 +329,31 @@ export class PoliticianList extends Component {
           </Button>
           <div style={{ display: "flex" }}>
             <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-              {this.state.showTracked ? this.listPoliticiansFavored() : null}
+              {this.state.showTracked ? (
+                <div style={{color:"white"}}>
+                  Favored <div>
+                  {this.listPoliticiansFavored()}
+                  </div>
+                </div>
+              ) : null}
             </div>
 
             <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-              {this.state.showTracked ? this.listPoliticiansOpposed() : null}
+              
+              {this.state.showTracked ? (
+                <div style={{color:"white"}}>
+                  Against <div>
+                  {this.listPoliticiansOpposed()}
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
 
-        <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-          {this.state.showSenate === true ? senateListDisplay : null}
+          <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+            {this.state.showSenate === true ? senateListDisplay : null}
+          </div>
         </div>
-</div>
         {this.state.showHouseReps === false ? null : (
           <Paper style={{ width: "70vw", margin: "auto", textAlign: "center" }}>
             <div>
@@ -353,7 +389,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getPoliticiansFavored: () => dispatch(getPoliticiansFavored()),
     getPoliticiansOpposed: () => dispatch(getPoliticiansOpposed()),
-    deletePolitician: politician => dispatch(deletePolitician(politician))
+    deletePolitician: (loc, id) => dispatch(deletePolitician(loc, id))
   }; /////////////////////
 };
 export default compose(
