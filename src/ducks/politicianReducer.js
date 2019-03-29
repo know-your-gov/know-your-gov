@@ -248,6 +248,9 @@ export const deletePolitician = (loc, id) => {
         .doc(id)
         .delete()
         .then(() => {
+            firestore.collection(loc).doc(id).collection("users").doc(firebase.auth().currentUser.uid).delete()
+        })
+        .then(() => {
           console.log("success");
           dispatch({ type: `${DELETEPOLITICIAN}_SUCCESS` });
           console.log("success");
@@ -255,7 +258,6 @@ export const deletePolitician = (loc, id) => {
         .catch(err => dispatch({ type: `${DELETEPOLITICIAN}_ERROR` }));
     };
   };
-  
 
 const politicianReducer = (state = initialState, action) => {
   switch (action.type) {

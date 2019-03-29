@@ -15,7 +15,8 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import {
   getPoliticiansFavored,
-  getPoliticiansOpposed
+  getPoliticiansOpposed,
+  deletePolitician
 } from "../../ducks/politicianReducer";
 import StateSelector from "./StateSelect";
 import "./PoliticianList.css";
@@ -351,7 +352,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getPoliticiansFavored: () => dispatch(getPoliticiansFavored()),
-    getPoliticiansOpposed: () => dispatch(getPoliticiansOpposed())
+    getPoliticiansOpposed: () => dispatch(getPoliticiansOpposed()),
+    deletePolitician: politician => dispatch(deletePolitician(politician))
   }; /////////////////////
 };
 export default compose(
