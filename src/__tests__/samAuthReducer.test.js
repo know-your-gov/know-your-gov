@@ -28,7 +28,7 @@ describe('sam auth reducer test',()=>{
     expect(getPoliticiansOpposed()).toBeDefined()
   })
 
-
+ 
   // it('get bills favored works',()=>{
   //   const ans = getBillsFavored()
   //   expect(initialState.billsFavored.length).toBeGreaterThan(0)

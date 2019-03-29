@@ -1,5 +1,7 @@
-import { billFavor, add, getPoliticianVotes, politicianFavor, politicianOppose } from "../ducks/authReducer";
-import { initialState } from "../ducks/authReducer";
+import { billFavor, add, getPoliticianVotes, politicianFavor, politicianOppose } from "../ducks/politicianReducer";
+import { initialState } from "../ducks/politicianReducer";
+
+
 
 describe("authReducer", () => {
   it("check if bill id is used in billFavor function", () => {
@@ -20,7 +22,7 @@ test("getting favored politicians returns anything", () => {
     }
     expect(politicianFavor(politicianID)).toEqual(expect.anything())
 })
-
+ 
 test("getPoliticianVotes returns something", () => {
     let politicianID = {
         id: "H001042"

@@ -3,7 +3,8 @@ const initialState = {
   user: [],
   politiciansFavored: [],
   politiciansOpposed: [],
-  politicianVotes: []
+  politicianVotes: [],
+  politicianOpposedVotes: []
 };
 
 const GETUSER = "GETUSER";
@@ -11,6 +12,9 @@ const POLITICIANFAVOR = "POLITICIANFAVOR";
 const GETPOLITICIANSFAVORED = "GETPOLITICIANSFAVORED";
 const POLITICIANOPPOSE = "POLITICIANOPPOSE";
 const GETPOLITICIANSOPPOSED = "GETPOLITICIANSOPPOSED";
+const GETPOLITICIANVOTES = "GETPOLITICIANVOTES"
+const GETPOLITICIANOPPOSEDVOTES="GETPOLITICIANOPPOSEDVOTES"
+const DELETEPOLITICIAN = "DELETEPOLITICIAN"
 
 export const getUser = () => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -56,24 +60,35 @@ export const getPoliticianVotes = id => {
       })
       .then(response => {
         dispatch({
-          type: "GETPOLITICIANVOTES_SUCCESS",
+          type: `${GETPOLITICIANVOTES}_SUCCESS`,
           payload: response
         });
       })
+  };
+};
+
+export const getPoliticianOpposedVotes = id => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+
+    firestore
+      .collection("politicians-opposed")
+      .doc(id)
+      .collection("users")
+      .get()
+      .then(querySnapshot => {
+        const dataArray = [];
+        querySnapshot.forEach(function(doc) {
+          dataArray.push(doc.data());
+        });
+        return dataArray;
+      })
       .then(response => {
-        firestore
-          .collection("politicians-opposed")
-          .doc(id)
-          .collection("users")
-          .get()
-          .then(querySnapshot => {
-            const dataArray = [];
-            querySnapshot.forEach(function(doc) {
-              dataArray.push(doc.data());
-            });
-            return dataArray;
-          });
-      });
+        dispatch({
+          type: `${GETPOLITICIANOPPOSEDVOTES}_SUCCESS`,
+          payload: response
+        });
+      })
   };
 };
 
@@ -159,7 +174,9 @@ export const politicianOppose = poliDetails => {
     const title = poliDetails["title"];
     const state = poliDetails["state"];
     const party = poliDetails["party"];
+
     firestore
+
       .collection("users")
       .doc(firebase.auth().currentUser.uid)
       .collection("politicians-opposed")
@@ -176,6 +193,17 @@ export const politicianOppose = poliDetails => {
       })
       .catch(err => {
         dispatch({ type: `${POLITICIANOPPOSE}_ERROR`, err });
+      })
+      .then(() => {
+        firestore
+          .collection("politicians-opposed")
+          .doc(poliDetails["id"])
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid)
+          .set({
+            user: firebase.auth().currentUser.uid,
+            vote: 1
+          });
       });
   };
 };
@@ -207,6 +235,28 @@ export const getPoliticiansOpposed = () => {
   };
 };
 
+export const deletePolitician = (loc, id) => {
+    console.log({ collection: loc, id });
+    return (dispatch, getState, { getFirebase, getFirestore }) => {
+      const firebase = getFirebase();
+      const firestore = getFirestore();
+  
+      firestore
+        .collection("users")
+        .doc(firebase.auth().currentUser.uid)
+        .collection(loc)
+        .doc(id)
+        .delete()
+        .then(() => {
+          console.log("success");
+          dispatch({ type: `${DELETEPOLITICIAN}_SUCCESS` });
+          console.log("success");
+        })
+        .catch(err => dispatch({ type: `${DELETEPOLITICIAN}_ERROR` }));
+    };
+  };
+  
+
 const politicianReducer = (state = initialState, action) => {
   switch (action.type) {
 
@@ -219,13 +269,23 @@ const politicianReducer = (state = initialState, action) => {
       return { ...state };
     case `${POLITICIANFAVOR}_ERROR`:
       return { ...state };
+    case `${POLITICIANOPPOSE}_SUCCESS`:
+      return { ...state };
+    case `${POLITICIANOPPOSE}_ERROR`:
+      return { ...state };
     case `${GETPOLITICIANSFAVORED}_SUCCESS`:
       return { ...state, politiciansFavored: action.payload };
     case `${GETPOLITICIANSOPPOSED}_SUCCESS`:
       return { ...state, politiciansOpposed: action.payload };
-    case "GETPOLITICIANVOTES_SUCCESS":
-      console.log(action);
+    case `${GETPOLITICIANVOTES}_SUCCESS`:
+    //   console.log(action);
       return { ...state, politicianVotes: action.payload };
+    case `${GETPOLITICIANOPPOSEDVOTES}_SUCCESS`:
+    //   console.log(action);
+      return { ...state, politicianOpposedVotes: action.payload };
+    case `${DELETEPOLITICIAN}_SUCCESS`:
+      return { ...state };
+      
     default:
       return state;
   }

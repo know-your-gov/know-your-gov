@@ -348,10 +348,8 @@ const authReducer = (state = initialState, action) => {
       return { ...state };
     case `${BILLFAVOR}_ERROR`:
       return { ...state };
-
     case `${GETBILLSFAVORED}_SUCCESS`:
       return { ...state, billsFavored: action.payload };
-
     case `${BILL_OPPOSE}_SUCCESS`:
       return { ...state };
     case `${BILL_OPPOSE}_ERROR`:
