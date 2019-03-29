@@ -30,12 +30,14 @@ const styles = theme => ({
     background: "rgb(38, 38, 43)",
     padding: "0 1rem"
   },
-  button: {
+  saveButton: {
     width: "20%",
     margin: "0 auto",
+    marginBottom: "2rem",
+    marginTop: "2rem",
 
-    backgroundColor: primary,
-    color: secondary,
+    backgroundColor: "rgb(59,177,67)",
+    color: "white",
     textDecoration: "none",
     [theme.breakpoints.down(400 + theme.spacing.unit * 3 * 2)]: {
       marginLeft: theme.spacing.unit * 22
@@ -44,6 +46,16 @@ const styles = theme => ({
   label: {
     color: "white",
     padding: "0.8rem"
+  },
+  resetButton: {
+    width: "20%",
+    marginLeft: "5rem",
+    backgroundColor: "transparent"
+  },
+  deleteButton: {
+    width: "20%",
+    marginLeft: "5rem",
+    backgroundColor: "rgb(208,49,45)"
   }
 });
 
@@ -71,6 +83,8 @@ class EditInfo extends Component {
     this.props.toggleEdit();
   };
 
+  resetPassword = () => {};
+
   render() {
     const { classes } = this.props;
     // console.log(this.state);
@@ -86,12 +100,41 @@ class EditInfo extends Component {
           <Button
             variant="contained"
             color="primary"
-            className={classes.button}
+            className={classes.resetButton}
             onClick={this.props.toggleEdit}
           >
             Cancel
           </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.resetButton}
+            onClick={this.props.toggleEdit}
+          >
+            Reset Password
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.deleteButton}
+            onClick={this.props.toggleEdit}
+          >
+            Delete Account
+          </Button>
           <form className={classes.form} onSubmit={this.handleSubmit}>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="email" className={classes.label}>
+                Username
+              </InputLabel>
+              <Input
+                id="username"
+                name="username"
+                autoComplete="username"
+                defaultValue={user && user[0].username}
+                onChange={this.handleChange}
+                className={classes.label}
+              />
+            </FormControl>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="email" className={classes.label}>
                 Address
@@ -151,7 +194,7 @@ class EditInfo extends Component {
               // classes={
 
               // }
-              className={classes.button}
+              className={classes.saveButton}
             >
               Save
             </Button>
