@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { /*billFavor,*/ getBillsFavored, getBillsOpposed, deleteBill } from "../../ducks/authReducer";
+import {
+  /*billFavor,*/ getBillsFavored,
+  getBillsOpposed,
+  deleteBill
+} from "../../ducks/authReducer";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -12,10 +16,10 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import ArrowForwardIos from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIos from "@material-ui/icons/ArrowBackIos";
-import DeleteOutline from '@material-ui/icons/DeleteOutline'
+import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import Input from '@material-ui/core/Input'
+import Input from "@material-ui/core/Input";
 
 class BillList extends Component {
   constructor() {
@@ -26,16 +30,17 @@ class BillList extends Component {
       rowsPerPage: 5,
       tracked: false,
       search: "",
-      favoredOrOpposed: false,
+      favoredOrOpposed: false
     };
   }
   componentDidMount() {
     this.getRecentBills();
     this.props.getBillsFavored();
+    this.props.getBillsOpposed();
   }
 
   getRecentBills = () => {
-    this.setState({favoredOrOpposed:false})
+    this.setState({ favoredOrOpposed: false });
     axios
       .get(
         `https://api.propublica.org/congress/v1/115/both/bills/active.json`,
@@ -50,7 +55,7 @@ class BillList extends Component {
   };
 
   getUpcomingBills = () => {
-    this.setState({favoredOrOpposed:false})
+    this.setState({ favoredOrOpposed: false });
     axios
       .get(`https://api.propublica.org/congress/v1/bills/upcoming/house.json`, {
         headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
@@ -59,27 +64,32 @@ class BillList extends Component {
         const bills = res.data.results[0].bills;
         this.setState({ bills });
         this.setState({ tracked: false });
-    });
-  }
+      });
+  };
 
-  searchInput =(e)=>{
-    this.setState({search:e.target.value})
-  }
+  searchInput = e => {
+    this.setState({ search: e.target.value });
+  };
 
-  searchBills = ()=>{
-    this.setState({tracked:false})
-    this.setState({favoredOrOpposed: false})
-    if(this.state.search.length>0){
-      let {search} = this.state
-      return axios.get(`https://api.propublica.org/congress/v1/bills/search.json?query=${search}`,{
-        headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
-      }).then(res=>{
-        const bills = res.data.results[0].bills;
-        this.setState({bills})
-      })  
+  searchBills = () => {
+    this.setState({ tracked: false });
+    this.setState({ favoredOrOpposed: false });
+    if (this.state.search.length > 0) {
+      let { search } = this.state;
+      return axios
+        .get(
+          `https://api.propublica.org/congress/v1/bills/search.json?query=${search}`,
+          {
+            headers: { "X-API-Key": process.env.REACT_APP_PRO_PUBLICA }
+          }
+        )
+        .then(res => {
+          const bills = res.data.results[0].bills;
+          this.setState({ bills });
+        });
     }
-  }
- 
+  };
+
   LikedBillsList = () => {
     this.setState({ tracked: true });
   };
@@ -113,7 +123,7 @@ class BillList extends Component {
               >
                 {bill.bill_id}
               </Link>
-              {this.deleteIconShow("",bill.bill_id)}
+              {this.deleteIconShow("", bill.bill_id)}
             </TableCell>
             <TableCell>{title}</TableCell>
             <TableCell>{bill.committees} </TableCell>
@@ -134,9 +144,7 @@ class BillList extends Component {
         const id = `${bill.billSlug}-${bill.congress}`;
         return (
           <TableRow key={id}>
-
             <TableCell>
-
               <Link
                 to={`/bills/${id}`}
                 style={{ textDecoration: "none", color: "black" }}
@@ -144,8 +152,9 @@ class BillList extends Component {
                 {id}
               </Link>
 
-              <DeleteOutline onClick = {()=>this.props.deleteBill("bills-favored", id)}/>
-
+              <DeleteOutline
+                onClick={() => this.props.deleteBill("bills-favored", id)}
+              />
             </TableCell>
 
             <TableCell>
@@ -159,15 +168,14 @@ class BillList extends Component {
                 ? bill.committee
                 : "Aute occaecat consectetur labore esse."}{" "}
             </TableCell>
-
           </TableRow>
         );
       });
     }
   };
 
-  showOpposedBills =()=>{
-    this.props.getBillsOpposed()
+  showOpposedBills =async ()=>{
+    // this.props.getBillsOpposed()
     this.setState({tracked:false})
     this.setState({favoredOrOpposed:true})
     const {opposed} = this.props
@@ -179,43 +187,48 @@ class BillList extends Component {
         committees: bill.committee
       })
     })
-    if(newOpposed.length>0){
+    if(newOpposed.length&&newOpposed.length>0){
       // console.log(newOpposed)
       this.setState({bills:newOpposed})
-    }else{
+    }
+    else{
       this.setState({bills:[]})
     }   
   }
 
-  buttonRender=(fun,buttonText,i)=>{
-    return <Button onClick = {()=>fun()} key = {i}>{buttonText}</Button>
-  }
+  buttonRender = (fun, buttonText, i) => {
+    return (
+      <Button onClick={() => fun()} key={i}>
+        {buttonText}
+      </Button>
+    );
+  };
 
-  buttonShow = ()=>{
+  buttonShow = () => {
     let buttons = {
       "See Recent": this.getRecentBills,
-      "See Upcoming": this.getUpcomingBills, 
-      "See Favored": this.LikedBillsList, 
-      "See Opposed": this.showOpposedBills, 
+      "See Upcoming": this.getUpcomingBills,
+      "See Favored": this.LikedBillsList,
+      "See Opposed": this.showOpposedBills,
       "Search Bills": this.searchBills
+    };
+    let buttonsArr = [];
+
+    for (let butt in buttons) {
+      buttonsArr.push({ text: butt, action: buttons[butt] });
     }
-    let buttonsArr = []
+    return buttonsArr.map((button, i) => {
+      return this.buttonRender(button.action, button.text, i);
+    });
+  };
 
-    for(let butt in buttons){
-      buttonsArr.push({text: butt,
-        action:buttons[butt]})
-    }
-    return buttonsArr.map((button,i)=>{
-      return this.buttonRender(button.action,button.text,i)
-    })
-  }
-
-  deleteIconShow = (loc,billId)=>{
-    return this.state.favoredOrOpposed? <DeleteOutline onClick = {()=>this.props.deleteBill("bills-opposed",billId)
-  }/>: null
-  }
-
-
+  deleteIconShow = (loc, billId) => {
+    return this.state.favoredOrOpposed ? (
+      <DeleteOutline
+        onClick={() => this.props.deleteBill("bills-opposed", billId)}
+      />
+    ) : null;
+  };
 
   render() {
     return (
@@ -227,16 +240,13 @@ class BillList extends Component {
           overflow: "scroll"
         }}
       >
-     
-        {this.buttonShow()}<br/>
-        <Input onChange = {(e)=>this.searchInput(e)}/>
+        {this.buttonShow()}
+        <br />
+        <Input onChange={e => this.searchInput(e)} />
 
         <Paper>
-
           <div>
-
             <Table>
-
               <TableHead>
                 <TableRow>
                   <TableCell>Bill Id</TableCell>
@@ -249,7 +259,6 @@ class BillList extends Component {
                 {!this.state.tracked
                   ? this.listBills()
                   : this.listBillsTracked()}
-
               </TableBody>
 
               <TableFooter>
@@ -261,13 +270,9 @@ class BillList extends Component {
                   {/* <TableCell>Page {this.state.page+1}</TableCell> */}
                 </TableRow>
               </TableFooter>
-
             </Table>
-
           </div>
-
         </Paper>
-
       </div>
     );
   }
@@ -277,22 +282,16 @@ const mapStateToProps = state => {
   return {
     auth: state.firebase.auth,
     bills: state.auth.billsFavored,
-    opposed: state.auth.billsOpposed,
+    opposed: state.auth.billsOpposed
   };
 };
-// const mapDispatchToProps =dispatch => {
-//   return {
-//     getBillsFavored: () => dispatch(getBillsFavored()),
-//     getBillsOpposed: ()=> dispatch(getBillsOpposed()),
-//     deleteBill: ()=>dispatch(deleteBill),
-//   }; /////////////////////
-// };
+
 export default compose(
   connect(
-    mapStateToProps,{getBillsFavored,getBillsOpposed,deleteBill}  
+    mapStateToProps,
+    { getBillsFavored, getBillsOpposed, deleteBill }
   )
 )(BillList);
-
 
 /*
 Pit of redundancy
@@ -329,3 +328,12 @@ import BillCard from "./BillCard";
   }
 
 */
+
+
+/*const mapDispatchToProps =dispatch => {
+  return {
+    getBillsFavored: () => dispatch(getBillsFavored()),
+    getBillsOpposed: ()=> dispatch(getBillsOpposed()),
+    deleteBill: ()=>dispatch(deleteBill),
+  }; /////////////////////
+};*/
