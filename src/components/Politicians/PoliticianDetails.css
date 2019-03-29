@@ -1,3 +1,7 @@
 .polLink {
   color: white;
 }
+
+.opposeButton:hover {
+  cursor: pointer
+}
