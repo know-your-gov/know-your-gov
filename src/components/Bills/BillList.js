@@ -222,13 +222,15 @@ class BillList extends Component {
     });
   };
 
-  deleteIconShow = (loc, billId) => {
-    return this.state.favoredOrOpposed ? (
-      <DeleteOutline
-        onClick={() => this.props.deleteBill("bills-opposed", billId)}
-      />
-    ) : null;
-  };
+  deleteIconShow = (loc,billId)=>{
+    return this.state.favoredOrOpposed? <DeleteOutline onClick = {async()=>{
+      await this.props.deleteBill("bills-opposed",billId)
+      console.log(this.state.bills)
+      await this.props.getBillsOpposed()
+      await this.showOpposedBills()
+    }
+  }/>: null
+  }
 
   render() {
     return (
