@@ -192,24 +192,27 @@ export class PoliticianDetails extends Component {
             <Card className={classes.cardInner}>
               <div>
                 <div style={{ display: "flex", float: "right" }}>
-                  <img
-                    style={{ padding: "10px" }}
+                  <Button size="small"><img
+                    style={{ padding: "10px",  }}
                     className="favorButton"
                     src="upvote.png"
                     alt="favor"
-                    width="28vw"
-                    height="25vh"
+                    width="40vw"
+                    height="35vh"
                     onClick={() => this.props.politicianFavor(politician)}
                   />
+                  </Button>
+                  <Button size="small">
                   <img
                     style={{ padding: "10px" }}
-                    className="againstButton"
+                    className="opposeButton"
                     src="downvote.png"
                     alt="favor"
-                    width="25vw"
-                    height="25vh"
+                    width="35w"
+                    height="35vh"
                     onClick={() => this.props.politicianOppose(politician)}
                   />
+                  </Button>
                 </div>
                 <Typography variant="caption" className={classes.subText}>
                   {" "}
