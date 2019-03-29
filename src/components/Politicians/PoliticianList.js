@@ -331,7 +331,7 @@ export class PoliticianList extends Component {
             <div style={{ marginLeft: "auto", marginRight: "auto" }}>
               {this.state.showTracked ? (
                 <div style={{color:"white"}}>
-                  Favored <div>
+                  Favored <div style={{color:"black"}}>
                   {this.listPoliticiansFavored()}
                   </div>
                 </div>
@@ -342,7 +342,7 @@ export class PoliticianList extends Component {
               
               {this.state.showTracked ? (
                 <div style={{color:"white"}}>
-                  Against <div>
+                  Against <div style={{color:"black"}}>
                   {this.listPoliticiansOpposed()}
                   </div>
                 </div>
