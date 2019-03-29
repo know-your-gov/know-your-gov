@@ -32,6 +32,7 @@ class BillList extends Component {
   componentDidMount() {
     this.getRecentBills();
     this.props.getBillsFavored();
+    this.props.getBillsOpposed();
   }
 
   getRecentBills = () => {
@@ -166,8 +167,8 @@ class BillList extends Component {
     }
   };
 
-  showOpposedBills =()=>{
-    this.props.getBillsOpposed()
+  showOpposedBills =async ()=>{
+    // this.props.getBillsOpposed()
     this.setState({tracked:false})
     this.setState({favoredOrOpposed:true})
     const {opposed} = this.props
@@ -179,10 +180,11 @@ class BillList extends Component {
         committees: bill.committee
       })
     })
-    if(newOpposed.length>0){
+    if(newOpposed.length&&newOpposed.length>0){
       // console.log(newOpposed)
       this.setState({bills:newOpposed})
-    }else{
+    }
+    else{
       this.setState({bills:[]})
     }   
   }
@@ -280,13 +282,7 @@ const mapStateToProps = state => {
     opposed: state.auth.billsOpposed,
   };
 };
-// const mapDispatchToProps =dispatch => {
-//   return {
-//     getBillsFavored: () => dispatch(getBillsFavored()),
-//     getBillsOpposed: ()=> dispatch(getBillsOpposed()),
-//     deleteBill: ()=>dispatch(deleteBill),
-//   }; /////////////////////
-// };
+
 export default compose(
   connect(
     mapStateToProps,{getBillsFavored,getBillsOpposed,deleteBill}  
@@ -329,3 +325,12 @@ import BillCard from "./BillCard";
   }
 
 */
+
+
+/*const mapDispatchToProps =dispatch => {
+  return {
+    getBillsFavored: () => dispatch(getBillsFavored()),
+    getBillsOpposed: ()=> dispatch(getBillsOpposed()),
+    deleteBill: ()=>dispatch(deleteBill),
+  }; /////////////////////
+};*/
